@@ -31,7 +31,6 @@ namespace ElephantLogger {
  * \note
  * Options
  *      - LogInFile
- *      - EraseLogAtStart
  *
  * \author  Constantin Masson
  * \date    Oct, 2017

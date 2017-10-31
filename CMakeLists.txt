@@ -11,6 +11,10 @@ include(CMake/CompilerFlags.cmake)
 
 # Executable
 include_directories("${CMAKE_SOURCE_DIR}/include")
-file(GLOB_RECURSE srcFiles *.cpp)
-add_executable(elephant-logger ${srcFiles})
-add_custom_target(run elephant-logger)
+
+
+# Example 1
+file(GLOB_RECURSE srcFilesE1 src/*.cpp examples/example1.cpp)
+add_executable(example1 ${srcFilesE1})
+target_link_libraries(example1 stdc++fs)
+add_custom_target(e1 example1)
