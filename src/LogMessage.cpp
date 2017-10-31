@@ -1,9 +1,3 @@
-/* -----------------------------------------------------------------------------
- * LogMessage Definitions
- * ---------------------------------------------------------------------------*/
-
-#include "MoonRPGElephantLoggerPch.h"
-
 #include "LogMessage.h"
 
 using namespace MoonRPG;

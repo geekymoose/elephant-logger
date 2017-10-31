@@ -9,13 +9,15 @@
 #define LOGGER_SETTINGS_DEFAULT_LOG_IN_FILE true
 #define LOGGER_SETTINGS_DEFAULT_ERASE_FILE_AT_START true
 
-#define LOGGER_SETTINGS_DEFAULT_LOG_LEVEL MoonRPG::LogLevel::Debug
+#define LOGGER_SETTINGS_DEFAULT_LOG_LEVEL ElephantLogger::LogLevel::Debug
 
 
-namespace MoonRPG {
+namespace ElephantLogger {
 
-    enum {
-        LOGGER_THREAD_UPDATE_RATE_IN_MILLISECONDS = 250
-    };
 
-} // End MoonRPG namespace
+enum {
+    LOGGER_THREAD_UPDATE_RATE_IN_MILLISECONDS = 250
+};
+
+
+} // End namespace

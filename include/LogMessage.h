@@ -5,8 +5,7 @@
 
 #include <ctime>
 
-namespace MoonRPG
-{
+namespace ElephantLogger {
 
 
     /**

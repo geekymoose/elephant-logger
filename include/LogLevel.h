@@ -3,7 +3,7 @@
 #include <atomic>
 
 
-namespace MoonRPG
+namespace ElephantLogger
 {
 
 
