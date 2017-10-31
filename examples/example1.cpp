@@ -1,9 +1,11 @@
 #include "ElephantLogger.h"
 
+#include <chrono>
 #include <thread>
 
-// Just for test
+// A simple test
 int main(int argc, char** argv) {
+
     ElephantLogger::LoggerManager::getInstance().initialize();
 
     LOG_ERROR("1. TEST ERROR");

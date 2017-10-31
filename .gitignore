@@ -1,5 +1,6 @@
 # Perso adds
 build
+build-doxygen
 *.sln
 *.vcxproj
 *.vcxproj.filters
