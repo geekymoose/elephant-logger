@@ -5,7 +5,7 @@
 template <class T>
 class Singleton : private Uncopyable<Singleton<T>> {
     private:
-        final T;
+        friend T;
         Singleton() = default;
         virtual ~Singleton() = default;
 

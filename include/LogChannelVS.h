@@ -1,5 +1,6 @@
 #pragma once
 #include "LogChannel.h"
+#include <windows.h>
 
 
 namespace ElephantLogger {

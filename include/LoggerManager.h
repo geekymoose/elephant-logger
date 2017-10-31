@@ -75,6 +75,7 @@ class LoggerManager : private Singleton<LoggerManager> {
         LoggerManager() = default;
 
     public:
+        using Singleton<LoggerManager>::getInstance;
         void initialize() override;
         void destroy() override;
 

@@ -1,6 +1,8 @@
 #include "LogMessage.h"
+#include <string>
 
-using namespace MoonRPG;
+
+using namespace ElephantLogger;
 
 
 LogMessage::LogMessage(const LogLevel logLevel,
@@ -13,16 +15,14 @@ LogMessage::LogMessage(const LogLevel logLevel,
       m_message(std::move(message)),
       m_filePosition(std::move(file)),
       m_linePosition(line),
-      m_creationTime(std::time(nullptr))
-{}
+      m_creationTime(std::time(nullptr)) {
+}
 
-const std::string LogMessage::getFormattedMessage() const
-{
+const std::string LogMessage::getFormattedMessage() const {
     std::string dateStr = ctime(&this->m_creationTime);
     dateStr.pop_back(); // Remove line return
 
-    static const std::string formatLU[] =
-    {
+    static const std::string formatLU[] = {
         "[ERROR]: ",
         "[WARNING]: ",
         "[CONFIG]: ",
@@ -34,8 +34,7 @@ const std::string LogMessage::getFormattedMessage() const
 
     std::string logDate = "[" + dateStr +"] ";
 
-    if (this->m_logLevel == LogLevel::Debug)
-    {
+    if (this->m_logLevel == LogLevel::Debug) {
         return logDate
             + formatLU[static_cast<size_t>(this->m_logLevel)] 
             + "[" + this->m_filePosition + ": " + std::to_string(this->m_linePosition) + "] "
@@ -45,8 +44,6 @@ const std::string LogMessage::getFormattedMessage() const
     return logDate + formatLU[static_cast<size_t>(this->m_logLevel)] + this->m_message;
 }
 
-const LogChannel::Output LogMessage::getLogChannel() const
-{
+const LogChannel::Output LogMessage::getLogChannel() const {
     return this->m_channel;
 }
-
