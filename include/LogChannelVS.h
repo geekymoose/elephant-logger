@@ -1,6 +1,11 @@
 #pragma once
 #include "LogChannel.h"
-#include <windows.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+#   include <windows.h>
+#else
+#   include <iostream>
+#endif
 
 
 namespace ElephantLogger {
@@ -8,6 +13,7 @@ namespace ElephantLogger {
 
 /**
  * LogChannel implementation for Visual Studio output.
+ * If VS not supported, use std::cout instead.
  */
 class LogChannelVS : public LogChannel {
     public:
@@ -16,8 +22,13 @@ class LogChannelVS : public LogChannel {
 
     public:
         void writeInChannel(std::string const& message) const override {
-            OutputDebugStringA(static_cast<LPCSTR>(message.c_str()));
-            OutputDebugStringA(static_cast<LPCSTR>("\n")); // There is probably a cleaner way
+#           if defined(_WIN32) || defined(_WIN64)
+                OutputDebugStringA(static_cast<LPCSTR>(message.c_str()));
+                OutputDebugStringA(static_cast<LPCSTR>("\n"));
+                // (There is probably a cleaner way to return line)
+#           else
+                std::cout << message << std::endl;
+#           endif
         }
 };
 

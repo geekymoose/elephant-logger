@@ -7,23 +7,31 @@
 
 #include <vector>
 #include <mutex>
+#include <atomic>
+#include <memory>
+#include <thread>
 
 
 namespace ElephantLogger {
 
 
 /**
- * The main logger manager (Singleton).
- * All functions are thread safe.
+ * The Logger Manager (Singleton).
+ * Run in it's own thread, all functions are thread safe.
  *
  * \remark
  * By default, logs are only displayed in channels.
  * logInFileMode may be set to also write all logs in files.
- * 
+ *
  * \remark
  * Log level may be set to choose which logs are bypassed.
  * Only logs with lower or equal enum value are displayed.
  * (See LogLevel Enum).
+ *
+ * \note
+ * Options
+ *      - LogInFile
+ *      - EraseLogAtStart
  *
  * \author  Constantin Masson
  * \date    Oct, 2017
@@ -39,7 +47,7 @@ class LoggerManager : private Singleton<LoggerManager> {
         std::atomic_bool m_isRunning;
 
         /** The current used log level (From LogLevel enum). */
-        std::atomic_int8_t m_currentLogLevel;
+        std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
         /** If true, all logs are also written in files. */
         std::atomic_bool m_isLogingInFile;
@@ -73,6 +81,7 @@ class LoggerManager : private Singleton<LoggerManager> {
     private:
         friend Singleton<LoggerManager>;
         LoggerManager() = default;
+        ~LoggerManager() = default;
 
     public:
         using Singleton<LoggerManager>::getInstance;

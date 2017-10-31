@@ -1,5 +1,16 @@
 #pragma once
 
+
+/**
+ * Uncopyable interface.
+ * Disable copy constructor and copy operator.
+ *
+ * \code{.cpp}
+ * class A : private Uncopyable<A> {
+ *     // Your code
+ * };
+ * \endcode
+ */
 template <class T>
 class Uncopyable {
     public:

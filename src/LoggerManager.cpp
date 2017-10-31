@@ -1,4 +1,5 @@
 #include "LoggerManager.h"
+
 #include "LoggerConfig.h"
 #include "LogChannelCout.h"
 #include "LogChannelVS.h"
@@ -79,7 +80,7 @@ bool LoggerManager::saveAllLogFiles() const {
         std::time_t startTime = Clock::to_time_t(Clock::now());
         char timestamp[30];
         std::strftime(timestamp, 30, "/%Y_%m_%d_%H%M%S_SavedLogs/", std::localtime(&startTime));
-        
+
         try {
             auto saveFolder = std::experimental::filesystem::path(this->m_logFileSavePath + timestamp);
             bool res = std::experimental::filesystem::create_directory(saveFolder);
@@ -102,7 +103,7 @@ bool LoggerManager::saveAllLogFiles() const {
 
 void LoggerManager::internalQueueLog(LogLevel level, LogChannel::Output output,
                                      std::string message,
-                                     std::string file, 
+                                     std::string file,
                                      const int line) {
     // Message passed by copie, otherwise, local scope of variable would destroye it.
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);

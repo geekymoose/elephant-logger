@@ -2,6 +2,8 @@
 
 // Just for test
 int main(int argc, char** argv) {
+    ElephantLogger::LoggerManager::getInstance().initialize();
+
     LOG_ERROR("TEST ERROR");
     LOG_WARNING("TEST WARNING");
     LOG_CONFIG("TEST CONFIG");

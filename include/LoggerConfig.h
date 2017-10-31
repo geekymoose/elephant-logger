@@ -1,6 +1,6 @@
 #pragma once
 
-#include <experimental\filesystem>
+#include <experimental/filesystem>
 
 
 #define LOGGER_SETTINGS_DEFAULT_LOGPATH std::experimental::filesystem::temp_directory_path().string() + "/MoonRPGLog/"
