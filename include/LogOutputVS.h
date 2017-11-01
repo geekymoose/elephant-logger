@@ -1,5 +1,6 @@
 #pragma once
-#include "LogChannel.h"
+
+#include "LogOutput.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #   include <windows.h>
@@ -12,16 +13,19 @@ namespace ElephantLogger {
 
 
 /**
- * LogChannel implementation for Visual Studio output.
- * If VS not supported, use std::cout instead.
+ * A debug console that print on Visual Studio output.
+ * If VS not supported (Ex: Linux), use std::cout instead.
+ *
+ * \author  Constantin Masson
+ * \since   1.0
  */
-class LogChannelVS : public LogChannel {
+class LogOutputVS : public LogOutput {
     public:
-        LogChannelVS() = default;
-        LogChannelVS(std::string const& filePath) : LogChannel(filePath) {};
+        LogOutputVS() = default;
+        LogOutputVS(std::string const& filePath) : LogOutput(filePath) {};
 
     public:
-        void writeInChannel(std::string const& message) const override {
+        void print(std::string const& message) const override {
 #           if defined(_WIN32) || defined(_WIN64)
                 OutputDebugStringA(static_cast<LPCSTR>(message.c_str()));
                 OutputDebugStringA(static_cast<LPCSTR>("\n"));

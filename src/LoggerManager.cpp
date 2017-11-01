@@ -1,8 +1,8 @@
 #include "LoggerManager.h"
 
 #include "LoggerConfig.h"
-#include "LogChannelCout.h"
-#include "LogChannelVS.h"
+#include "LogOutputCout.h"
+#include "LogOutputVS.h"
 
 #include <ctime>
 #include <experimental/filesystem>
@@ -28,8 +28,8 @@ void LoggerManager::initialize() {
     this->setLogLevel(LOGGER_SETTINGS_DEFAULT_LOG_LEVEL);
 
     // Register all available log channles. (To add a new, place it here)
-    this->m_lookupChannels[LogChannel::Vs]      = std::unique_ptr<LogChannelVS>(new LogChannelVS());
-    this->m_lookupChannels[LogChannel::Cout]    = std::unique_ptr<LogChannelCout>(new LogChannelCout());
+    this->m_lookupChannels[static_cast<size_t>(LogOutputType::Vs)]   = std::unique_ptr<LogOutputVS>(new LogOutputVS());
+    this->m_lookupChannels[static_cast<size_t>(LogOutputType::Cout)] = std::unique_ptr<LogOutputCout>(new LogOutputCout());
 
     if (this->m_isLogingInFile) {
         // Warning: Erase before linkWithFile() otherwise, files stream are opened.
@@ -45,8 +45,8 @@ void LoggerManager::initialize() {
         std::string vsLogPath   = this->m_logFilePath + "/vs.log";
         std::string coutLogPath = this->m_logFilePath + "/cout.log";
 
-        this->m_lookupChannels[LogChannel::Vs]->linkWithFile(vsLogPath);
-        this->m_lookupChannels[LogChannel::Cout]->linkWithFile(coutLogPath);
+        this->m_lookupChannels[static_cast<size_t>(LogOutputType::Vs)]->linkWithFile(vsLogPath);
+        this->m_lookupChannels[static_cast<size_t>(LogOutputType::Cout)]->linkWithFile(coutLogPath);
     }
 
     this->internalStartLoggerThread();
@@ -65,7 +65,8 @@ void LoggerManager::destroy() {
 // Core Methods
 // -----------------------------------------------------------------------------
 
-void LoggerManager::queueLog(LogLevel level, LogChannel::Output output,
+void LoggerManager::queueLog(LogLevel level,
+                             LogOutputType output,
                              char const* message,
                              char const* file,
                              int line) {
@@ -79,6 +80,7 @@ bool LoggerManager::saveAllLogFiles() const {
         using Clock = std::chrono::system_clock;
         std::time_t startTime = Clock::to_time_t(Clock::now());
         char timestamp[30];
+        // TODO: Saved log name may be exported in config.
         std::strftime(timestamp, 30, "/%Y_%m_%d_%H%M%S_SavedLogs/", std::localtime(&startTime));
 
         try {
@@ -101,7 +103,8 @@ bool LoggerManager::saveAllLogFiles() const {
 // Internal Methods
 // -----------------------------------------------------------------------------
 
-void LoggerManager::internalQueueLog(LogLevel level, LogChannel::Output output,
+void LoggerManager::internalQueueLog(LogLevel level,
+                                     LogOutputType output,
                                      std::string message,
                                      std::string file,
                                      const int line) {
@@ -114,8 +117,8 @@ void LoggerManager::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
         std::string formattedMessage = msg.getFormattedMessage();
 
-        auto& coco = m_lookupChannels[msg.getLogChannel()];
-        coco->writeInChannel(formattedMessage);
+        auto& coco = m_lookupChannels[static_cast<size_t>(msg.getLogOutput())];
+        coco->print(formattedMessage);
 
         if (this->m_isLogingInFile) {
             coco->writeInFile(formattedMessage);

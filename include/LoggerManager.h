@@ -1,7 +1,8 @@
 #pragma once
 
 #include "helper/Singleton.h"
-#include "LogChannel.h"
+#include "LogOutput.h"
+#include "LogOutputType.h"
 #include "LogMessage.h"
 #include "LogLevel.h"
 
@@ -17,22 +18,10 @@ namespace ElephantLogger {
 
 /**
  * The Logger Manager (Singleton).
- * Run in it's own thread, all functions are thread safe.
- *
- * \remark
- * By default, logs are only displayed in channels.
- * logInFileMode may be set to also write all logs in files.
- *
- * \remark
- * Log level may be set to choose which logs are bypassed.
- * Only logs with lower or equal enum value are displayed.
- * (See LogLevel Enum).
- *
- * \note
- * Options
- *      - LogInFile
+ * Run inside it's own thread (all functions are thread safe).
  *
  * \author  Constantin Masson
+ * \since   1.0
  * \date    Oct, 2017
  */
 class LoggerManager : private Singleton<LoggerManager> {
@@ -42,7 +31,7 @@ class LoggerManager : private Singleton<LoggerManager> {
     // -------------------------------------------------------------------------
     private:
 
-        /** True if this Logger is Running */
+        /** True if this Logger is Running. */
         std::atomic_bool m_isRunning;
 
         /** The current used log level (From LogLevel enum). */
@@ -58,7 +47,7 @@ class LoggerManager : private Singleton<LoggerManager> {
         std::string m_logFileSavePath;
 
         /** Lookup array of all registered and available output channels. */
-        std::unique_ptr<LogChannel> m_lookupChannels[static_cast<size_t>(LogLevel::LogLevelSize)];
+        std::unique_ptr<LogOutput> m_lookupChannels[static_cast<size_t>(LogOutputType::SIZE)];
 
         /** Vector of logs. */
         std::vector<LogMessage> m_queueLogs1;
@@ -94,28 +83,31 @@ class LoggerManager : private Singleton<LoggerManager> {
     public:
 
         /**
-         * Queue a Log if level is accepted by current Log settings.
-         * Log is queued to be written in the respective LogChannel.
-         * Current loggerManager level is used to bypass logs with superior
-         * level (Less critical logs) than current level.
+         * Queue a log to be processed by the respective Output.
+         * 
+         * \remark
+         * Only logs more critical or equal to current LogLevel are queued.
          *
          * \remark
          * This function is thread safe and may be called concurrently.
          *
          * \param level     Log Level for this message.
-         * \param output    Channel to use with this message.
+         * \param output    Output to use with this message.
          * \param message   The row message to display.
          * \param file      File that created the log
          * \param line      Line position in file.
          */
-        void queueLog(LogLevel const level, LogChannel::Output const output,
+        void queueLog(LogLevel const level,
+                      LogOutputType const output,
                       char const* message,
                       char const* file,
                       const int line);
 
         /**
-         * Save all current log files in the save directory set.
-         * This process a simple copy of current log file path to save path.
+         * Save all logs in a save directory.
+         * This simply copy the logPath directory into a safe LogPath directory.
+         *
+         * \remark
          * Do nothing if log in file is not allowed (False returned).
          *
          * \return True if successfully saved, otherwise, return false.
@@ -130,8 +122,10 @@ class LoggerManager : private Singleton<LoggerManager> {
 
         /**
          * Queue a log, regardless any settings.
+         * (Not thread safe, to use internally only).
          */
-        void internalQueueLog(LogLevel level, LogChannel::Output output,
+        void internalQueueLog(LogLevel level,
+                              LogOutputType output,
                               std::string message,
                               std::string file,
                               const int line);
@@ -147,7 +141,7 @@ class LoggerManager : private Singleton<LoggerManager> {
         void internalSwapQueues();
 
         /**
-         * Run the LoggerEngine in a new thread.
+         * Runs the LoggerEngine in a new thread.
          * LoggerEngine can be started only if it's not already running.
          */
         void internalStartLoggerThread();

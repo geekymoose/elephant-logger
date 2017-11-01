@@ -1,6 +1,9 @@
 #pragma once
 
 
+namespace ElephantLogger {
+
+
 /**
  * Uncopyable interface.
  * Disable copy constructor and copy operator.
@@ -20,3 +23,6 @@ class Uncopyable {
         Uncopyable(Uncopyable<T> const& other) = delete;
         Uncopyable<T>& operator=(Uncopyable<T> const& other) = delete;
 };
+
+
+} // End namespace

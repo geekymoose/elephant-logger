@@ -1,24 +1,24 @@
-#include "LogChannel.h"
+#include "LogOutput.h"
 #include <string>
 
 using namespace ElephantLogger;
 
 
-LogChannel::LogChannel(std::string const& filePath) {
+LogOutput::LogOutput(std::string const& filePath) {
     this->linkWithFile(filePath);
 }
 
-LogChannel::~LogChannel() {
+LogOutput::~LogOutput() {
     this->unlinkFile();
 }
 
-void LogChannel::writeInFile(std::string const& message) {
+void LogOutput::writeInFile(std::string const& message) {
     if (this->m_fileOutputStream.is_open()) {
         this->m_fileOutputStream << message << std::endl;
     }
 }
 
-bool LogChannel::linkWithFile(std::string const& filePath) {
+bool LogOutput::linkWithFile(std::string const& filePath) {
     if (this->m_fileOutputStream.is_open()) {
         this->m_fileOutputStream.close();
     }
@@ -29,7 +29,7 @@ bool LogChannel::linkWithFile(std::string const& filePath) {
     return this->m_fileOutputStream.is_open();
 }
 
-void LogChannel::unlinkFile() {
+void LogOutput::unlinkFile() {
     if (this->m_fileOutputStream.is_open()) {
         this->m_fileOutputStream.close();
         this->m_pathLogFile.clear();

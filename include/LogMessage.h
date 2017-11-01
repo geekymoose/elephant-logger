@@ -1,9 +1,10 @@
 #pragma once
 
 #include "LogLevel.h"
-#include "LogChannel.h"
+#include "LogOutputType.h"
 
 #include <ctime>
+#include <string>
 
 
 namespace ElephantLogger {
@@ -11,15 +12,19 @@ namespace ElephantLogger {
 
 /**
  * Internal representation of a log message.
- * A log message is to be printed in a specific channel.
- * It has a message and a LogLevel.
- * LogLevel add specific format.
+ * A log message is to be printed in a specific output.
+ *
+ * \remark
+ * LogLevel add a specific format.
+ *
+ * \author  Constantin Masson
+ * \since   1.0
  */
 class LogMessage {
 
     private:
         LogLevel            m_logLevel;
-        LogChannel::Output  m_channel;
+        LogOutputType       m_outputType;
         std::string         m_message;
 
         const std::string   m_filePosition;
@@ -29,7 +34,7 @@ class LogMessage {
 
     public:
         LogMessage(const LogLevel logLevel,
-                   const LogChannel::Output channel,
+                   const LogOutputType outputType,
                    std::string&& message,
                    std::string&& file,
                    const int line);
@@ -41,17 +46,16 @@ class LogMessage {
          * Returns the Formatted version of the message.
          * (Message is truncated if length highter than max size).
          *
-         * \warning
-         * Not thread safe, only one formatedMessage can be set (Static variable).
-         *
-         * \return Pointer to the static variable that has the formated message.
+         * \return Formatted version of the message.
          */
         const std::string getFormattedMessage() const;
 
         /**
-         * Returns the logChannel associated with this LogMessage.
+         * Gets the Output Type associated.
+         *
+         *\return LogOutput.
          */
-        const LogChannel::Output getLogChannel() const;
+        const LogOutputType getLogOutput() const;
 };
 
 

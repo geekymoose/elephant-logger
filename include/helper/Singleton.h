@@ -2,6 +2,8 @@
 
 #include "Uncopyable.h"
 
+namespace ElephantLogger {
+
 
 /**
  * Singleton interface.
@@ -39,3 +41,6 @@ class Singleton : private Uncopyable<Singleton<T>> {
         virtual void initialize() = 0;
         virtual void destroy() = 0;
 };
+
+
+} // End namespace

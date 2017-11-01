@@ -1,6 +1,6 @@
 #pragma once
 
-// ENTRY POINT for this logger.
+// ENTRY POINT for this terrible Elephant Logger.
 // This is the only header to include in your project.
 
 #include "LoggerManager.h"
@@ -10,23 +10,23 @@
 // End user macros
 // -----------------------------------------------------------------------------
 
-#define LOG_VS_ERROR(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Error,     ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
-#define LOG_VS_WARNING(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Warning,   ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
-#define LOG_VS_CONFIG(msg)      ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Config,    ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
-#define LOG_VS_INFO(msg)        ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Info,      ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
-#define LOG_VS_TRACE(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Trace,     ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
-#define LOG_VS_DEBUG(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Debug,     ElephantLogger::LogChannel::Vs,     msg, __FILE__, __LINE__)
+#define LOG_ERROR_VS(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Error,  ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
+#define LOG_WARNING_VS(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Warning,ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
+#define LOG_CONFIG_VS(msg)      ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Config, ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
+#define LOG_INFO_VS(msg)        ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Info,   ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
+#define LOG_TRACE_VS(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Trace,  ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
+#define LOG_DEBUG_VS(msg)       ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Debug,  ElephantLogger::LogOutputType::Vs,     msg, __FILE__, __LINE__)
 
-#define LOG_COUT_ERROR(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Error,     ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
-#define LOG_COUT_WARNING(msg)   ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Warning,   ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
-#define LOG_COUT_CONFIG(msg)    ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Config,    ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
-#define LOG_COUT_INFO(msg)      ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Info,      ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
-#define LOG_COUT_TRACE(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Trace,     ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
-#define LOG_COUT_DEBUG(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Debug,     ElephantLogger::LogChannel::Cout,   msg, __FILE__, __LINE__)
+#define LOG_ERROR_COUT(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Error,  ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
+#define LOG_WARNING_COUT(msg)   ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Warning,ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
+#define LOG_CONFIG_COUT(msg)    ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Config, ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
+#define LOG_INFO_COUT(msg)      ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Info,   ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
+#define LOG_TRACE_COUT(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Trace,  ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
+#define LOG_DEBUG_COUT(msg)     ElephantLogger::LoggerManager::getInstance().queueLog(ElephantLogger::LogLevel::Debug,  ElephantLogger::LogOutputType::Cout,   msg, __FILE__, __LINE__)
 
-#define LOG_ERROR(msg)          LOG_VS_ERROR(msg)
-#define LOG_WARNING(msg)        LOG_VS_WARNING(msg)
-#define LOG_CONFIG(msg)         LOG_VS_CONFIG(msg)
-#define LOG_INFO(msg)           LOG_VS_INFO(msg)
-#define LOG_TRACE(msg)          LOG_VS_TRACE(msg)
-#define LOG_DEBUG(msg)          LOG_VS_DEBUG(msg)
+#define LOG_ERROR(msg)          LOG_ERROR_VS(msg)
+#define LOG_WARNING(msg)        LOG_WARNING_VS(msg)
+#define LOG_CONFIG(msg)         LOG_CONFIG_VS(msg)
+#define LOG_INFO(msg)           LOG_INFO_VS(msg)
+#define LOG_TRACE(msg)          LOG_TRACE_VS(msg)
+#define LOG_DEBUG(msg)          LOG_DEBUG_VS(msg)
