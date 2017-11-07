@@ -14,7 +14,7 @@ using namespace ElephantLogger;
 // Init
 // -----------------------------------------------------------------------------
 
-void LoggerManager::initialize() {
+void LoggerManager::startup() {
     if (this->m_isRunning) {
         return;
     }
@@ -52,7 +52,7 @@ void LoggerManager::initialize() {
     this->internalStartLoggerThread();
 }
 
-void LoggerManager::destroy() {
+void LoggerManager::shutdown() {
     this->m_isRunning = false;
     this->internalProcessBackQueue();
     this->internalSwapQueues();

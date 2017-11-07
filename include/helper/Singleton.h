@@ -38,8 +38,8 @@ class Singleton : private Uncopyable<Singleton<T>> {
         }
 
     public:
-        virtual void initialize() = 0;
-        virtual void destroy() = 0;
+        virtual void startup() = 0;
+        virtual void shutdown() = 0;
 };
 
 
