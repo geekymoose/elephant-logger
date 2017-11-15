@@ -31,26 +31,30 @@ enum LogLevel : std::int8_t {
     Size            // Enum's size: Number of defined LogLevels (TO KEEP LAST).
 };
 
-/*
-const char* logLevelToString(LogLevel level) {
-    switch(level) {
-        case LogLevel::Error:
-            return "Error";
-        case LogLevel::Warning:
-            return "Warning";
-        case LogLevel::Config:
-            return "Config";
-        case LogLevel::Info:
-            return "Info";
-        case LogLevel::Trace:
-            return "Trace";
-        case LogLevel::Debug:
-            return "Debug";
-        default:
-            return "WTF";
-    }
-}
-*/
+class LogLevelHelper {
+    private:
+        LogLevelHelper() = delete;
+        ~LogLevelHelper() = delete;
+    public:
+        static const char* logLevelToString(LogLevel level) {
+            switch(level) {
+                case LogLevel::Error:
+                    return "Error";
+                case LogLevel::Warning:
+                    return "Warning";
+                case LogLevel::Config:
+                    return "Config";
+                case LogLevel::Info:
+                    return "Info";
+                case LogLevel::Trace:
+                    return "Trace";
+                case LogLevel::Debug:
+                    return "Debug";
+                default:
+                    return "WTF";
+            }
+        }
+};
 
 
 } // End namespace

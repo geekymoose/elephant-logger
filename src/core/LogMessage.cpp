@@ -25,7 +25,7 @@ const std::string LogMessage::getFormattedMessage() const {
 
     std::string msg = "[" + dateStr +"] ";
     msg += "[";
-    //msg += logLevelToString(this->m_logLevel);
+    msg += LogLevelHelper::logLevelToString(this->m_logLevel);
     msg += "]: ";
     msg += this->m_message;
     return msg;
