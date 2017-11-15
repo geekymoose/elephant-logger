@@ -7,7 +7,7 @@
 // A simple test
 int main(int argc, char** argv) {
 
-    ElephantLogger::Logger::get().startup();
+    ElephantLogger::init();
 
     LOG_ERROR(0, "1. TEST ERROR");
     LOG_WARNING(0, "2. TEST WARNING");

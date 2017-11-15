@@ -4,6 +4,7 @@
 #include "core/LogLevel.h"
 #include "core/Channel.h"
 #include "core/LogMessage.h"
+#include "LoggerConfig.h"
 
 #include <vector>
 #include <mutex>
@@ -29,21 +30,33 @@ class Logger : private Singleton<Logger> {
     // Attributs
     // -------------------------------------------------------------------------
     private:
-
-        /** True if this Logger is Running. */
-        std::atomic_bool m_isRunning;
-
         /** The current used log level (From LogLevel enum). */
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
+
+        /** Lookup array of all available channels. */
+        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
+
+        /** Number of channels actually in use. */
+        int nbChannels;
 
         /** Path to the folder with logs. */
         std::string m_logFilePath;
 
-        /** Lookup array of all available channels. */
-        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(3)];
+        /** Update rate. */
+        int threadUpdateRate;
 
-        /** Vector of logs. */
+        /** True if clear any output at start (ex: clear log file). */
+        bool clearAtStart;
+
+    private:
+
+        /** True if this Logger is Running. */
+        std::atomic_bool m_isRunning;
+
+        /** Vector of logs (List 1). */
         std::vector<LogMessage> m_queueLogs1;
+
+        /** Vector of logs (List 2). */
         std::vector<LogMessage> m_queueLogs2;
 
         /** Point to the vector where logs are queued. */
@@ -147,6 +160,9 @@ class Logger : private Singleton<Logger> {
 
         /** Returns the current log level. */
         LogLevel getLogLevel() const;
+
+        /** Change all settings with config value. */
+        void applyConfig(const LoggerConfig& config);
 
 }; // End Logger class
 

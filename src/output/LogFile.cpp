@@ -80,7 +80,12 @@ bool LogFile::internal_save(std::string& savePath) const {
             return false; // Doesn't override existing file.
         }
 
-        fs::copy(this->m_fullPath, destination);
+        try{
+            fs::copy(this->m_fullPath, destination);
+        }
+        catch(const fs::filesystem_error& e) {
+            return false;
+        }
         return true;
     }
     return false;

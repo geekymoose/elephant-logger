@@ -1,7 +1,5 @@
 #include "Logger.h"
 
-#include "utils/constants.h"
-
 #include <ctime>
 #include <experimental/filesystem>
 
@@ -20,40 +18,16 @@ void Logger::startup() {
     this->m_isRunning           = true;
     this->m_queueLogsFront      = &m_queueLogs1;
     this->m_queueLogsBack       = &m_queueLogs2;
-    this->m_logFilePath         = LOGGER_SETTINGS_DEFAULT_LOGPATH;
 
-    this->m_lookupChannels[0]   = std::unique_ptr<Channel>(new Channel());
-    this->m_lookupChannels[1]   = std::unique_ptr<Channel>(new Channel());
-    this->m_lookupChannels[2]   = std::unique_ptr<Channel>(new Channel());
+    LoggerConfig conf;
+    conf.setDefaultConfig();
+    this->applyConfig(conf);
 
-    if (LOGGER_SETTINGS_DEFAULT_ERASE_FILE_AT_START) {
-        this->m_lookupChannels[0]->clear();
-        this->m_lookupChannels[1]->clear();
-        this->m_lookupChannels[2]->clear();
-    }
-
-    this->setLogLevel(LOGGER_SETTINGS_DEFAULT_LOG_LEVEL);
-
-
-    /*
-    if (this->m_isLogingInFile) {
-        // Warning: Erase before linkWithFile() otherwise, files stream are opened.
-        if (LOGGER_SETTINGS_DEFAULT_ERASE_FILE_AT_START) {
-            if (std::experimental::filesystem::exists(this->m_logFilePath)) {
-                std::experimental::filesystem::remove_all(m_logFilePath);
-            }
+    if(this->clearAtStart) {
+        for(int k = 0; k < this->nbChannels; ++k) {
+            this->m_lookupChannels[k]->clear();
         }
-
-        std::experimental::filesystem::create_directory(this->m_logFilePath);
-        std::experimental::filesystem::create_directory(this->m_logFileSavePath);
-
-        std::string vsLogPath   = this->m_logFilePath + "/vs.log";
-        std::string coutLogPath = this->m_logFilePath + "/cout.log";
-
-        this->m_lookupChannels[static_cast<size_t>(LogOutputType::Vs)]->linkWithFile(vsLogPath);
-        this->m_lookupChannels[static_cast<size_t>(LogOutputType::Cout)]->linkWithFile(coutLogPath);
     }
-    */
 
     this->internalStartLoggerThread();
 }
@@ -81,34 +55,9 @@ void Logger::queueLog(LogLevel level,
 }
 
 bool Logger::saveAllLogFiles() const {
-    this->m_lookupChannels[0]->save();
-    this->m_lookupChannels[1]->save();
-    this->m_lookupChannels[2]->save();
-
-    /*
-     * TODO To update (Just call save an each channel)
-     *
-
-    if (this->m_isLogingInFile) {
-        using Clock = std::chrono::system_clock;
-        std::time_t startTime = Clock::to_time_t(Clock::now());
-        char timestamp[30];
-        // TODO: Saved log name may be exported in config.
-        std::strftime(timestamp, 30, "/%Y_%m_%d_%H%M%S_SavedLogs/", std::localtime(&startTime));
-
-        try {
-            auto saveFolder = std::experimental::filesystem::path(this->m_logFileSavePath + timestamp);
-            bool res = std::experimental::filesystem::create_directory(saveFolder);
-            if (res == true) {
-                std::experimental::filesystem::copy(this->m_logFilePath, saveFolder);
-            }
-            return res;
-        }
-        catch (const std::experimental::filesystem::filesystem_error& e) {
-            return false;
-        }
+    for(int k = 0; k < this->nbChannels; ++k) {
+        this->m_lookupChannels[k]->save();
     }
-    */
     return false;
 }
 
@@ -129,8 +78,11 @@ void Logger::internalQueueLog(LogLevel level,
 
 void Logger::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
-        auto& coco = m_lookupChannels[static_cast<size_t>(msg.getChannelID())];
-        coco->write(msg);
+        int index = msg.getChannelID();
+        if(index < this->nbChannels) {
+            auto& coco = m_lookupChannels[static_cast<size_t>(index)];
+            coco->write(msg);
+        }
     }
     this->m_queueLogsBack->clear();
 }
@@ -145,8 +97,8 @@ void Logger::internalStartLoggerThread() {
         [this]() {
             while (this->m_isRunning) {
                 std::this_thread::sleep_for(std::chrono::milliseconds{
-                    ElephantLogger::LOGGER_THREAD_UPDATE_RATE_IN_MILLISECONDS}
-                );
+                    this->threadUpdateRate
+                });
                 this->internalProcessBackQueue();
                 this->internalSwapQueues();
             }
@@ -165,4 +117,18 @@ void Logger::setLogLevel(const LogLevel level) {
 
 LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
+}
+
+void Logger::applyConfig(const LoggerConfig& config) {
+    this->setLogLevel(config.logLevel);
+    this->nbChannels        = config.nbChannels;
+    this->m_logFilePath     = config.logFilePath;
+    this->threadUpdateRate  = config.threadUpdateRate;
+    this->clearAtStart      = config.clearAtStart;
+
+    for(int k = 0; k < this->nbChannels; ++k) {
+        this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
+    }
+
+    // TODO Instanciate all Output for each channel
 }

@@ -6,6 +6,18 @@
 #include "Logger.h"
 
 
+namespace ElephantLogger {
+
+    /**
+     * Initialize the logger and all its subsystem..
+     * Must be called once at the beginning.
+     */
+    void init() {
+        ElephantLogger::Logger::get().startup();
+    }
+}
+
+
 // -----------------------------------------------------------------------------
 // End user macros
 // -----------------------------------------------------------------------------
