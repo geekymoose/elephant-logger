@@ -29,13 +29,3 @@ namespace ElephantLogger {
 #define LOG_INFO(channelID, msg)     ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Info,     channelID, msg, __FILE__, __LINE__)
 #define LOG_TRACE(channelID, msg)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Trace,    channelID, msg, __FILE__, __LINE__)
 #define LOG_DEBUG(channelID, msg)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Debug,    channelID, msg, __FILE__, __LINE__)
-
-/*
-#define LOG_WTF(msg)        LOG_WTF(0, msg)
-#define LOG_ERROR(msg)      LOG_ERROR(0, msg)
-#define LOG_WARNING(msg)    LOG_WARNING(0, msg)
-#define LOG_CONFIG(msg)     LOG_CONFIG(0, msg)
-#define LOG_INFO(msg)       LOG_INFO(0, msg)
-#define LOG_TRACE(msg)      LOG_TRACE(0, msg)
-#define LOG_DEBUG(msg)      LOG_DEBUG(0, msg)
-*/
