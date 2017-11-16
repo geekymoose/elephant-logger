@@ -17,14 +17,14 @@ namespace ElephantLogger {
 
 
 /**
- * The Logger Manager (Singleton).
+ * The Famouse Ugly Logger (Singleton).
  * Run inside it's own thread (all functions are thread safe).
  *
  * \author  Constantin Masson
  * \since   1.0
  * \date    Oct, 2017
  */
-class LoggerManager : private Singleton<LoggerManager> {
+class Logger : private Singleton<Logger> {
 
     // -------------------------------------------------------------------------
     // Attributs
@@ -67,14 +67,15 @@ class LoggerManager : private Singleton<LoggerManager> {
     // Initialization / Constructors
     // -------------------------------------------------------------------------
     private:
-        friend Singleton<LoggerManager>;
-        LoggerManager() = default;
-        ~LoggerManager() = default;
+        friend Singleton<Logger>;
+        Logger() = default;
+        ~Logger() = default;
 
     public:
-        using Singleton<LoggerManager>::getInstance;
-        void startup() override;
-        void shutdown() override;
+        using Singleton<Logger>::get;
+
+        void startup();
+        void shutdown();
 
 
     // -----------------------------------------------------------------
@@ -84,7 +85,7 @@ class LoggerManager : private Singleton<LoggerManager> {
 
         /**
          * Queue a log to be processed by the respective Output.
-         * 
+         *
          * \remark
          * Only logs more critical or equal to current LogLevel are queued.
          *
@@ -164,7 +165,7 @@ class LoggerManager : private Singleton<LoggerManager> {
         /** Logs are put in files. (Use log file path currently set). */
         void enableLogInFile();
 
-}; // End LoggerManager
+}; // End Logger class
 
 
 } // End namespace

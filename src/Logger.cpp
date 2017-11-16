@@ -1,4 +1,4 @@
-#include "LoggerManager.h"
+#include "Logger.h"
 
 #include "LoggerConfig.h"
 #include "LogOutputCout.h"
@@ -14,7 +14,7 @@ using namespace ElephantLogger;
 // Init
 // -----------------------------------------------------------------------------
 
-void LoggerManager::startup() {
+void Logger::startup() {
     if (this->m_isRunning) {
         return;
     }
@@ -52,7 +52,7 @@ void LoggerManager::startup() {
     this->internalStartLoggerThread();
 }
 
-void LoggerManager::shutdown() {
+void Logger::shutdown() {
     this->m_isRunning = false;
     this->internalProcessBackQueue();
     this->internalSwapQueues();
@@ -65,7 +65,7 @@ void LoggerManager::shutdown() {
 // Core Methods
 // -----------------------------------------------------------------------------
 
-void LoggerManager::queueLog(LogLevel level,
+void Logger::queueLog(LogLevel level,
                              LogOutputType output,
                              char const* message,
                              char const* file,
@@ -75,7 +75,7 @@ void LoggerManager::queueLog(LogLevel level,
     }
 }
 
-bool LoggerManager::saveAllLogFiles() const {
+bool Logger::saveAllLogFiles() const {
     if (this->m_isLogingInFile) {
         using Clock = std::chrono::system_clock;
         std::time_t startTime = Clock::to_time_t(Clock::now());
@@ -103,7 +103,7 @@ bool LoggerManager::saveAllLogFiles() const {
 // Internal Methods
 // -----------------------------------------------------------------------------
 
-void LoggerManager::internalQueueLog(LogLevel level,
+void Logger::internalQueueLog(LogLevel level,
                                      LogOutputType output,
                                      std::string message,
                                      std::string file,
@@ -113,7 +113,7 @@ void LoggerManager::internalQueueLog(LogLevel level,
     this->m_queueLogsFront->emplace_back(level, output, std::move(message), std::move(file), line);
 }
 
-void LoggerManager::internalProcessBackQueue() {
+void Logger::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
         std::string formattedMessage = msg.getFormattedMessage();
 
@@ -128,12 +128,12 @@ void LoggerManager::internalProcessBackQueue() {
     this->m_queueLogsBack->clear();
 }
 
-void LoggerManager::internalSwapQueues() {
+void Logger::internalSwapQueues() {
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
     std::swap(this->m_queueLogsFront, this->m_queueLogsBack);
 }
 
-void LoggerManager::internalStartLoggerThread() {
+void Logger::internalStartLoggerThread() {
     std::thread {
         [this]() {
         while (this->m_isRunning) {
@@ -152,18 +152,18 @@ void LoggerManager::internalStartLoggerThread() {
 // Getter - Setters
 // -----------------------------------------------------------------------------
 
-void LoggerManager::setLogLevel(const LogLevel level) {
+void Logger::setLogLevel(const LogLevel level) {
     this->m_currentLogLevel = static_cast<int8_t>(level);
 }
 
-LogLevel LoggerManager::getLogLevel() const {
+LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
 }
 
-void LoggerManager::disableLogInFile() {
+void Logger::disableLogInFile() {
     this->m_isLogingInFile = false;
 }
 
-void LoggerManager::enableLogInFile() {
+void Logger::enableLogInFile() {
     this->m_isLogingInFile = true;
 }

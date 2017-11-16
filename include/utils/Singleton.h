@@ -37,7 +37,7 @@ class Singleton : private Uncopyable<Singleton<T>> {
         virtual ~Singleton() = default;
 
     public:
-        static T& getInstance() {
+        static T& get() {
             static T m_instance;
             return m_instance;
         }
