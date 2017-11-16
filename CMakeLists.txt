@@ -9,5 +9,6 @@ endif()
 
 # Dependencies
 include(CMake/CompilerFlags.cmake)
+include(CMake/CreateLibrary.cmake)
 include(CMake/Examples.cmake)
 
