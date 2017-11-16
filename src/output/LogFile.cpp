@@ -1,11 +1,12 @@
-#include "LogFile.h"
-#include "LogMessage.h"
+#include "output/LogFile.h"
+
+#include "core/LogMessage.h"
 
 #include <experimental/filesystem>
 #include <chrono>
 
-namespace fs = std::experimental::filesystem;
 
+namespace fs = std::experimental::filesystem;
 using namespace ElephantLogger;
 
 
@@ -36,8 +37,12 @@ void LogFile::write(const LogMessage & message) {
     std::lock_guard<std::mutex> lock(m_streamAccess);
 
     if(this->m_stream.is_open()) {
-        //TODO
+        this->m_stream << message.getFormattedMessage() << std::endl;
     }
+}
+
+void LogFile::flush() {
+    this->m_stream << std::flush;
 }
 
 bool LogFile::save() const {

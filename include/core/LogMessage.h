@@ -1,7 +1,6 @@
 #pragma once
 
 #include "LogLevel.h"
-#include "LogOutputType.h"
 
 #include <ctime>
 #include <string>
@@ -10,21 +9,21 @@
 namespace ElephantLogger {
 
 
+
 /**
  * Internal representation of a log message.
- * A log message is to be printed in a specific output.
- *
- * \remark
- * LogLevel add a specific format.
  *
  * \author  Constantin Masson
  * \since   1.0
+ * \date    Oct, 2017
  */
 class LogMessage {
-
+    // -------------------------------------------------------------------------
+    // Attributes
+    // -------------------------------------------------------------------------
     private:
         LogLevel            m_logLevel;
-        LogOutputType       m_outputType;
+        int                 m_channelID;
         std::string         m_message;
 
         const std::string   m_filePosition;
@@ -32,14 +31,20 @@ class LogMessage {
         const std::time_t   m_creationTime;
 
 
+    // -------------------------------------------------------------------------
+    // Init
+    // -------------------------------------------------------------------------
     public:
         LogMessage(const LogLevel logLevel,
-                   const LogOutputType outputType,
+                   const int channelID,
                    std::string&& message,
                    std::string&& file,
                    const int line);
 
 
+    // -------------------------------------------------------------------------
+    // Core
+    // -------------------------------------------------------------------------
     public:
 
         /**
@@ -51,11 +56,12 @@ class LogMessage {
         const std::string getFormattedMessage() const;
 
         /**
-         * Gets the Output Type associated.
+         * Returns channel ID where to write this message.
          *
-         *\return LogOutput.
+         * \return Channel ID.
          */
-        const LogOutputType getLogOutput() const;
+        const int getChannelID() const;
+
 };
 
 

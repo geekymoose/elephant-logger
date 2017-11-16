@@ -1,6 +1,9 @@
 #pragma once
 
 #include "IOutput.h"
+#include "core/LogMessage.h"
+
+#include <string>
 
 #if defined(_WIN32) || defined(_WIN64)
 #   include <windows.h>
@@ -21,20 +24,35 @@ namespace ElephantLogger {
  * \date    Oct 2017
  */
 class ConsoleVS : public IOutput {
+
     public:
+        /** \copydoc IOutput::write() */
         void write(const LogMessage & message) override {
 #           if defined(_WIN32) || defined(_WIN64)
-                //OutputDebugStringA(static_cast<LPCSTR>(message.c_str()));
-                //OutputDebugStringA(static_cast<LPCSTR>("\n"));
-                // (There is probably a cleaner way to return line)
-                // TODO
+                std::string msg = message.getFormattedMessage() + "\n";
+                OutputDebugStringA(static_cast<LPCSTR>(msg.c_str()));
 #           else
-                //std::cout << message << std::endl;
-                // TODO
+                std::cout << message.getFormattedMessage() << std::endl;
 #           endif
         }
 
+        /** \copydoc IOutput::flush() */
         void flush() override {
+#           if defined(_WIN32) || defined(_WIN64)
+                // A way to flush VS Console?
+#           else
+                std::cout << std::flush;
+#           endif
+        }
+
+        /** \copydoc IOutput::save() */
+        bool save() const override {
+            // Nothing to do>
+            return true;
+        }
+
+        /** \copydoc IOutput::clear() */
+        void clear() override {
             // TODO
         }
 };

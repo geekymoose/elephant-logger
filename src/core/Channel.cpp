@@ -1,5 +1,5 @@
 #include "core/Channel.h"
-
+#include "output/IOutput.h"
 
 using namespace ElephantLogger;
 
@@ -9,10 +9,7 @@ Channel::Channel() {
 }
 
 Channel::~Channel() {
-    std::vector<IOutput*>::iterator it = this->m_listOutputs.begin();
-    for(it; it != this->m_listOutputs.end(); ++it) {
-        (*it)->flush();
-    }
+    this->flush();
 }
 
 void Channel::addOutput(IOutput* output) {
@@ -21,9 +18,28 @@ void Channel::addOutput(IOutput* output) {
 
 void Channel::write(const LogMessage & message) {
     std::vector<IOutput*>::iterator it = this->m_listOutputs.begin();
-    for(it; it != this->m_listOutputs.end(); ++it) {
+    for(; it != this->m_listOutputs.end(); ++it) {
         (*it)->write(message);
     }
 }
 
+void Channel::flush() {
+    std::vector<IOutput*>::iterator it = this->m_listOutputs.begin();
+    for(; it != this->m_listOutputs.end(); ++it) {
+        (*it)->flush();
+    }
+}
 
+void Channel::save() {
+    std::vector<IOutput*>::iterator it = this->m_listOutputs.begin();
+    for(; it != this->m_listOutputs.end(); ++it) {
+        (*it)->save();
+    }
+}
+
+void Channel::clear() {
+    std::vector<IOutput*>::iterator it = this->m_listOutputs.begin();
+    for(; it != this->m_listOutputs.end(); ++it) {
+        (*it)->clear();
+    }
+}

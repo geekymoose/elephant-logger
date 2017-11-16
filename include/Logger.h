@@ -1,10 +1,9 @@
 #pragma once
 
 #include "utils/Singleton.h"
-#include "LogOutput.h"
-#include "LogOutputType.h"
-#include "LogMessage.h"
-#include "LogLevel.h"
+#include "core/LogLevel.h"
+#include "core/Channel.h"
+#include "core/LogMessage.h"
 
 #include <vector>
 #include <mutex>
@@ -37,17 +36,11 @@ class Logger : private Singleton<Logger> {
         /** The current used log level (From LogLevel enum). */
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
-        /** If true, all logs are also written in files. */
-        std::atomic_bool m_isLogingInFile;
-
         /** Path to the folder with logs. */
         std::string m_logFilePath;
 
-        /** Path to the folder with saved logs. */
-        std::string m_logFileSavePath;
-
-        /** Lookup array of all registered and available output channels. */
-        std::unique_ptr<LogOutput> m_lookupChannels[static_cast<size_t>(LogOutputType::SIZE)];
+        /** Lookup array of all available channels. */
+        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(3)];
 
         /** Vector of logs. */
         std::vector<LogMessage> m_queueLogs1;
@@ -93,13 +86,13 @@ class Logger : private Singleton<Logger> {
          * This function is thread safe and may be called concurrently.
          *
          * \param level     Log Level for this message.
-         * \param output    Output to use with this message.
+         * \param channelID ID of the channel where to write log.
          * \param message   The row message to display.
          * \param file      File that created the log
          * \param line      Line position in file.
          */
         void queueLog(LogLevel const level,
-                      LogOutputType const output,
+                      const int channelID,
                       char const* message,
                       char const* file,
                       const int line);
@@ -123,22 +116,18 @@ class Logger : private Singleton<Logger> {
 
         /**
          * Queue a log, regardless any settings.
-         * (Not thread safe, to use internally only).
+         * Not thread safe, to use internally only.
          */
         void internalQueueLog(LogLevel level,
-                              LogOutputType output,
+                              const int channelID,
                               std::string message,
                               std::string file,
                               const int line);
 
-        /**
-         * Process each elements from the back queue and clear it.
-         */
+        /** Process each elements from the back queue and clear it.  */
         void internalProcessBackQueue();
 
-        /**
-         * Swap front and back queue buffers.
-         */
+        /** Swap front and back queue buffers.  */
         void internalSwapQueues();
 
         /**
@@ -158,12 +147,6 @@ class Logger : private Singleton<Logger> {
 
         /** Returns the current log level. */
         LogLevel getLogLevel() const;
-
-        /** Logs are no longer put in files. */
-        void disableLogInFile();
-
-        /** Logs are put in files. (Use log file path currently set). */
-        void enableLogInFile();
 
 }; // End Logger class
 

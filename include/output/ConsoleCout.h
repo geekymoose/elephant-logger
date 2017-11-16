@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IOutput.h"
+#include "core/LogMessage.h"
 
 #include <string>
 #include <iostream>
@@ -17,16 +18,28 @@ namespace ElephantLogger {
  * \date    Oct 2017
  */
 class ConsoleCout : public IOutput {
+
     public:
-        ConsoleCout() = default;
-    public:
+
+        /** \copydoc IOutput::write() */
         void write(const LogMessage & message) override {
-            //std::cout << message << std::endl;
-            // TODO
+            std::cout << message.getFormattedMessage() << std::endl;
         }
 
+        /** \copydoc IOutput::flush() */
         void flush() override {
             std::cout << std::flush;
+        }
+
+        /** \copydoc IOutput::save() */
+        bool save() const override {
+            // Nothing to do>
+            return true;
+        }
+
+        /** \copydoc IOutput::clear() */
+        void clear() override {
+            // TODO
         }
 };
 

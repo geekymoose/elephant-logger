@@ -37,6 +37,18 @@ class IOutput {
          * Flush output now.
          */
         virtual void flush() = 0;
+
+        /**
+         * Clear the output.
+         */
+        virtual void clear() = 0;
+
+        /**
+         * Save output.
+         * May not be supported by all outputs.
+         * Save location may be set (ex: constructor).
+         */
+        virtual bool save() const = 0;
 };
 
 

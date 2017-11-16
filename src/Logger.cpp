@@ -1,8 +1,6 @@
 #include "Logger.h"
 
-#include "LoggerConfig.h"
-#include "LogOutputCout.h"
-#include "LogOutputVS.h"
+#include "utils/constants.h"
 
 #include <ctime>
 #include <experimental/filesystem>
@@ -22,15 +20,22 @@ void Logger::startup() {
     this->m_isRunning           = true;
     this->m_queueLogsFront      = &m_queueLogs1;
     this->m_queueLogsBack       = &m_queueLogs2;
-    this->m_isLogingInFile      = LOGGER_SETTINGS_DEFAULT_LOG_IN_FILE;
     this->m_logFilePath         = LOGGER_SETTINGS_DEFAULT_LOGPATH;
-    this->m_logFileSavePath     = LOGGER_SETTINGS_DEFAULT_LOGPATH_SAVE;
+
+    this->m_lookupChannels[0]   = std::unique_ptr<Channel>(new Channel());
+    this->m_lookupChannels[1]   = std::unique_ptr<Channel>(new Channel());
+    this->m_lookupChannels[2]   = std::unique_ptr<Channel>(new Channel());
+
+    if (LOGGER_SETTINGS_DEFAULT_ERASE_FILE_AT_START) {
+        this->m_lookupChannels[0]->clear();
+        this->m_lookupChannels[1]->clear();
+        this->m_lookupChannels[2]->clear();
+    }
+
     this->setLogLevel(LOGGER_SETTINGS_DEFAULT_LOG_LEVEL);
 
-    // Register all available log channles. (To add a new, place it here)
-    this->m_lookupChannels[static_cast<size_t>(LogOutputType::Vs)]   = std::unique_ptr<LogOutputVS>(new LogOutputVS());
-    this->m_lookupChannels[static_cast<size_t>(LogOutputType::Cout)] = std::unique_ptr<LogOutputCout>(new LogOutputCout());
 
+    /*
     if (this->m_isLogingInFile) {
         // Warning: Erase before linkWithFile() otherwise, files stream are opened.
         if (LOGGER_SETTINGS_DEFAULT_ERASE_FILE_AT_START) {
@@ -48,6 +53,7 @@ void Logger::startup() {
         this->m_lookupChannels[static_cast<size_t>(LogOutputType::Vs)]->linkWithFile(vsLogPath);
         this->m_lookupChannels[static_cast<size_t>(LogOutputType::Cout)]->linkWithFile(coutLogPath);
     }
+    */
 
     this->internalStartLoggerThread();
 }
@@ -57,7 +63,6 @@ void Logger::shutdown() {
     this->internalProcessBackQueue();
     this->internalSwapQueues();
     this->internalProcessBackQueue();
-    this->m_isLogingInFile = false;
 }
 
 
@@ -66,16 +71,24 @@ void Logger::shutdown() {
 // -----------------------------------------------------------------------------
 
 void Logger::queueLog(LogLevel level,
-                             LogOutputType output,
-                             char const* message,
-                             char const* file,
-                             int line) {
+                      const int channelID,
+                      char const* message,
+                      char const* file,
+                      int line) {
     if (this->m_isRunning && this->getLogLevel() >= level) {
-        this->internalQueueLog(level, output, message, file, line);
+        this->internalQueueLog(level, channelID, message, file, line);
     }
 }
 
 bool Logger::saveAllLogFiles() const {
+    this->m_lookupChannels[0]->save();
+    this->m_lookupChannels[1]->save();
+    this->m_lookupChannels[2]->save();
+
+    /*
+     * TODO To update (Just call save an each channel)
+     *
+
     if (this->m_isLogingInFile) {
         using Clock = std::chrono::system_clock;
         std::time_t startTime = Clock::to_time_t(Clock::now());
@@ -95,6 +108,7 @@ bool Logger::saveAllLogFiles() const {
             return false;
         }
     }
+    */
     return false;
 }
 
@@ -104,27 +118,20 @@ bool Logger::saveAllLogFiles() const {
 // -----------------------------------------------------------------------------
 
 void Logger::internalQueueLog(LogLevel level,
-                                     LogOutputType output,
-                                     std::string message,
-                                     std::string file,
-                                     const int line) {
-    // Message passed by copie, otherwise, local scope of variable would destroye it.
+                              const int channelID,
+                              std::string message,
+                              std::string file,
+                              const int line) {
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
-    this->m_queueLogsFront->emplace_back(level, output, std::move(message), std::move(file), line);
+    this->m_queueLogsFront->emplace_back(level, channelID, std::move(message), std::move(file), line);
+    // Message passed by copie, otherwise, local variable scope destroyes it.
 }
 
 void Logger::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
-        std::string formattedMessage = msg.getFormattedMessage();
-
-        auto& coco = m_lookupChannels[static_cast<size_t>(msg.getLogOutput())];
-        coco->print(formattedMessage);
-
-        if (this->m_isLogingInFile) {
-            coco->writeInFile(formattedMessage);
-        }
+        auto& coco = m_lookupChannels[static_cast<size_t>(msg.getChannelID())];
+        coco->write(msg);
     }
-
     this->m_queueLogsBack->clear();
 }
 
@@ -136,14 +143,14 @@ void Logger::internalSwapQueues() {
 void Logger::internalStartLoggerThread() {
     std::thread {
         [this]() {
-        while (this->m_isRunning) {
-            std::this_thread::sleep_for(std::chrono::milliseconds{
-                ElephantLogger::LOGGER_THREAD_UPDATE_RATE_IN_MILLISECONDS}
-            );
-            this->internalProcessBackQueue();
-            this->internalSwapQueues();
+            while (this->m_isRunning) {
+                std::this_thread::sleep_for(std::chrono::milliseconds{
+                    ElephantLogger::LOGGER_THREAD_UPDATE_RATE_IN_MILLISECONDS}
+                );
+                this->internalProcessBackQueue();
+                this->internalSwapQueues();
+            }
         }
-    }
     }.detach();
 }
 
@@ -158,12 +165,4 @@ void Logger::setLogLevel(const LogLevel level) {
 
 LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
-}
-
-void Logger::disableLogInFile() {
-    this->m_isLogingInFile = false;
-}
-
-void Logger::enableLogInFile() {
-    this->m_isLogingInFile = true;
 }

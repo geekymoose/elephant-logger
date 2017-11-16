@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IOutput.h"
+
 #include <string>
 #include <mutex>
 #include <fstream>
@@ -13,11 +15,17 @@ class LogMessage;
 /**
  * File logging output.
  *
+ * \note
+ * It implements IOutput but has some more specific components.
+ *
+ * \note
+ * All functions are thread safe.
+ *
  * \author  Constantin Masson
  * \since   1.0
  * \date    Nov 2017
  */
-class LogFile {
+class LogFile : public IOutput {
     private:
         /** Path of the log file (Without it's name). */
         std::string m_filePath;
@@ -60,31 +68,28 @@ class LogFile {
     public:
 
         /**
-         * Write a log message in this file and add a line return.
-         *
-         * \note
-         * This function is Thread safe.
-         *
-         * \param message The message to write.
+         * \copydoc IOutput::write()
          */
-        void write(const LogMessage & message);
+        void write(const LogMessage & message) override;
+
+        /**
+         * \copydoc IOutput::flush()
+         */
+        void flush() override;
 
         /**
          * Save the content of the log file.
          * Copy is placed in the same directory, but with current timestamp suffix.
          *
-         * \note
-         * This function is Thread safe.
-         *
          * \return True if saved successfully, otherwise, return false.
          */
-        bool save() const;
+        bool save() const override;
 
         /**
          * Clear content of the log file.
-         * This function is Thread safe.
          */
-        void clear();
+        void clear() override;
+
 
     private:
         bool internal_save(std::string & savePath) const;
