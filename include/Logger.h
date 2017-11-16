@@ -9,7 +9,7 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
-#include <memory>
+#include <memory> // unique_ptr
 #include <thread>
 
 
@@ -47,6 +47,17 @@ class Logger : private Singleton<Logger> {
 
         /** True if clear any output at start (ex: clear log file). */
         bool clearAtStart;
+
+        /**
+         * Initial size of the queue.
+         *
+         * Each time a message is queued, I use push_back,
+         * which is slow if has reached vector max size.
+         * To avoid this, we should initialize the queue with a size big enough
+         * to be hard to reach (Not enough logs in the queue)
+         * and small enough for memory use space.
+         */
+        int defaultQueueSize;
 
     private:
 

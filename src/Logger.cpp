@@ -3,6 +3,7 @@
 #include <ctime>
 #include <experimental/filesystem>
 
+
 using namespace ElephantLogger;
 
 
@@ -22,6 +23,7 @@ void Logger::startup() {
     LoggerConfig conf;
     conf.setDefaultConfig();
     this->applyConfig(conf);
+    conf.applyDefaultOutputs(this->m_lookupChannels);
 
     if(this->clearAtStart) {
         for(int k = 0; k < this->nbChannels; ++k) {
@@ -125,10 +127,12 @@ void Logger::applyConfig(const LoggerConfig& config) {
     this->m_logFilePath     = config.logFilePath;
     this->threadUpdateRate  = config.threadUpdateRate;
     this->clearAtStart      = config.clearAtStart;
+    this->defaultQueueSize  = config.defaultQueueSize;
 
     for(int k = 0; k < this->nbChannels; ++k) {
         this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
     }
 
-    // TODO Instanciate all Output for each channel
+    this->m_queueLogs1.reserve(this->defaultQueueSize);
+    this->m_queueLogs2.reserve(this->defaultQueueSize);
 }

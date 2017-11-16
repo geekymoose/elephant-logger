@@ -16,9 +16,6 @@ class LogMessage;
  * File logging output.
  *
  * \note
- * It implements IOutput but has some more specific components.
- *
- * \note
  * All functions are thread safe.
  *
  * \author  Constantin Masson
