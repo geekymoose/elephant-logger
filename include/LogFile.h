@@ -14,6 +14,7 @@ class LogMessage;
  * File logging output.
  *
  * \author  Constantin Masson
+ * \since   1.0
  * \date    Nov 2017
  */
 class LogFile {

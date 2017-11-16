@@ -13,11 +13,16 @@ namespace ElephantLogger {
  *     // Your code
  * };
  * \endcode
+ *
+ * \author  Constantin Masson
+ * \since   1.0
+ * \date    Oct 2017
  */
 template <class T>
 class Uncopyable {
     public:
         Uncopyable() = default;
+        virtual ~Uncopyable() = default;
 
     private:
         Uncopyable(Uncopyable<T> const& other) = delete;

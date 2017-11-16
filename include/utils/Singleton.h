@@ -2,6 +2,7 @@
 
 #include "Uncopyable.h"
 
+
 namespace ElephantLogger {
 
 
@@ -23,6 +24,10 @@ namespace ElephantLogger {
  *          void destroy() override;
  * };
  * \endcode
+ *
+ * \author  Constantin Masson
+ * \since   1.0
+ * \date    Oct 2017
  */
 template <class T>
 class Singleton : private Uncopyable<Singleton<T>> {
@@ -36,10 +41,6 @@ class Singleton : private Uncopyable<Singleton<T>> {
             static T m_instance;
             return m_instance;
         }
-
-    public:
-        virtual void startup() = 0;
-        virtual void shutdown() = 0;
 };
 
 

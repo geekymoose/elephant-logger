@@ -1,6 +1,6 @@
 #pragma once
 
-#include "helper/Singleton.h"
+#include "utils/Singleton.h"
 #include "LogOutput.h"
 #include "LogOutputType.h"
 #include "LogMessage.h"
