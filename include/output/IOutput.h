@@ -31,7 +31,12 @@ class IOutput {
          *
          * \param message The message to print in the channel.
          */
-        virtual void write(const LogMessage & message) const = 0;
+        virtual void write(const LogMessage & message) = 0;
+
+        /**
+         * Flush output now.
+         */
+        virtual void flush() = 0;
 };
 
 

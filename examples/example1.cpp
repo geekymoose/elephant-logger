@@ -1,5 +1,9 @@
 #include "ElephantLogger.h"
 
+#include "core/Channel.h"
+#include "output/ConsoleCout.h"
+#include "output/ConsoleVS.h"
+
 #include <chrono>
 #include <thread>
 
@@ -7,6 +11,12 @@
 int main(int argc, char** argv) {
 
     ElephantLogger::Logger::get().startup();
+
+    // TODO Tmp debug for channel
+    ElephantLogger::Channel c;
+    ElephantLogger::ConsoleCout cc;
+    c.addOutput(&cc);
+    //c.write();
 
     LOG_ERROR("1. TEST ERROR");
     LOG_WARNING("2. TEST WARNING");

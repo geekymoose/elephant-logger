@@ -18,9 +18,15 @@ namespace ElephantLogger {
  */
 class ConsoleCout : public IOutput {
     public:
+        ConsoleCout() = default;
+    public:
         void write(const LogMessage & message) override {
             //std::cout << message << std::endl;
             // TODO
+        }
+
+        void flush() override {
+            std::cout << std::flush;
         }
 };
 

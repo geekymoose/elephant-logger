@@ -33,6 +33,10 @@ class ConsoleVS : public IOutput {
                 // TODO
 #           endif
         }
+
+        void flush() override {
+            // TODO
+        }
 };
 
 
