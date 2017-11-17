@@ -8,6 +8,8 @@ namespace ElephantLogger {
 
 /**
  * Singleton interface.
+ * Any class that inherits from Singleton is not more instanciable.
+ * Singleton can't be copied nor instanciated (ex: new).
  *
  * \note
  * Example to implement a singleton class A:
@@ -24,6 +26,7 @@ namespace ElephantLogger {
  *          void destroy() override;
  * };
  * \endcode
+ *
  *
  * \author  Constantin Masson
  * \since   1.0
