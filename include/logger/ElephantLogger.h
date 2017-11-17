@@ -12,7 +12,7 @@ namespace ElephantLogger {
      * Initialize the logger and all its subsystem..
      * Must be called once at the beginning.
      */
-    void init() {
+    inline void init() {
         Logger::get().startup();
     }
 }
