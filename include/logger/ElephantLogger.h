@@ -13,7 +13,7 @@ namespace ElephantLogger {
      * Must be called once at the beginning.
      */
     void init() {
-        ElephantLogger::Logger::get().startup();
+        Logger::get().startup();
     }
 }
 
