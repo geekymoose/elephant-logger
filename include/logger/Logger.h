@@ -86,7 +86,7 @@ class Logger : private Singleton<Logger> {
     private:
         friend Singleton<Logger>;
         Logger() = default;
-        ~Logger() = default;
+        ~Logger();
 
     public:
         using Singleton<Logger>::get;

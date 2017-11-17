@@ -7,8 +7,12 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
 endif()
 
 
-# Dependencies
 include(CMake/CompilerFlags.cmake)
 include(CMake/CreateLibrary.cmake)
-#include(CMake/Examples.cmake)
+
+option(EXAMPLES "Generate all examples executables" ON)
+if(EXAMPLES)
+    message(STATUS "Generate examples")
+    include(CMake/Examples.cmake)
+endif()
 
