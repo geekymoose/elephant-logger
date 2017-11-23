@@ -13,15 +13,16 @@
 
 
 namespace fs = std::experimental::filesystem;
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
  * All configuration for this Logger.
  *
  * \note
- * Only hard coded config is implemented.
- * Update would be to use JSON config file to fill up this config.
+ * TODO
+ * Only hard coded configuration is implemented.
+ * Update would be to use JSON configuration file to fill up this data.
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -79,3 +80,5 @@ class LoggerConfig {
 
 
 } // End namespace
+
+

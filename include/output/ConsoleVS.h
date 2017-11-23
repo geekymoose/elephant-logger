@@ -12,11 +12,13 @@
 #endif
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
  * A debug console that print on Visual Studio output.
+ *
+ * \note
  * If VS not supported (Ex: Linux), use std::cout instead.
  *
  * \author  Constantin Masson
@@ -26,7 +28,9 @@ namespace ElephantLogger {
 class ConsoleVS : public IOutput {
 
     public:
-        /** \copydoc IOutput::write() */
+        /**
+         * \copydoc IOutput::write()
+         */
         void write(const LogMessage & message) override {
 #           if defined(_WIN32) || defined(_WIN64)
                 std::string msg = message.getFormattedMessage() + "\n";
@@ -36,7 +40,9 @@ class ConsoleVS : public IOutput {
 #           endif
         }
 
-        /** \copydoc IOutput::flush() */
+        /**
+         * \copydoc IOutput::flush()
+         */
         void flush() override {
 #           if defined(_WIN32) || defined(_WIN64)
                 // A way to flush VS Console?
@@ -45,13 +51,17 @@ class ConsoleVS : public IOutput {
 #           endif
         }
 
-        /** \copydoc IOutput::save() */
+        /**
+         * \copydoc IOutput::save()
+         */
         bool save() const override {
             // Nothing to do>
             return true;
         }
 
-        /** \copydoc IOutput::clear() */
+        /**
+         * \copydoc IOutput::clear()
+         */
         void clear() override {
             // TODO
         }

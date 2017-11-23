@@ -3,7 +3,7 @@
 #include "cstdint" // For int8_t
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
@@ -31,10 +31,12 @@ enum LogLevel : std::int8_t {
     Size            // Enum's size: Number of defined LogLevels (TO KEEP LAST).
 };
 
+
 class LogLevelHelper {
     private:
         LogLevelHelper() = delete;
         ~LogLevelHelper() = delete;
+
     public:
         static const char* logLevelToString(LogLevel level) {
             switch(level) {

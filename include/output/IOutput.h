@@ -3,7 +3,8 @@
 #include <fstream>
 
 
-namespace ElephantLogger {
+namespace elephant {
+
 class LogMessage;
 
 
@@ -53,3 +54,6 @@ class IOutput {
 
 
 } // End namespace
+
+
+

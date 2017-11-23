@@ -1,10 +1,10 @@
 #include "logger/Logger.h"
 
 #include <ctime>
-#include <stdarg.h>
+#include <stdarg.h> // va_list
 
 
-using namespace ElephantLogger;
+using namespace elephant;
 
 
 // -----------------------------------------------------------------------------

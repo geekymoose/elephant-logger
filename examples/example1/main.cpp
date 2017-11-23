@@ -1,4 +1,4 @@
-#include "logger/ElephantLogger.h"
+#include "logger/elephant.h"
 
 #include <chrono>
 #include <thread>
@@ -7,7 +7,7 @@
 // A simple test
 int main(int argc, char** argv) {
 
-    ElephantLogger::init();
+    elephant::init();
 
     LOG_WTF(0, "1. TEST ERROR");
     LOG_ERROR(0, "1. TEST ERROR");

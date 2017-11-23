@@ -3,7 +3,7 @@
 #include <vector>
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 class LogMessage;
 class IOutput;

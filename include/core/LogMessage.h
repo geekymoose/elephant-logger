@@ -7,12 +7,13 @@
 #include <stdarg.h> // va_list
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 
 /**
  * Internal representation of a log message.
+ * A message can't excess a defined size. (Usually 256 characters).
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -33,7 +34,7 @@ class LogMessage {
 
 
     // -------------------------------------------------------------------------
-    // Init
+    // Initialization
     // -------------------------------------------------------------------------
     public:
         LogMessage(const LogLevel logLevel,
@@ -52,7 +53,7 @@ class LogMessage {
 
         /**
          * Returns the Formatted version of the message.
-         * (Message is truncated if length highter than max size).
+         * Message is truncated if length higher than max size.
          *
          * \return Formatted version of the message.
          */
@@ -69,3 +70,5 @@ class LogMessage {
 
 
 } // End namespace
+
+

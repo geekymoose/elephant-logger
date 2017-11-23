@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
@@ -21,23 +21,31 @@ class ConsoleCout : public IOutput {
 
     public:
 
-        /** \copydoc IOutput::write() */
+        /**
+         * \copydoc IOutput::write()
+         */
         void write(const LogMessage & message) override {
             std::cout << message.getFormattedMessage() << std::endl;
         }
 
-        /** \copydoc IOutput::flush() */
+        /**
+         * \copydoc IOutput::flush()
+         */
         void flush() override {
             std::cout << std::flush;
         }
 
-        /** \copydoc IOutput::save() */
+        /**
+         * \copydoc IOutput::save()
+         */
         bool save() const override {
             // Nothing to do>
             return true;
         }
 
-        /** \copydoc IOutput::clear() */
+        /**
+         * \copydoc IOutput::clear()
+         */
         void clear() override {
             // TODO
         }
@@ -45,3 +53,5 @@ class ConsoleCout : public IOutput {
 
 
 } // End namespace
+
+

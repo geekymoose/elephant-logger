@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "utils/Singleton.h"
 #include "core/LogLevel.h"
 #include "core/Channel.h"
@@ -9,16 +10,16 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
-#include <memory> // unique_ptr
 #include <thread>
-#include <stdio.h> // va_list
+#include <memory>   // unique_ptr
+#include <stdarg.h> // va_list
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
- * The Famouse Ugly Logger (Singleton).
+ * The Famous Ugly Logger (Singleton).
  *
  * Run inside it's own thread (all functions are thread safe).
  * The user thread only queue message to be processed.
@@ -80,7 +81,7 @@ class Logger : private Singleton<Logger> {
         /** Point to the vector currently processed by the Logger. */
         std::vector<LogMessage>* m_queueLogsBack;
 
-        /** Mutex for FrontLogs queue access. */
+        /** Mutex for Front Logs queue access. */
         std::mutex m_queuesFrontAccessMutex;
 
 
@@ -99,9 +100,9 @@ class Logger : private Singleton<Logger> {
         void shutdown();
 
 
-    // -----------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // Core Methods
-    // -----------------------------------------------------------------
+    // -------------------------------------------------------------------------
     public:
 
         /**
@@ -171,8 +172,8 @@ class Logger : private Singleton<Logger> {
         void internalSwapQueues();
 
         /**
-         * Runs the LoggerEngine in a new thread.
-         * LoggerEngine can be started only if it's not already running.
+         * Runs the Logger Component in a new thread.
+         * Logger can be started only if it's not already running.
          */
         void internalStartLoggerThread();
 

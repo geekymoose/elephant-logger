@@ -4,10 +4,10 @@
 
 #include <string>
 #include <mutex>
-#include <fstream>
+#include <fstream> //for ofstream
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 class LogMessage;
 
@@ -23,6 +23,10 @@ class LogMessage;
  * \date    Nov 2017
  */
 class LogFile : public IOutput {
+
+    // -------------------------------------------------------------------------
+    // Variables
+    // -------------------------------------------------------------------------
     private:
         /** Path of the log file (Without it's name). */
         std::string m_filePath;
@@ -40,6 +44,9 @@ class LogFile : public IOutput {
         mutable std::mutex m_streamAccess;
 
 
+    // -------------------------------------------------------------------------
+    // Initialization
+    // -------------------------------------------------------------------------
     public:
 
         /**
@@ -62,6 +69,9 @@ class LogFile : public IOutput {
         ~LogFile();
 
 
+    // -------------------------------------------------------------------------
+    // IOutPut override
+    // -------------------------------------------------------------------------
     public:
 
         /**
@@ -88,9 +98,14 @@ class LogFile : public IOutput {
         void clear() override;
 
 
+    // -------------------------------------------------------------------------
+    // Internal methods
+    // -------------------------------------------------------------------------
     private:
         bool internal_save(std::string & savePath) const;
 };
 
 
 } // End namespace
+
+

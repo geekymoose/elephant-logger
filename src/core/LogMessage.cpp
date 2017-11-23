@@ -1,10 +1,10 @@
 #include "core/LogMessage.h"
 
-#include <string.h>
-#include <stdio.h>
+#include <string.h> // memcpy
+#include <stdio.h>  // printf
 
 
-using namespace ElephantLogger;
+using namespace elephant;
 
 
 LogMessage::LogMessage(const LogLevel logLevel,
@@ -20,7 +20,7 @@ LogMessage::LogMessage(const LogLevel logLevel,
       m_creationTime(std::time(nullptr)) {
           memcpy(this->m_file, file, strlen(file));
           memcpy(this->m_function, function, strlen(function));
-          vsnprintf(m_message, 256, format, argList);
+          vsnprintf(m_message, 255, format, argList);
 }
 
 const std::string LogMessage::getFormattedMessage() const {
@@ -38,4 +38,5 @@ const std::string LogMessage::getFormattedMessage() const {
 const int LogMessage::getChannelID() const {
     return this->m_channelID;
 }
+
 

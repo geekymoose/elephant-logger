@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
@@ -34,3 +34,5 @@ class Uncopyable {
 
 
 } // End namespace
+
+

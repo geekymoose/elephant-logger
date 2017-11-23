@@ -3,7 +3,7 @@
 #include "Uncopyable.h"
 
 
-namespace ElephantLogger {
+namespace elephant {
 
 
 /**
@@ -48,3 +48,6 @@ class Singleton : private Uncopyable<Singleton<T>> {
 
 
 } // End namespace
+
+
+
