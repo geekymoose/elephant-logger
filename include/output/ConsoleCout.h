@@ -3,7 +3,6 @@
 #include "IOutput.h"
 #include "core/LogMessage.h"
 
-#include <string>
 #include <iostream>
 
 

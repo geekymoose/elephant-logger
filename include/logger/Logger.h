@@ -3,7 +3,6 @@
 
 #include "utils/Singleton.h"
 #include "core/LogLevel.h"
-#include "core/Channel.h"
 #include "core/LogMessage.h"
 #include "LoggerConfig.h"
 
@@ -12,10 +11,12 @@
 #include <atomic>
 #include <thread>
 #include <memory>   // unique_ptr
-#include <stdarg.h> // va_list
+#include <cstdarg>  // va_list
 
 
 namespace elephant {
+
+class Channel;
 
 
 /**

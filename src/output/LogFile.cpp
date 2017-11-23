@@ -1,5 +1,4 @@
 #include "output/LogFile.h"
-
 #include "core/LogMessage.h"
 
 #include <experimental/filesystem>

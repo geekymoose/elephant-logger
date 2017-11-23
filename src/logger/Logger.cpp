@@ -1,8 +1,5 @@
 #include "logger/Logger.h"
 
-#include <ctime>
-#include <stdarg.h> // va_list
-
 
 using namespace elephant;
 
