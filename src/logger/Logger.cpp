@@ -1,7 +1,7 @@
 #include "logger/Logger.h"
 
 #include <ctime>
-#include <experimental/filesystem>
+#include <stdarg.h>
 
 
 using namespace ElephantLogger;
@@ -52,11 +52,16 @@ void Logger::shutdown() {
 
 void Logger::queueLog(LogLevel level,
                       const int channelID,
-                      char const* message,
-                      char const* file,
-                      int line) {
+                      const char* file,
+                      const int line,
+                      const char* function,
+                      const char* format,
+                      ...) {
     if (this->m_isRunning && this->getLogLevel() >= level) {
-        this->internalQueueLog(level, channelID, message, file, line);
+        va_list argList;
+        va_start(argList, format);
+        this->internalQueueLog(level, channelID, file, line, function, format, argList);
+        va_end(argList);
     }
 }
 
@@ -74,12 +79,13 @@ bool Logger::saveAllLogFiles() const {
 
 void Logger::internalQueueLog(LogLevel level,
                               const int channelID,
-                              std::string message,
-                              std::string file,
-                              const int line) {
+                              const char* file,
+                              const int line,
+                              const char* function,
+                              const char* format,
+                              va_list argList) {
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
-    this->m_queueLogsFront->emplace_back(level, channelID, std::move(message), std::move(file), line);
-    // Message passed by copie, otherwise, local variable scope destroyes it.
+    this->m_queueLogsFront->emplace_back(level, channelID, file, line, function, format, argList);
 }
 
 void Logger::internalProcessBackQueue() {

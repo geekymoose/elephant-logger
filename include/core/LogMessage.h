@@ -4,6 +4,7 @@
 
 #include <ctime>
 #include <string>
+#include <stdarg.h> // va_list
 
 
 namespace ElephantLogger {
@@ -22,12 +23,12 @@ class LogMessage {
     // Attributes
     // -------------------------------------------------------------------------
     private:
-        LogLevel            m_logLevel;
-        int                 m_channelID;
-        std::string         m_message;
-
-        const std::string   m_filePosition;
-        const int           m_linePosition;
+        const LogLevel      m_logLevel;
+        const int           m_channelID;
+        char                m_file[256];
+        const int           m_line;
+        char                m_function[256];
+        char                m_message[256];
         const std::time_t   m_creationTime;
 
 
@@ -37,9 +38,11 @@ class LogMessage {
     public:
         LogMessage(const LogLevel logLevel,
                    const int channelID,
-                   std::string&& message,
-                   std::string&& file,
-                   const int line);
+                   const char* file,
+                   const int line,
+                   const char* function,
+                   const char* format,
+                   va_list argList);
 
 
     // -------------------------------------------------------------------------

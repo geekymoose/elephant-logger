@@ -1,6 +1,7 @@
 #include "core/LogMessage.h"
 
-#include <string>
+#include <string.h>
+#include <stdio.h>
 
 
 using namespace ElephantLogger;
@@ -8,15 +9,18 @@ using namespace ElephantLogger;
 
 LogMessage::LogMessage(const LogLevel logLevel,
                        const int channelID,
-                       std::string&& message,
-                       std::string&& file,
-                       const int line)
+                       const char* file,
+                       const int line,
+                       const char* function,
+                       const char* format,
+                       va_list argList)
     : m_logLevel(logLevel),
       m_channelID(channelID),
-      m_message(std::move(message)),
-      m_filePosition(std::move(file)),
-      m_linePosition(line),
+      m_line(line),
       m_creationTime(std::time(nullptr)) {
+          memcpy(this->m_file, file, strlen(file));
+          memcpy(this->m_function, function, strlen(function));
+          vsnprintf(m_message, 256, format, argList);
 }
 
 const std::string LogMessage::getFormattedMessage() const {

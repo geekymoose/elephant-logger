@@ -11,6 +11,7 @@
 #include <atomic>
 #include <memory> // unique_ptr
 #include <thread>
+#include <stdio.h> // va_list
 
 
 namespace ElephantLogger {
@@ -18,7 +19,9 @@ namespace ElephantLogger {
 
 /**
  * The Famouse Ugly Logger (Singleton).
+ *
  * Run inside it's own thread (all functions are thread safe).
+ * The user thread only queue message to be processed.
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -34,7 +37,8 @@ class Logger : private Singleton<Logger> {
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
         /** Lookup array of all available channels. */
-        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
+        std::unique_ptr<Channel>
+            m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
 
         /** Number of channels actually in use. */
         int nbChannels;
@@ -102,6 +106,8 @@ class Logger : private Singleton<Logger> {
 
         /**
          * Queue a log to be processed by the respective Output.
+         * This function is meant be be as fast as possible.
+         * Only queue the message to be processed later by logger thread.
          *
          * \remark
          * Only logs more critical or equal to current LogLevel are queued.
@@ -111,15 +117,19 @@ class Logger : private Singleton<Logger> {
          *
          * \param level     Log Level for this message.
          * \param channelID ID of the channel where to write log.
-         * \param message   The row message to display.
          * \param file      File that created the log
          * \param line      Line position in file.
+         * \param function  Function's name.
+         * \param format    Row message, using printf convention (%s, %d etc).
+         * \param ...       Variable list of parameters.
          */
-        void queueLog(LogLevel const level,
+        void queueLog(const LogLevel level,
                       const int channelID,
-                      char const* message,
-                      char const* file,
-                      const int line);
+                      const char* file,
+                      const int line,
+                      const char* function,
+                      const char* format,
+                      ...);
 
         /**
          * Save all logs in a save directory.
@@ -144,14 +154,20 @@ class Logger : private Singleton<Logger> {
          */
         void internalQueueLog(LogLevel level,
                               const int channelID,
-                              std::string message,
-                              std::string file,
-                              const int line);
+                              const char* file,
+                              const int line,
+                              const char* function,
+                              const char* format,
+                              va_list argList);
 
-        /** Process each elements from the back queue and clear it.  */
+        /**
+         * Process each elements from the back queue and clear it.
+         */
         void internalProcessBackQueue();
 
-        /** Swap front and back queue buffers.  */
+        /**
+         * Swap front and back queue buffers.
+         */
         void internalSwapQueues();
 
         /**
@@ -166,16 +182,24 @@ class Logger : private Singleton<Logger> {
     // -------------------------------------------------------------------------
     public:
 
-        /** Changes the current log level. */
+        /**
+         * Changes the current log level.
+         */
         void setLogLevel(const LogLevel level);
 
-        /** Returns the current log level. */
+        /**
+         * Returns the current log level.
+         */
         LogLevel getLogLevel() const;
 
-        /** Change all settings with config value. */
+        /**
+         * Change all settings with config value.
+         */
         void applyConfig(const LoggerConfig& config);
 
 }; // End Logger class
 
 
 } // End namespace
+
+

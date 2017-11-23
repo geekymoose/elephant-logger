@@ -5,11 +5,14 @@
 
 #include "Logger.h"
 
+#include <stdarg.h>
+#include <stdio.h>
+
 
 namespace ElephantLogger {
 
     /**
-     * Initialize the logger and all its subsystem..
+     * Initialize the logger and all its subsystem.
      * Must be called once at the beginning.
      */
     inline void init() {
@@ -22,10 +25,10 @@ namespace ElephantLogger {
 // End user macros
 // -----------------------------------------------------------------------------
 
-#define LOG_WTF(channelID, msg)      ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Wtf,      channelID, msg, __FILE__, __LINE__)
-#define LOG_ERROR(channelID, msg)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Error,    channelID, msg, __FILE__, __LINE__)
-#define LOG_WARNING(channelID, msg)  ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Warning,  channelID, msg, __FILE__, __LINE__)
-#define LOG_CONFIG(channelID, msg)   ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Config,   channelID, msg, __FILE__, __LINE__)
-#define LOG_INFO(channelID, msg)     ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Info,     channelID, msg, __FILE__, __LINE__)
-#define LOG_TRACE(channelID, msg)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Trace,    channelID, msg, __FILE__, __LINE__)
-#define LOG_DEBUG(channelID, msg)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Debug,    channelID, msg, __FILE__, __LINE__)
+#define LOG_WTF(channelID, format, ...)      ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Wtf,      channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_ERROR(channelID, format, ...)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Error,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_WARNING(channelID, format, ...)  ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Warning,  channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_CONFIG(channelID, format, ...)   ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Config,   channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_INFO(channelID, format, ...)     ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Info,     channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_TRACE(channelID, format, ...)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Trace,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_DEBUG(channelID, format, ...)    ElephantLogger::Logger::get().queueLog(ElephantLogger::LogLevel::Debug,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
