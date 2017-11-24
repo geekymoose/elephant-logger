@@ -16,6 +16,17 @@ namespace elephant {
     inline void init() {
         Logger::get().startup();
     }
+
+    /**
+     * Save all current logs.
+     * Place where logs are saved is defined in configuration.
+     *
+     * \note
+     * Only certain log output are saved (Generally FileLog output).
+     */
+    inline void saveLogs() {
+        Logger::get().saveAllLogFiles();
+    }
 }
 
 
