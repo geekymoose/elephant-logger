@@ -4,7 +4,7 @@
 
 #include <thread>
 
-// A simple test with several files using the logger.
+// A simple example with several files using the logger.
 int main(int argc, char** argv) {
     elephant::init();
     LOG_INFO(0, "Start example 2");
