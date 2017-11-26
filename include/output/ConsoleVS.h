@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IOutput.h"
-#include "core/LogMessage.h"
+#include "logger/LogMessage.h"
 
 #include <string>
 

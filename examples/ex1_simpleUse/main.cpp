@@ -1,4 +1,4 @@
-#include "logger/elephant.h"
+#include "elephant.h"
 
 #include <chrono>
 #include <thread>
@@ -9,13 +9,13 @@ int main(int argc, char** argv) {
 
     elephant::init();
 
-    LOG_WTF(0, "1. TEST ERROR");
-    LOG_ERROR(0, "1. TEST ERROR");
-    LOG_WARNING(0, "2. TEST WARNING");
-    LOG_CONFIG(0, "3. TEST CONFIG");
-    LOG_INFO(0, "4. TEST INFO");
-    LOG_TRACE(0, "5. TEST TRACE");
-    LOG_DEBUG(0, "6. TEST DEBUG");
+    LOG_WTF(0, "Log WTF");
+    LOG_ERROR(0, "Log error");
+    LOG_WARNING(0, "Log warning");
+    LOG_CONFIG(0, "Log config");
+    LOG_INFO(0, "Log info");
+    LOG_TRACE(0, "Log trace");
+    LOG_DEBUG(0, "Log debug");
 
     LOG_DEBUG(0, "Integer value: %d", 42);
     LOG_DEBUG(0, "Float value: %f", 31.9);

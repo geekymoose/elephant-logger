@@ -1,5 +1,5 @@
 #include "output/LogFile.h"
-#include "core/LogMessage.h"
+#include "logger/LogMessage.h"
 
 #include <experimental/filesystem>
 #include <chrono>

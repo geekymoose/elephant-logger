@@ -1,4 +1,4 @@
-#include "core/LogMessage.h"
+#include "logger/LogMessage.h"
 
 #include <string.h> // memcpy
 #include <stdio.h>  // printf

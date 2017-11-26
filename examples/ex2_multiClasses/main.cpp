@@ -1,4 +1,4 @@
-#include "logger/elephant.h"
+#include "elephant.h"
 #include "MyClass1.h"
 #include "MyClass2.h"
 

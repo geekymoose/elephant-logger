@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Logger.h"
-#include <stdarg.h>
+#include "logger/Logger.h"
+#include <stdarg.h> // va_args
 
 // ENTRY POINT for this terrible Elephant Logger.
 // This is the only header to include in your project.
@@ -23,6 +23,7 @@ namespace elephant {
      *
      * \note
      * Only certain log output are saved (Generally FileLog output).
+     * Depends of the actual IOutput implementation.
      */
     inline void saveLogs() {
         Logger::get().saveAllLogFiles();

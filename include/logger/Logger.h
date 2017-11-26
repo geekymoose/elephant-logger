@@ -1,10 +1,10 @@
 #pragma once
 
 
-#include "utils/Singleton.h"
-#include "core/LogLevel.h"
-#include "core/LogMessage.h"
+#include "LogLevel.h"
+#include "LogMessage.h"
 #include "LoggerConfig.h"
+#include "utils/Singleton.h"
 
 #include <vector>
 #include <mutex>
