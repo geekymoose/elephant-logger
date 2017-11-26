@@ -8,10 +8,6 @@ Channel::Channel() {
     this->m_listOutputs.reserve(3); // Pre-allocate 3 places for output.
 }
 
-Channel::~Channel() {
-    this->flush();
-}
-
 void Channel::addOutput(IOutput* output) {
     this->m_listOutputs.push_back(output);
 }

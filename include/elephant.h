@@ -1,6 +1,8 @@
 #pragma once
 
 #include "logger/Logger.h"
+#include "utils/LoggerAutoInstaller.h"
+
 #include <stdarg.h> // va_args
 
 // ENTRY POINT for this terrible Elephant Logger.
@@ -11,10 +13,13 @@ namespace elephant {
 
     /**
      * Initialize the logger and all its subsystem.
-     * Must be called once at the beginning.
+     *
+     * \warning
+     * Must be called once at the beginning. (In main)
      */
     inline void init() {
-        Logger::get().startup();
+        // Use of autoinstaller to properly cleanup logger thread before destroyed.
+        static LoggerAutoInstaller elephantLoggerEngine;
     }
 
     /**

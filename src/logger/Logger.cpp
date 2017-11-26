@@ -8,10 +8,6 @@ using namespace elephant;
 // Init
 // -----------------------------------------------------------------------------
 
-Logger::~Logger() {
-    this->shutdown();
-}
-
 void Logger::startup() {
     if (this->m_isRunning) {
         return;
