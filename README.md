@@ -1,6 +1,6 @@
 # Elephant Logger
+[![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger-realtime.svg?branch=master)](https://travis-ci.org/GeekyMoose/elephant-logger-realtime)
 ![LittleElephant](https://i.imgur.com/zXS7zHs.png)
-[Made by Marie-Pier Bouffard](https://www.artstation.com/mariepierbouffard)
 
 > Your code
 
@@ -157,3 +157,4 @@ int main(int argc, char** argv) {
 
 # Author
 Constantin Masson ([constantinmasson.com](http://constantinmasson.com/))
+Logo made by [Marie-Pier Bouffard](https://www.artstation.com/mariepierbouffard)
