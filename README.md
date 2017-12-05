@@ -1,6 +1,12 @@
 # Elephant Logger
-[![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger-realtime.svg?branch=master)](https://travis-ci.org/GeekyMoose/elephant-logger-realtime)
-![LittleElephant](https://i.imgur.com/zXS7zHs.png)
+C++ logger library for multithreading realtime system using printf like format.
+
+[![release-version](https://img.shields.io/badge/release-beta--version-red.svg)]()
+[![build-status](https://travis-ci.org/GeekyMoose/elephant-logger-realtime.svg?branch=master)](https://travis-ci.org/GeekyMoose/elephant-logger-realtime)
+[![license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/GeekyMoose/elephant-logger-realtime/blob/dev/LICENSE.txt)
+
+![icon-LittleElephant](https://i.imgur.com/zXS7zHs.png)
+
 
 > Your code
 
@@ -28,15 +34,26 @@ for(int counter = 1; counter < 4; ++counter) {
 
 > Execution
 
-![Screenshot - Example](https://i.imgur.com/OJKpjmW.png)
+![screenshot-example](https://i.imgur.com/OJKpjmW.png)
 
 
-# Work in progress
+
+
+
+# Overview
+
+## Work in progress
 > Work in progress. Important change may still happened.
 > This doc may be not at the last up to date state.
 
 
-# Description
+## Performance
+> Though my goal was to have something perfomant, I still need to do all the performance,
+> profiling tests before I can validate this.
+> For now, beware if you are using it! (Specially with too many threads).
+
+
+## Description
 This project is a C++ logger designed for Realtime softwares.
 Realtime doesn't mean here that logs are displayed in realtime.
 Instead, the goal is that logging shouldn't affect the programme execution time.
