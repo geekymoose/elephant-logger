@@ -1,3 +1,5 @@
+include_directories("${CMAKE_SOURCE_DIR}/include")
+
 
 # Example 1
 add_executable(example1 examples/ex1_simpleUse/main.cpp)
