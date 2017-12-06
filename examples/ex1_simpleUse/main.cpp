@@ -1,4 +1,4 @@
-#include "elephantlogger.h"
+#include "elephantlogger/log.h"
 
 #include <chrono>
 #include <thread>

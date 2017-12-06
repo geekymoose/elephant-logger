@@ -4,7 +4,7 @@
 #include "LogLevel.h"
 #include "LogMessage.h"
 #include "LoggerConfig.h"
-#include "utils/Singleton.h"
+#include "elephantlogger/utils/Singleton.h"
 
 #include <vector>
 #include <mutex>

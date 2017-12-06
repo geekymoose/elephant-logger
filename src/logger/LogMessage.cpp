@@ -1,4 +1,4 @@
-#include "logger/LogMessage.h"
+#include "elephantlogger/logger/LogMessage.h"
 
 #include <string.h> // memcpy
 #include <stdio.h>  // printf

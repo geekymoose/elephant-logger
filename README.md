@@ -76,7 +76,7 @@ The logger is started on its own thread which then process the logs, print them,
 - Build the logger library (Or download the build if available).
 - Add elephant `include` path in your project includes path.
 - Add static library in your project dependencies.
-- Add `#include <elephantlogger.h>` into your cpp/h files.
+- Add `#include <elephantlogger/log.h>` into your cpp/h files.
 - Call `elephant::init()` in your main.
 - You're done!
 
@@ -131,7 +131,7 @@ make ex1
 > Several examples are available in `examples` directory.
 
 ```
-#include "elephantlogger.h"
+#include "elephantlogger/log.h"
 
 #include <chrono>
 #include <thread>

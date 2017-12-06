@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IOutput.h"
-#include "logger/LogMessage.h"
+#include "elephantlogger/logger/LogMessage.h"
 
 #include <iostream>
 
