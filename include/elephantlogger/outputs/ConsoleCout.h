@@ -1,12 +1,11 @@
 #pragma once
 
 #include "IOutput.h"
-#include "elephantlogger/logger/LogMessage.h"
-
-#include <iostream>
 
 
 namespace elephantlogger {
+
+class LogMessage;
 
 
 /**
@@ -23,31 +22,22 @@ class ConsoleCout : public IOutput {
         /**
          * \copydoc IOutput::write()
          */
-        void write(const LogMessage & message) override {
-            std::cout << message.getFormattedMessage() << std::endl;
-        }
+        void write(const LogMessage & message) override;
 
         /**
          * \copydoc IOutput::flush()
          */
-        void flush() override {
-            std::cout << std::flush;
-        }
+        void flush() override;
 
         /**
          * \copydoc IOutput::save()
          */
-        bool save() const override {
-            // Nothing to do>
-            return true;
-        }
+        bool save() const override;
 
         /**
          * \copydoc IOutput::clear()
          */
-        void clear() override {
-            // TODO
-        }
+        void clear() override;
 };
 
 

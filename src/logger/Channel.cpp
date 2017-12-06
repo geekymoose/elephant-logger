@@ -1,5 +1,5 @@
 #include "elephantlogger/logger/Channel.h"
-#include "elephantlogger/output/IOutput.h"
+#include "elephantlogger/outputs/IOutput.h"
 
 using namespace elephantlogger;
 

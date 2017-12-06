@@ -1,4 +1,4 @@
-#include "elephantlogger/output/LogFile.h"
+#include "elephantlogger/outputs/LogFile.h"
 #include "elephantlogger/logger/LogMessage.h"
 
 #include <experimental/filesystem>

@@ -2,9 +2,9 @@
 
 #include "LogLevel.h"
 #include "Channel.h"
-#include "elephantlogger/output/ConsoleVS.h"
-#include "elephantlogger/output/ConsoleCout.h"
-#include "elephantlogger/output/LogFile.h"
+#include "elephantlogger/outputs/ConsoleVS.h"
+#include "elephantlogger/outputs/ConsoleCout.h"
+#include "elephantlogger/outputs/LogFile.h"
 
 #include <string>
 #include <memory> // unique_ptr
