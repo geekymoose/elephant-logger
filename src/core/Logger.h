@@ -1,10 +1,9 @@
 #pragma once
 
-
-#include "LogLevel.h"
-#include "LogMessage.h"
+#include "elephantlogger/core/LogLevel.h"
+#include "elephantlogger/core/LogMessage.h"
 #include "LoggerConfig.h"
-#include "elephantlogger/utils/Singleton.h"
+#include "../utils/Singleton.h"
 
 #include <vector>
 #include <mutex>
@@ -42,16 +41,16 @@ class Logger : private Singleton<Logger> {
         std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
 
         /** Number of channels actually in use. */
-        int nbChannels;
+        int m_nbChannels;
 
         /** Path to the folder with logs. */
         std::string m_logFilePath;
 
         /** Update rate. */
-        int threadUpdateRate;
+        int m_threadUpdateRate;
 
         /** True if clear any output at start (ex: clear log file). */
-        bool clearAtStart;
+        bool m_clearAtStart;
 
         /**
          * Initial size of the queue.
@@ -62,7 +61,7 @@ class Logger : private Singleton<Logger> {
          * to be hard to reach (Not enough logs in the queue)
          * and small enough for memory use space.
          */
-        int defaultQueueSize;
+        int m_defaultQueueSize;
 
     private:
 
@@ -133,15 +132,9 @@ class Logger : private Singleton<Logger> {
                       va_list argList);
 
         /**
-         * Save all logs in a save directory.
-         * This simply copy the logPath directory into a safe LogPath directory.
-         *
-         * \remark
-         * Do nothing if log in file is not allowed (False returned).
-         *
-         * \return True if successfully saved, otherwise, return false.
+         * Save all logs in a safe directory.
          */
-        bool saveAllLogFiles() const;
+        void saveAllLogs() const;
 
 
     // -------------------------------------------------------------------------
@@ -176,7 +169,7 @@ class Logger : private Singleton<Logger> {
          *
          * \return True if accepted, otherwise, return false.
          */
-        bool isAcceptedLogLevel(const LogLevel level);
+        bool isAcceptedLogLevel(const LogLevel level) const;
 
         /**
          * Changes the current log level.
@@ -187,6 +180,15 @@ class Logger : private Singleton<Logger> {
          * Returns the current log level.
          */
         LogLevel getLogLevel() const;
+
+        /**
+         * Add an ouptut to a specific channel.
+         * Keep a pointer to this output (Beware with variable scope).
+         *
+         * \param channelID The channel where to add output.
+         * \param output The output to add in the channel.
+         */
+        void addOutput(const int channelID, IOutput* output);
 
         /**
          * Change all settings with config value.

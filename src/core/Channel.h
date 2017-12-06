@@ -24,7 +24,7 @@ class Channel {
 
 
     public:
-        Channel();
+        Channel() = default;
         ~Channel() = default;
 
 

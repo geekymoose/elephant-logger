@@ -1,4 +1,4 @@
-#include "elephantlogger/core/Logger.h"
+#include "Logger.h"
 
 
 using namespace elephantlogger;
@@ -20,10 +20,23 @@ void Logger::startup() {
     LoggerConfig conf;
     conf.setDefaultConfig();
     this->applyConfig(conf);
-    conf.applyDefaultOutputs(this->m_lookupChannels);
 
-    if(this->clearAtStart) {
-        for(int k = 0; k < this->nbChannels; ++k) {
+    // TODO To move
+    // Set default outputs
+    static LogFile      generalFile(this->m_logFilePath, "logs.log");
+    static ConsoleCout  coutConsole;
+    static LogFile      coutFile(this->m_logFilePath, "cout.log");
+    static ConsoleVS    visualConsole;
+    static LogFile      visualFile(this->m_logFilePath, "vs.log");
+
+    this->addOutput(0, &coutConsole);
+    this->addOutput(0, &coutFile);
+    this->addOutput(1, &visualConsole);
+    this->addOutput(1, &visualFile);
+    this->addOutput(3, &generalFile);
+
+    if(this->m_clearAtStart) {
+        for(int k = 0; k < this->m_nbChannels; ++k) {
             this->m_lookupChannels[k]->clear();
         }
     }
@@ -56,11 +69,10 @@ void Logger::queueLog(LogLevel level,
     }
 }
 
-bool Logger::saveAllLogFiles() const {
-    for(int k = 0; k < this->nbChannels; ++k) {
+void Logger::saveAllLogs() const {
+    for(int k = 0; k < this->m_nbChannels; ++k) {
         this->m_lookupChannels[k]->save();
     }
-    return false;
 }
 
 
@@ -71,7 +83,7 @@ bool Logger::saveAllLogFiles() const {
 void Logger::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
         int index = msg.getChannelID();
-        if(index < this->nbChannels) {
+        if(index < this->m_nbChannels) {
             auto& coco = m_lookupChannels[static_cast<size_t>(index)];
             coco->write(msg);
         }
@@ -89,7 +101,7 @@ void Logger::internalStartLoggerThread() {
         [this]() {
             while (this->m_isRunning) {
                 std::this_thread::sleep_for(std::chrono::milliseconds{
-                    this->threadUpdateRate
+                    this->m_threadUpdateRate
                 });
                 this->internalProcessBackQueue();
                 this->internalSwapQueues();
@@ -103,7 +115,7 @@ void Logger::internalStartLoggerThread() {
 // Getter - Setters
 // -----------------------------------------------------------------------------
 
-bool Logger::isAcceptedLogLevel(const LogLevel level) {
+bool Logger::isAcceptedLogLevel(const LogLevel level) const {
     return this->m_currentLogLevel >= level;
 }
 
@@ -115,18 +127,24 @@ LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
 }
 
+void Logger::addOutput(const int channelID, IOutput* output) {
+    if(channelID >= 0 && channelID < this->m_nbChannels) {
+        this->m_lookupChannels[channelID]->addOutput(output);
+    }
+}
+
 void Logger::applyConfig(const LoggerConfig& config) {
     this->setLogLevel(config.logLevel);
-    this->nbChannels        = config.nbChannels;
+    this->m_nbChannels      = config.nbChannels;
     this->m_logFilePath     = config.logFilePath;
-    this->threadUpdateRate  = config.threadUpdateRate;
-    this->clearAtStart      = config.clearAtStart;
-    this->defaultQueueSize  = config.defaultQueueSize;
+    this->m_threadUpdateRate= config.threadUpdateRate;
+    this->m_clearAtStart    = config.clearAtStart;
+    this->m_defaultQueueSize= config.defaultQueueSize;
 
-    for(int k = 0; k < this->nbChannels; ++k) {
+    for(int k = 0; k < this->m_nbChannels; ++k) {
         this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
     }
 
-    this->m_queueLogs1.reserve(this->defaultQueueSize);
-    this->m_queueLogs2.reserve(this->defaultQueueSize);
+    this->m_queueLogs1.reserve(this->m_defaultQueueSize);
+    this->m_queueLogs2.reserve(this->m_defaultQueueSize);
 }

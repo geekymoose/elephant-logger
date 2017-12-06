@@ -1,12 +1,8 @@
-#include "elephantlogger/core/Channel.h"
+#include "Channel.h"
 #include "elephantlogger/outputs/IOutput.h"
 
 using namespace elephantlogger;
 
-
-Channel::Channel() {
-    this->m_listOutputs.reserve(3); // Pre-allocate 3 places for output.
-}
 
 void Channel::addOutput(IOutput* output) {
     this->m_listOutputs.push_back(output);

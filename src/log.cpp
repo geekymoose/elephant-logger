@@ -1,5 +1,5 @@
 #include "elephantlogger/log.h"
-#include "elephantlogger/core/Logger.h"
+#include "core/Logger.h"
 #include "utils/LoggerAutoInstaller.h"
 #include <stdarg.h> // va_args
 
@@ -12,7 +12,7 @@ namespace elephantlogger {
     }
 
     void saveLogs() {
-        Logger::get().saveAllLogFiles();
+        Logger::get().saveAllLogs();
     }
 
     void log(const LogLevel level,
@@ -28,5 +28,9 @@ namespace elephantlogger {
             Logger::get().queueLog(level, channelID, file, line, function, format, argList);
             va_end(argList);
         }
+    }
+
+    void setLogLevel(const LogLevel level) {
+        Logger::get().setLogLevel(level);
     }
 }

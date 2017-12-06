@@ -1,7 +1,7 @@
 #pragma once
 
-#include "LogLevel.h"
 #include "Channel.h"
+#include "elephantlogger/core/LogLevel.h"
 #include "elephantlogger/outputs/ConsoleVS.h"
 #include "elephantlogger/outputs/ConsoleCout.h"
 #include "elephantlogger/outputs/LogFile.h"
@@ -54,26 +54,6 @@ class LoggerConfig {
             this->defaultQueueSize      = 30;
             this->logFilePath           = fs::temp_directory_path().c_str();
             this->logFilePath           += "/ElephantLogs/";
-        }
-
-        /**
-         * Setup the Output in the given array of channels.
-         *
-         * This is hard coded initialization.
-         * Must be called only once, with arrayChannels of size at least 3.
-         */
-        void applyDefaultOutputs(std::unique_ptr<Channel> *arrayChannels) {
-            static LogFile      generalFile(this->logFilePath, "logs.log");
-            static ConsoleCout  coutConsole;
-            static LogFile      coutFile(this->logFilePath, "cout.log");
-            static ConsoleVS    visualConsole;
-            static LogFile      visualFile(this->logFilePath, "vs.log");
-
-            arrayChannels[0]->addOutput(&coutConsole);
-            arrayChannels[0]->addOutput(&coutFile);
-            arrayChannels[1]->addOutput(&visualConsole);
-            arrayChannels[1]->addOutput(&visualFile);
-            arrayChannels[2]->addOutput(&generalFile);
         }
 };
 

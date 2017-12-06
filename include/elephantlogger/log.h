@@ -45,6 +45,13 @@ namespace elephantlogger {
              const char* function,
              const char* format,
              ...);
+
+    /**
+     * Change the log level.
+     *
+     * \param level LogLevel to apply.
+     */
+    void setLogLevel(const LogLevel level);
 }
 
 
