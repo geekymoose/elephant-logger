@@ -7,7 +7,7 @@
 #include <fstream> //for ofstream
 
 
-namespace elephant {
+namespace elephantlogger {
 
 class LogMessage;
 

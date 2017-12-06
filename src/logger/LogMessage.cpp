@@ -4,7 +4,7 @@
 #include <stdio.h>  // printf
 
 
-using namespace elephant;
+using namespace elephantlogger;
 
 
 LogMessage::LogMessage(const LogLevel logLevel,

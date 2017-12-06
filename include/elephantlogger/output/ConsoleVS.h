@@ -12,7 +12,7 @@
 #endif
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

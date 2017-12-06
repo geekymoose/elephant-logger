@@ -3,7 +3,7 @@
 #include "Uncopyable.h"
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

@@ -4,7 +4,7 @@
 #include "elephantlogger/logger/Logger.h"
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

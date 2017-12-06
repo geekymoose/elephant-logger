@@ -3,7 +3,7 @@
 #include "cstdint" // For int8_t
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

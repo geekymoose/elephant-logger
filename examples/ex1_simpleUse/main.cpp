@@ -7,7 +7,7 @@
 // A simple test
 int main(int argc, char** argv) {
 
-    elephant::init();
+    elephantlogger::init();
 
     LOG_WTF(0, "Log WTF");
     LOG_ERROR(0, "Log error");

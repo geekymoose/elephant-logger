@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     sethandler(SIGINT, &saveAndExit);
     sethandler(SIGQUIT, &throwException);
 
-    elephant::init();
+    elephantlogger::init();
 
     try {
         // The main execution
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     catch(...) {
         // Save logs because something went wrong.
         LOG_DEBUG(0, "Exception thrown. Save logs");
-        elephant::saveLogs();
+        elephantlogger::saveLogs();
     }
     return 0;
 }
@@ -51,7 +51,7 @@ void throwException(int x) {
 void saveAndExit(int x) {
     isRunning = false;
     LOG_DEBUG(0, "Save logs and exist.");
-    elephant::saveLogs();
+    elephantlogger::saveLogs();
     exit(EXIT_SUCCESS);
 }
 

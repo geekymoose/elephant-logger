@@ -1,7 +1,7 @@
 #include "elephantlogger/logger/Logger.h"
 
 
-using namespace elephant;
+using namespace elephantlogger;
 
 
 // -----------------------------------------------------------------------------

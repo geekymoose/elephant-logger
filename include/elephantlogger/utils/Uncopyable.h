@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

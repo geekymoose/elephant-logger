@@ -12,7 +12,7 @@
 
 
 namespace fs = std::experimental::filesystem;
-namespace elephant {
+namespace elephantlogger {
 
 
 /**

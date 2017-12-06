@@ -14,7 +14,7 @@
 #include <cstdarg>  // va_list
 
 
-namespace elephant {
+namespace elephantlogger {
 
 class Channel;
 
@@ -39,8 +39,7 @@ class Logger : private Singleton<Logger> {
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
         /** Lookup array of all available channels. */
-        std::unique_ptr<Channel>
-            m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
+        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
 
         /** Number of channels actually in use. */
         int nbChannels;

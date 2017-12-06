@@ -3,7 +3,7 @@
 #include <fstream>
 
 
-namespace elephant {
+namespace elephantlogger {
 
 class LogMessage;
 

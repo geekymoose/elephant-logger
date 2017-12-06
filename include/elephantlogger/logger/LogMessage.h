@@ -7,7 +7,7 @@
 #include <stdarg.h> // va_list
 
 
-namespace elephant {
+namespace elephantlogger {
 
 
 

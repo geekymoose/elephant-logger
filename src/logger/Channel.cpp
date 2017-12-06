@@ -1,7 +1,7 @@
 #include "elephantlogger/logger/Channel.h"
 #include "elephantlogger/output/IOutput.h"
 
-using namespace elephant;
+using namespace elephantlogger;
 
 
 Channel::Channel() {
