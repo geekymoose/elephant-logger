@@ -1,5 +1,5 @@
 #include "elephantlogger/outputs/ConsoleCout.h"
-#include "elephantlogger/logger/LogMessage.h"
+#include "elephantlogger/core/LogMessage.h"
 
 #include <iostream>
 

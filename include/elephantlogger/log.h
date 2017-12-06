@@ -1,6 +1,6 @@
 #pragma once
 
-#include "elephantlogger/logger/Logger.h"
+#include "elephantlogger/core/Logger.h"
 #include "elephantlogger/utils/LoggerAutoInstaller.h"
 
 #include <stdarg.h> // va_args

@@ -1,4 +1,4 @@
-#include "elephantlogger/logger/Logger.h"
+#include "elephantlogger/core/Logger.h"
 
 
 using namespace elephantlogger;

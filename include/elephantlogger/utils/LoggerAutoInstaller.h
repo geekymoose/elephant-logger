@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "elephantlogger/logger/Logger.h"
+#include "elephantlogger/core/Logger.h"
 
 
 namespace elephantlogger {

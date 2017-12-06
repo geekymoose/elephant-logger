@@ -1,5 +1,5 @@
 #include "elephantlogger/outputs/LogFile.h"
-#include "elephantlogger/logger/LogMessage.h"
+#include "elephantlogger/core/LogMessage.h"
 
 #include <experimental/filesystem>
 #include <chrono>
