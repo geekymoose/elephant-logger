@@ -7,6 +7,11 @@
 #include <stdarg.h> // va_list
 
 
+#define LOG_MSG_SIZE        256     // Max size of displayed msg.
+#define LOG_FUNCTION_SIZE   50      // Max size of displayed function name.
+#define LOG_FILE_SIZE       200     // Max size of displayed file.
+
+
 namespace elephantlogger {
 
 
@@ -26,10 +31,10 @@ class LogMessage {
     private:
         const LogLevel      m_logLevel;
         const int           m_channelID;
-        char                m_file[256];
+        char                m_file[LOG_FILE_SIZE];
         const int           m_line;
-        char                m_function[256];
-        char                m_message[256];
+        char                m_function[LOG_FUNCTION_SIZE];
+        char                m_message[LOG_MSG_SIZE];
         const std::time_t   m_creationTime;
 
 
@@ -65,7 +70,6 @@ class LogMessage {
          * \return Channel ID.
          */
         const int getChannelID() const;
-
 };
 
 

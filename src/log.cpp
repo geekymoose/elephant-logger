@@ -1,6 +1,11 @@
 #include "elephantlogger/log.h"
+#include "elephantlogger/outputs/ConsoleCout.h"
+#include "elephantlogger/outputs/ConsoleVS.h"
+#include "elephantlogger/outputs/LogFile.h"
+
 #include "core/Logger.h"
 #include "utils/LoggerAutoInstaller.h"
+
 #include <stdarg.h> // va_args
 
 
@@ -30,7 +35,29 @@ namespace elephantlogger {
         }
     }
 
+    void addOutput(const int channelID, IOutput* output) {
+        Logger::get().addOutput(channelID, output);
+    }
+
     void setLogLevel(const LogLevel level) {
         Logger::get().setLogLevel(level);
+    }
+
+    void setLogFilePath(const char* path) {
+        Logger::get().setLogFilePath(path);
+    }
+
+    void setDefaultChannels() {
+        static ConsoleCout  coutConsole;
+        static ConsoleVS    visualConsole;
+        static LogFile      coutFile(Logger::get().getLogFilePath(),    "cout.log");
+        static LogFile      visualFile(Logger::get().getLogFilePath(),  "vs.log");
+        static LogFile      generalFile(Logger::get().getLogFilePath(), "logs.log");
+
+        Logger::get().addOutput(0, &coutConsole);
+        Logger::get().addOutput(0, &coutFile);
+        Logger::get().addOutput(1, &visualConsole);
+        Logger::get().addOutput(1, &visualFile);
+        Logger::get().addOutput(3, &generalFile);
     }
 }

@@ -9,6 +9,9 @@
 
 namespace elephantlogger {
 
+class IOutput;
+
+
     /**
      * Initialize the logger and all its subsystem.
      *
@@ -19,13 +22,49 @@ namespace elephantlogger {
 
     /**
      * Save all current logs.
-     * Place where logs are saved is defined in configuration.
+     * Logs are placed in same logFilePath, with special date format prefix.
      *
      * \note
      * Only certain log output are saved (Generally FileLog output).
      * Depends of the actual IOutput implementation.
      */
     void saveLogs();
+
+    /**
+     * Add an Output to the specific channel.
+     * This channel now write logs in this output as well.
+     *
+     * \note
+     * Channel keeps a pointer only.
+     * The output variable must live until you manually remove it from channel
+     * or close the whole logger.
+     */
+    void addOutput(const int channelID, IOutput* output);
+
+    /**
+     * Change the log level.
+     *
+     * \param level LogLevel to apply.
+     */
+    void setLogLevel(const LogLevel level);
+
+    /**
+     * Change the path where log files are places.
+     *
+     * \warning
+     * No validity check.
+     *
+     * \param path Where to place logs.
+     */
+    void setLogFilePath(const char* path);
+
+    /**
+     * This set the channels with default outputs linked with them.
+     *
+     * \note
+     * This is usually called at the begining for fast configuration.
+     */
+    void setDefaultChannels();
 
     /**
      * Log a message. (If log level accept the given value).
@@ -45,13 +84,6 @@ namespace elephantlogger {
              const char* function,
              const char* format,
              ...);
-
-    /**
-     * Change the log level.
-     *
-     * \param level LogLevel to apply.
-     */
-    void setLogLevel(const LogLevel level);
 }
 
 
@@ -66,3 +98,5 @@ namespace elephantlogger {
 #define LOG_INFO(channelID, format, ...)    elephantlogger::log(elephantlogger::LogLevel::Info,     channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_TRACE(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Trace,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_DEBUG(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Debug,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+
+

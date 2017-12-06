@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Channel.h"
 #include "elephantlogger/core/LogLevel.h"
 #include "elephantlogger/core/LogMessage.h"
-#include "LoggerConfig.h"
+
 #include "../utils/Singleton.h"
+#include "../utils/config.h"
 
 #include <vector>
 #include <mutex>
@@ -16,6 +18,7 @@
 namespace elephantlogger {
 
 class Channel;
+class IOutput;
 
 
 /**
@@ -31,26 +34,32 @@ class Channel;
 class Logger : private Singleton<Logger> {
 
     // -------------------------------------------------------------------------
-    // Attributs
+    // Attributs (Config)
     // -------------------------------------------------------------------------
     private:
         /** The current used log level (From LogLevel enum). */
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
-        /** Lookup array of all available channels. */
-        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(LoggerConfig::maxNbChannels)];
-
-        /** Number of channels actually in use. */
-        int m_nbChannels;
-
         /** Path to the folder with logs. */
         std::string m_logFilePath;
 
-        /** Update rate. */
-        int m_threadUpdateRate;
-
         /** True if clear any output at start (ex: clear log file). */
         bool m_clearAtStart;
+
+
+    // -------------------------------------------------------------------------
+    // Attributs (Internal use: general)
+    // -------------------------------------------------------------------------
+    private:
+
+        /** Lookup array of all available channels. */
+        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(NB_CHANNELS)];
+
+        /** True if this Logger is Running. */
+        std::atomic_bool m_isRunning;
+
+        /** Update rate. */
+        int m_threadUpdateRate;
 
         /**
          * Initial size of the queue.
@@ -63,10 +72,11 @@ class Logger : private Singleton<Logger> {
          */
         int m_defaultQueueSize;
 
-    private:
 
-        /** True if this Logger is Running. */
-        std::atomic_bool m_isRunning;
+    // -------------------------------------------------------------------------
+    // Attributs (Internal use: queue)
+    // -------------------------------------------------------------------------
+    private:
 
         /** Vector of logs (List 1). */
         std::vector<LogMessage> m_queueLogs1;
@@ -145,18 +155,22 @@ class Logger : private Singleton<Logger> {
         /**
          * Process each elements from the back queue and clear it.
          */
-        void internalProcessBackQueue();
+        void processBackQueue();
 
         /**
          * Swap front and back queue buffers.
          */
-        void internalSwapQueues();
+        void swapQueues();
 
         /**
-         * Runs the Logger Component in a new thread.
-         * Logger can be started only if it's not already running.
+         * Start logger loop.
          */
-        void internalStartLoggerThread();
+        void run();
+
+        /**
+         * Start logger loop in a thread.
+         */
+        void runInThread();
 
 
     // -------------------------------------------------------------------------
@@ -172,16 +186,6 @@ class Logger : private Singleton<Logger> {
         bool isAcceptedLogLevel(const LogLevel level) const;
 
         /**
-         * Changes the current log level.
-         */
-        void setLogLevel(const LogLevel level);
-
-        /**
-         * Returns the current log level.
-         */
-        LogLevel getLogLevel() const;
-
-        /**
          * Add an ouptut to a specific channel.
          * Keep a pointer to this output (Beware with variable scope).
          *
@@ -191,9 +195,20 @@ class Logger : private Singleton<Logger> {
         void addOutput(const int channelID, IOutput* output);
 
         /**
-         * Change all settings with config value.
+         * Changes the current log level.
          */
-        void applyConfig(const LoggerConfig& config);
+        void setLogLevel(const LogLevel level);
+
+        /**
+         * Returns the current log level.
+         */
+        LogLevel getLogLevel() const;
+
+        // TODO
+        std::string getLogFilePath() const;
+
+        // TODO
+        void setLogFilePath(const char* path);
 
 }; // End Logger class
 

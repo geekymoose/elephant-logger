@@ -8,6 +8,7 @@
 int main(int argc, char** argv) {
 
     elephantlogger::init();
+    elephantlogger::setDefaultChannels();
 
     LOG_WTF(0, "Log WTF");
     LOG_ERROR(0, "Log error");
