@@ -111,7 +111,7 @@ class Logger : private Singleton<Logger> {
          * Only queue the message to be processed later by logger thread.
          *
          * \remark
-         * Only logs more critical or equal to current LogLevel are queued.
+         * Log is queued regardless its log level.
          *
          * \remark
          * This function is thread safe and may be called concurrently.
@@ -122,7 +122,7 @@ class Logger : private Singleton<Logger> {
          * \param line      Line position in file.
          * \param function  Function's name.
          * \param format    Row message, using printf convention (%s, %d etc).
-         * \param ...       Variable list of parameters.
+         * \param argList   Variable list of parameters.
          */
         void queueLog(const LogLevel level,
                       const int channelID,
@@ -130,7 +130,7 @@ class Logger : private Singleton<Logger> {
                       const int line,
                       const char* function,
                       const char* format,
-                      ...);
+                      va_list argList);
 
         /**
          * Save all logs in a save directory.
@@ -148,18 +148,6 @@ class Logger : private Singleton<Logger> {
     // Internal Methods
     // -------------------------------------------------------------------------
     private:
-
-        /**
-         * Queue a log, regardless any settings.
-         * Not thread safe, to use internally only.
-         */
-        void internalQueueLog(LogLevel level,
-                              const int channelID,
-                              const char* file,
-                              const int line,
-                              const char* function,
-                              const char* format,
-                              va_list argList);
 
         /**
          * Process each elements from the back queue and clear it.
@@ -182,6 +170,13 @@ class Logger : private Singleton<Logger> {
     // Getters - Setters
     // -------------------------------------------------------------------------
     public:
+
+        /**
+         * Check wether the given loglevel value is accepted by this logger.
+         *
+         * \return True if accepted, otherwise, return false.
+         */
+        bool isAcceptedLogLevel(const LogLevel level);
 
         /**
          * Changes the current log level.

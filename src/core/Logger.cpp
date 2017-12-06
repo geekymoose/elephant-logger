@@ -49,12 +49,10 @@ void Logger::queueLog(LogLevel level,
                       const int line,
                       const char* function,
                       const char* format,
-                      ...) {
-    if (this->m_isRunning && this->getLogLevel() >= level) {
-        va_list argList;
-        va_start(argList, format);
-        this->internalQueueLog(level, channelID, file, line, function, format, argList);
-        va_end(argList);
+                      va_list argList) {
+    if (this->m_isRunning) {
+        std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
+        this->m_queueLogsFront->emplace_back(level, channelID, file, line, function, format, argList);
     }
 }
 
@@ -69,17 +67,6 @@ bool Logger::saveAllLogFiles() const {
 // -----------------------------------------------------------------------------
 // Internal Methods
 // -----------------------------------------------------------------------------
-
-void Logger::internalQueueLog(LogLevel level,
-                              const int channelID,
-                              const char* file,
-                              const int line,
-                              const char* function,
-                              const char* format,
-                              va_list argList) {
-    std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
-    this->m_queueLogsFront->emplace_back(level, channelID, file, line, function, format, argList);
-}
 
 void Logger::internalProcessBackQueue() {
     for (LogMessage& msg : *this->m_queueLogsBack) {
@@ -115,6 +102,10 @@ void Logger::internalStartLoggerThread() {
 // -----------------------------------------------------------------------------
 // Getter - Setters
 // -----------------------------------------------------------------------------
+
+bool Logger::isAcceptedLogLevel(const LogLevel level) {
+    return this->m_currentLogLevel >= level;
+}
 
 void Logger::setLogLevel(const LogLevel level) {
     this->m_currentLogLevel = static_cast<int8_t>(level);
