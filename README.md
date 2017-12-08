@@ -126,23 +126,25 @@ It is actually important to respect this order!
 > Example
 
 ```
+// Include Output headers
 #include "elephantlogger/outputs/ConsoleCout.h"
 #include "elephantlogger/outputs/ConsoleVS.h"
 #include "elephantlogger/outputs/LogFile.h"
 
 #include <elephantlogger/log.h>
+
 int main(int argc, char** argc) {
-    static ConsoleCout  coutConsole;
-    static ConsoleVS    visualConsole;
-    static LogFile      logFile("/path/to/log/folder/" "filename.log");
-    static LogFile      logFileVS("/path/to/log/folder/" "filename.log");
+    static elephantlogger::ConsoleCout  coutConsole;
+    static elephantlogger::ConsoleVS    visualConsole;
+    static elephantlogger::LogFile      logFile("/path/to/log/folder/"   "filename.log");
+    static elephantlogger::LogFile      logFileVS("/path/to/log/folder/" "filename.log");
 
-    init();
+    elephantlogger::init();
 
-    Logger::get().addOutput(0, &coutConsole);   // Channel 0 logs on cout
-    Logger::get().addOutput(1, &visualConsole); // Channel 1 logs on VS
-    Logger::get().addOutput(2, &logFile);       // Channel 2 logs in file
-    Logger::get().addOutput(1, &logFileVS);     // Channel 1 also log in file
+    elephantlogger::addOutput(0, &coutConsole);   // Channel 0 logs on cout
+    elephantlogger::addOutput(1, &visualConsole); // Channel 1 logs on VS
+    elephantlogger::addOutput(2, &logFile);       // Channel 2 logs in file
+    elephantlogger::addOutput(1, &logFileVS);     // Channel 1 also log in file
 
     // Your code
     return 0;

@@ -22,3 +22,10 @@ target_link_libraries(example3 stdc++fs)
 target_link_libraries(example3 -pthread)
 target_link_libraries(example3 elephantlogger)
 add_custom_target(ex3 example3)
+
+# Example 4
+add_executable(example4 examples/ex4_customInit/main.cpp)
+target_link_libraries(example4 stdc++fs)
+target_link_libraries(example4 -pthread)
+target_link_libraries(example4 elephantlogger)
+add_custom_target(ex4 example4)
