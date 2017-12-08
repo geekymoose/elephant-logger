@@ -16,8 +16,7 @@ bool isRunning = true;
 
 // Example to show use of elephant::saveLogs() function.
 int main(int argc, char** argv) {
-    elephantlogger::init();
-    elephantlogger::setDefaultChannels();
+    elephantlogger::initDefault();
 
     fprintf(stdout, " ----- Start example 3 - SaveLogs -----\n");
     fprintf(stdout, " - Ctrl+C to stop (Interrupt signal)\n");

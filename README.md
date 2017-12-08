@@ -9,11 +9,11 @@ C++ logger library for multi-threads realtime system with printf like format.
 
 > Your code
 
-![screenshot-yourcode](https://i.imgur.com/nhAHD7L.png)
+![screenshot-yourcode](https://i.imgur.com/nqh5U6A.png)
 
 > Execution
 
-![screenshot-result](https://i.imgur.com/cD57rVa.png)
+![screenshot-result](https://i.imgur.com/CS2Fhiq.png)
 
 
 
@@ -22,12 +22,14 @@ C++ logger library for multi-threads realtime system with printf like format.
 # WARNING
 
 ## Work in progress
-> Work in progress. Important changes may happen. (And doc may be not uptodate)
+> Work in progress.
+> Important changes may happen.
+> (Doc may be not UpToDate)
 
 ## Performance
 > My goal is to implement a logger with high performance.
 > However, I haven't done profiling and performance test yet!!
-> (My solution could be even slower than simple cout: profiling required)
+> (My solution could be even slower than simple cout -> profiling required)
 
 
 
@@ -37,7 +39,7 @@ C++ logger library for multi-threads realtime system with printf like format.
 
 ## Description
 This project is a C++ logger designed for Realtime softwares.
-Realtime doesn't mean here that logs are displayed in realtime.
+In this case, Realtime doesn't mean that logs are displayed in realtime.
 Instead, the goal is that logging shouldn't affect the programme execution time.
 (The least we can).
 Inside the software thread (Your running programme), logs call only queue the message.
@@ -54,18 +56,22 @@ The logger is started on its own thread which then process the logs, print them,
     - LOG_DEBUG
 - Printf like log format
     - Log message works like printf message format.
+    - Log max size is 255 char (truncated if higher).
 - Outputs
     - Write logs in several outputs.
         - File
         - Cout
         - Visual Studio Console (Cout is not supported)
+    - Define your own IOutput implementation.
 - Channels
-    - Up to 10 channels
+    - Up to 10 channels (ID from 0 to 9)
     - Each channel may be binded to several outputs.
+        - Use default configuration for fast use.
+        - Set manually outputs in the channels.
 - Log configurations
     - Log Level: Bypass all logs with lower critique level.
-    - Save: save all logs in file.
-    - ClearAtStart: reset log file at start. (Otherwise, append).
+    - Save: save all logs in safe files.
+    - Reset log files at start (Except saved logs).
 
 
 
@@ -77,9 +83,71 @@ The logger is started on its own thread which then process the logs, print them,
 - Add elephant `include` path in your project includes path.
 - Add static library in your project dependencies.
 - Add `#include <elephantlogger/log.h>` into your cpp/h files.
-- Call `elephant::init()` in your main.
+- Call `elephant::initDefault()` in your main.
 - You're done!
 
+## Setup channels and outputs
+You may either use the default settings or use your custom settings.
+
+### Default Outputs
+Simply use `elephantlogger::initDefault()` at the beginning of your program.
+This is usually done in the main function.
+```
+#include <elephantlogger/log.h>
+int main(int argc, char** argc) {
+    elephantlogger::init();
+    // Your code
+    return 0;
+}
+```
+
+Default settings is the following:
+- Channel 0
+    - Logs in Cout console.
+    - Logs in File in TMP folder, with name "elephant-cout.log".
+- Channel 1
+    - Logs in VS console.
+    - Logs in File in TMP folder, with name "elephant-vs.log".
+- Channel 2
+    - Logs in just one file, in TMP folder, with name "elephant.log"
+
+### Custom Outputs
+You may want to manually set outputs to a specific channel (Up to 10).
+The steps to follow:
+- Include the Output header.
+- Create static Output variable.
+- Initialize the logger with `init()` (Instead of initDefault).
+- Add each output in the channel you want.
+
+WARNING:
+It is actually important to respect this order!
+(Otherwise, static variable would be destroyed while logger still use them).
+
+> Example
+
+```
+#include "elephantlogger/outputs/ConsoleCout.h"
+#include "elephantlogger/outputs/ConsoleVS.h"
+#include "elephantlogger/outputs/LogFile.h"
+
+#include <elephantlogger/log.h>
+int main(int argc, char** argc) {
+    static ConsoleCout  coutConsole;
+    static ConsoleVS    visualConsole;
+    static LogFile      logFile("/path/to/log/folder/" "filename.log");
+    static LogFile      logFileVS("/path/to/log/folder/" "filename.log");
+
+    init();
+
+    Logger::get().addOutput(0, &coutConsole);   // Channel 0 logs on cout
+    Logger::get().addOutput(1, &visualConsole); // Channel 1 logs on VS
+    Logger::get().addOutput(2, &logFile);       // Channel 2 logs in file
+    Logger::get().addOutput(1, &logFileVS);     // Channel 1 also log in file
+
+    // Your code
+    return 0;
+}
+```
 
 
 
@@ -105,7 +173,12 @@ make -j4
 > DCMAKE_BUILD_TYPE options: Debug / Release / RelWithDebInfo / MinSizeRel
 
 
-## Execute examples on GNU/Linux (CMake)
+## Build on GNU/Linux from command line
+`g++ -I/path/to/elephant/include/ yourProject.cpp /paht/to/libelephantlogger.a -pthread -lstc++fs`
+> You may add -g -Wall for debug.
+
+
+## Execute examples on GNU/Linux with CMake
 Set CMake option "BUILD_EXAMPLES" to ON (OFF by default)
 
 ```
@@ -140,15 +213,15 @@ make ex1
 // A simple test
 int main(int argc, char** argv) {
 
-    elephant::init();
+    elephantlogger::initDefault(); // Init and set default outputs.
 
-    LOG_WTF(0, "1. TEST ERROR");
-    LOG_ERROR(0, "1. TEST ERROR");
-    LOG_WARNING(0, "2. TEST WARNING");
-    LOG_CONFIG(0, "3. TEST CONFIG");
-    LOG_INFO(0, "4. TEST INFO");
-    LOG_TRACE(0, "5. TEST TRACE");
-    LOG_DEBUG(0, "6. TEST DEBUG");
+    LOG_WTF(0, "Log wtf (For things that should never happen!)");
+    LOG_ERROR(0, "Log an error");
+    LOG_WARNING(0, "Warning");
+    LOG_CONFIG(0, "Some configuration");
+    LOG_INFO(0, "Some information");
+    LOG_TRACE(0, "Trace information");
+    LOG_DEBUG(0, "The famouse debug!");
 
     LOG_DEBUG(0, "Integer value: %d", 42);
     LOG_DEBUG(0, "Float value: %f", 31.9);
@@ -180,6 +253,17 @@ int main(int argc, char** argv) {
 
 
 
+# Bugs
+See the github [issues-section](https://github.com/GeekyMoose/elephant-logger/issues)
+
+> Beware with the format in logs.
+> In case of wrong format (Ex: %s instead of %d),
+> you may have weird errors without nice warning information.
+
+
+
+
+
 # Author
 - Constantin Masson ([constantinmasson.com](http://constantinmasson.com/))
-- Logo made by [Marie-Pier Bouffard](https://www.artstation.com/mariepierbouffard)
+- Logo made by Marie-Pier Bouffard ([www.artstation.com/mariepierbouffard](https://www.artstation.com/mariepierbouffard))

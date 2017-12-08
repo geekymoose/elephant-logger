@@ -1,6 +1,6 @@
 #pragma once
 #include "core/LogLevel.h"
-#include <stdarg.h> // va_args
+#include <stdarg.h>
 
 
 // ENTRY POINT for this terrible Elephant Logger.
@@ -8,83 +8,97 @@
 
 
 namespace elephantlogger {
-
 class IOutput;
 
 
-    /**
-     * Initialize the logger and all its subsystem.
-     *
-     * \warning
-     * Must be called once at the beginning. (In main)
-     */
-    void init();
+/**
+ * Initialize the logger and all its subsystems.
+ *
+ * \warning
+ * Must be called once at the beginning. (Ex: in main)
+ */
+void init();
 
-    /**
-     * Save all current logs.
-     * Logs are placed in same logFilePath, with special date format prefix.
-     *
-     * \note
-     * Only certain log output are saved (Generally FileLog output).
-     * Depends of the actual IOutput implementation.
-     */
-    void saveLogs();
+/**
+ * Initialize the logger and all its subsystems.
+ * Set channels with default outputs.
+ *
+ * \warning
+ * Must be called once at the beginning. (Ex: In main)
+ */
+void initDefault();
 
-    /**
-     * Add an Output to the specific channel.
-     * This channel now write logs in this output as well.
-     *
-     * \note
-     * Channel keeps a pointer only.
-     * The output variable must live until you manually remove it from channel
-     * or close the whole logger.
-     */
-    void addOutput(const int channelID, IOutput* output);
+/**
+ * Save all current logs.
+ * Logs are placed in same current path set for logger and add date prefix.
+ *
+ * \note
+ * Only certain log output are saved (Generally FileLog output).
+ * Depends of the actual IOutput implementation.
+ */
+void saveLogs();
 
-    /**
-     * Change the log level.
-     *
-     * \param level LogLevel to apply.
-     */
-    void setLogLevel(const LogLevel level);
+/**
+ * Add an Output to the specific channel.
+ * This channel now write logs in this output as well.
+ *
+ * \note
+ * Channel keeps a pointer only.
+ * The output variable must live until you manually remove it from channel
+ * or close the whole logger.
+ *
+ * \warning
+ * Undefined behavior if output freed while logger still use it.
+ */
+void addOutput(const int channelID, IOutput* output);
 
-    /**
-     * Change the path where log files are places.
-     *
-     * \warning
-     * No validity check.
-     *
-     * \param path Where to place logs.
-     */
-    void setLogFilePath(const char* path);
+/**
+ * Change the log level.
+ *
+ * \param level LogLevel to apply.
+ */
+void setLogLevel(const LogLevel level);
 
-    /**
-     * This set the channels with default outputs linked with them.
-     *
-     * \note
-     * This is usually called at the begining for fast configuration.
-     */
-    void setDefaultChannels();
+/**
+ * Change the path where log files are places.
+ *
+ * \warning
+ * No validity check.
+ *
+ * \param path Where to place logs.
+ */
+void setLogFilePath(const char* path);
 
-    /**
-     * Log a message. (If log level accept the given value).
-     *
-     * \param level     Log Level for this message.
-     * \param channelID ID of the channel where to write log.
-     * \param file      File that created the log
-     * \param line      Line position in file.
-     * \param function  Function's name.
-     * \param format    Row message, using printf convention (%s, %d etc).
-     * \param argList   Variable list of parameters.
-     */
-    void log(const LogLevel level,
-             const int channelID,
-             const char* file,
-             const int line,
-             const char* function,
-             const char* format,
-             ...);
-}
+/**
+ * Returns the temporary file path.
+ * Ex: /tmp/ on Linux or %TEMP% on Windows.
+ *
+ * \return Path to temporary folder.
+ */
+const char* getTmpFilePath();
+
+/**
+ * Log a message.
+ * Accept the message only if LogLevel inferior or equals to current logger level.
+ *
+ * \param level     Log Level for this message.
+ * \param channelID ID of the channel where to write log.
+ * \param file      File that created the log
+ * \param line      Line position in file.
+ * \param function  Function's name.
+ * \param format    Row message, using printf convention (%s, %d etc).
+ * \param argList   Variable list of parameters.
+ */
+void log(const LogLevel level,
+         const int channelID,
+         const char* file,
+         const int line,
+         const char* function,
+         const char* format,
+         ...);
+
+
+} // End namespace
 
 
 // -----------------------------------------------------------------------------

@@ -6,8 +6,7 @@
 
 // A simple example with several files using the logger.
 int main(int argc, char** argv) {
-    elephantlogger::init();
-    elephantlogger::setDefaultChannels();
+    elephantlogger::initDefault();
 
     LOG_INFO(0, "Start example 2");
 
