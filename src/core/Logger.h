@@ -90,6 +90,9 @@ class Logger : private Singleton<Logger> {
         /** Mutex for Front Logs queue access. */
         std::mutex m_queuesFrontAccessMutex;
 
+        /** Mutex for Back Logs queue access. */
+        std::mutex m_queuesBackAccessMutex;
+
 
     // -------------------------------------------------------------------------
     // Initialization / Constructors

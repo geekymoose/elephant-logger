@@ -38,6 +38,7 @@ void Logger::startup() {
 
 void Logger::shutdown() {
     this->m_isRunning = false;
+    this->swapQueues();
     this->processBackQueue();
     this->swapQueues();
     this->processBackQueue();
@@ -55,8 +56,8 @@ void Logger::queueLog(const LogLevel level,
                       const char* function,
                       const char* format,
                       va_list argList) {
+    std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
     if (this->m_isRunning) {
-        std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
         this->m_queueLogsFront->emplace_back(level, channelID, file, line, function, format, argList);
     }
 }
@@ -74,6 +75,7 @@ void Logger::saveAllLogs(const char* path) const {
 // -----------------------------------------------------------------------------
 
 void Logger::processBackQueue() {
+    std::lock_guard<std::mutex> lock(m_queuesBackAccessMutex);
     for (LogMessage& msg : *this->m_queueLogsBack) {
         int channelID = msg.getChannelID();
         assert(channelID < NB_CHANNELS);
@@ -87,6 +89,7 @@ void Logger::processBackQueue() {
 
 void Logger::swapQueues() {
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
+    std::lock_guard<std::mutex> lock2(m_queuesBackAccessMutex);
     std::swap(this->m_queueLogsFront, this->m_queueLogsBack);
 }
 

@@ -12,9 +12,10 @@ void saveAndExit(int x);
 void throwException(int x);
 
 bool isRunning = true;
+const char* savePath = "/tmp/";
 
 
-// Example to show use of elephant::saveLogs() function.
+// Example to show use of saveLogs() function.
 int main(int argc, char** argv) {
     elephantlogger::initDefault();
 
@@ -37,8 +38,8 @@ int main(int argc, char** argv) {
     }
     catch(...) {
         // Save logs because something went wrong.
-        LOG_DEBUG(0, "Exception thrown. Save logs");
-        elephantlogger::saveLogs("/tmp/");
+        LOG_DEBUG(0, "Exception thrown. Save logs in %s", savePath);
+        elephantlogger::saveLogs(savePath);
     }
     return 0;
 }
@@ -47,11 +48,10 @@ void throwException(int x) {
     throw 1;
 }
 
-
 void saveAndExit(int x) {
     isRunning = false;
-    LOG_DEBUG(0, "Save logs and exist.");
-    elephantlogger::saveLogs("/tmp/");
+    LOG_DEBUG(0, "Save logs in %s", savePath);
+    elephantlogger::saveLogs(savePath);
     exit(EXIT_SUCCESS);
 }
 
