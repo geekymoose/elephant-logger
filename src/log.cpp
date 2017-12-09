@@ -7,7 +7,7 @@
 #include "core/Logger.h"
 #include "utils/LoggerAutoInstaller.h"
 
-#include <stdarg.h> // va_args
+#include <experimental/filesystem> // For tmp path
 
 
 namespace elephantlogger {
@@ -19,11 +19,12 @@ void init() {
 }
 
 void initDefault() {
+    const std::string logPath = getTmpFilePath() + "/elephant_logs/";
     static ConsoleCout  coutConsole;
     static ConsoleVS    visualConsole;
-    static LogFile      coutFile(getTmpFilePath(),    "elephant-cout.log");
-    static LogFile      visualFile(getTmpFilePath(),  "elephant-vs.log");
-    static LogFile      generalFile(getTmpFilePath(), "elephant.log");
+    static LogFile      coutFile(logPath,    "elephant-cout.log");
+    static LogFile      visualFile(logPath,  "elephant-vs.log");
+    static LogFile      generalFile(logPath, "elephant.log");
 
     init();
 
@@ -46,8 +47,11 @@ void setLogLevel(const LogLevel level) {
     Logger::get().setLogLevel(level);
 }
 
-const char* getTmpFilePath() {
-    return ELEPHANT_CONFIG_TMP_PATH;
+std::string getTmpFilePath() {
+    namespace fs = std::experimental::filesystem;
+    fs::path dir = fs::temp_directory_path();
+    dir += "/";
+    return dir;
 }
 
 void log(const LogLevel level,

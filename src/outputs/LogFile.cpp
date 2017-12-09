@@ -13,7 +13,7 @@ using namespace elephantlogger;
 // Constructors
 // -----------------------------------------------------------------------------
 
-LogFile::LogFile(std::string filePath, std::string fileName)
+LogFile::LogFile(const std::string filePath, const std::string fileName)
     : m_filePath(filePath),
       m_fileName(fileName) {
 

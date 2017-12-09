@@ -1,12 +1,7 @@
 #pragma once
 
-#include <experimental/filesystem> // For tmp path
-
 
 // Mostly for internal configuration
-
-namespace fs = std::experimental::filesystem;
-#define ELEPHANT_CONFIG_TMP_PATH fs::temp_directory_path().c_str()
 
 
 namespace elephantlogger {

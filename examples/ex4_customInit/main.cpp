@@ -5,10 +5,12 @@
 #include "elephantlogger/outputs/ConsoleVS.h"
 #include "elephantlogger/outputs/LogFile.h"
 
+#include <string>
+
 
 // Initialize the logger with custom outputs and channels.
 void customInitElephant() {
-    const char* logPath = elephantlogger::getTmpFilePath();
+    const std::string logPath = elephantlogger::getTmpFilePath() + "/Elephant/";
 
     static elephantlogger::ConsoleCout  coutConsole;
     static elephantlogger::ConsoleVS    visualConsole;

@@ -1,6 +1,8 @@
 #pragma once
 #include "core/LogLevel.h"
+
 #include <stdarg.h>
+#include <string>
 
 
 // ENTRY POINT for this terrible Elephant Logger.
@@ -60,12 +62,12 @@ void addOutput(const int channelID, IOutput* output);
 void setLogLevel(const LogLevel level);
 
 /**
- * Returns the temporary file path.
+ * Returns the temporary file path. (Ended with /)
  * Ex: /tmp/ on Linux or %TEMP% on Windows.
  *
  * \return Path to temporary folder.
  */
-const char* getTmpFilePath();
+std::string getTmpFilePath();
 
 /**
  * Log a message.

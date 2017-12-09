@@ -61,7 +61,7 @@ class LogFile : public IOutput {
          * \param filePath Directory where file may live.
          * \param fileName Name of the file.
          */
-        LogFile(std::string filePath, std::string fileName);
+        LogFile(const std::string filePath, const std::string fileName);
 
         /**
          * Close file stream and destroye this poor object.
