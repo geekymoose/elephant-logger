@@ -14,7 +14,8 @@ using namespace elephantlogger;
 // -----------------------------------------------------------------------------
 
 LogFile::LogFile(std::string filePath, std::string fileName)
-  : m_filePath(filePath), m_fileName(fileName) {
+    : m_filePath(filePath),
+      m_fileName(fileName) {
 
     fs::create_directory(this->m_filePath);
     this->m_fullPath = this->m_filePath + this->m_fileName;
@@ -40,21 +41,27 @@ void LogFile::write(const LogMessage & message) {
     }
 }
 
-void LogFile::flush() {
-    this->m_stream << std::flush;
-}
-
-bool LogFile::save() const {
-    using Clock = std::chrono::system_clock;
-    std::time_t startTime = Clock::to_time_t(Clock::now());
-
-    char timestamp[20];
-    std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
-
+bool LogFile::save(const char* path) const {
     std::lock_guard<std::mutex> lock(m_streamAccess);
 
-    std::string destination = this->m_filePath + "/" + timestamp + "_" + this->m_fileName;
-    return this->internal_save(destination);
+    if(this->m_stream.is_open()) {
+        using Clock = std::chrono::system_clock;
+        std::time_t startTime = Clock::to_time_t(Clock::now());
+
+        char timestamp[20];
+        std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
+
+        std::string destination = std::string(path) + "/" + timestamp + "_" + this->m_fileName;
+        return this->internal_save(destination);
+    }
+    return false;
+}
+
+void LogFile::flush() {
+    if(this->m_stream.is_open()) {
+        std::lock_guard<std::mutex> lock(m_streamAccess);
+        this->m_stream << std::flush;
+    }
 }
 
 void LogFile::clear() {
@@ -72,20 +79,17 @@ void LogFile::clear() {
 // -----------------------------------------------------------------------------
 
 bool LogFile::internal_save(std::string& savePath) const {
-    if(this->m_stream.is_open()) {
-        auto destination = fs::path(savePath);
+    auto destination = fs::path(savePath);
 
-        if(fs::exists(destination) && !fs::is_directory(destination)) {
-            return false; // Doesn't override existing file.
-        }
-
-        try{
-            fs::copy(this->m_fullPath, destination);
-        }
-        catch(const fs::filesystem_error& e) {
-            return false;
-        }
-        return true;
+    if(fs::exists(destination) && !fs::is_directory(destination)) {
+        return false; // Doesn't override existing file.
     }
-    return false;
+
+    try{
+        fs::copy(this->m_fullPath, destination);
+    }
+    catch(const fs::filesystem_error& e) {
+        return false;
+    }
+    return true;
 }

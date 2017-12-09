@@ -40,9 +40,6 @@ class Logger : private Singleton<Logger> {
         /** The current used log level (From LogLevel enum). */
         std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
 
-        /** Path to the folder with logs. */
-        std::string m_logFilePath;
-
         /** True if clear any output at start (ex: clear log file). */
         bool m_clearAtStart;
 
@@ -144,7 +141,7 @@ class Logger : private Singleton<Logger> {
         /**
          * Save all logs in a safe directory.
          */
-        void saveAllLogs() const;
+        void saveAllLogs(const char* path) const;
 
 
     // -------------------------------------------------------------------------
@@ -203,12 +200,6 @@ class Logger : private Singleton<Logger> {
          * Returns the current log level.
          */
         LogLevel getLogLevel() const;
-
-        // TODO
-        std::string getLogFilePath() const;
-
-        // TODO
-        void setLogFilePath(const char* path);
 
 }; // End Logger class
 

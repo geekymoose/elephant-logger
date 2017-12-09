@@ -34,8 +34,8 @@ void initDefault() {
     Logger::get().addOutput(2, &generalFile);
 }
 
-void saveLogs() {
-    Logger::get().saveAllLogs();
+void saveLogs(const char* path) {
+    Logger::get().saveAllLogs(path);
 }
 
 void addOutput(const int channelID, IOutput* output) {
@@ -44,10 +44,6 @@ void addOutput(const int channelID, IOutput* output) {
 
 void setLogLevel(const LogLevel level) {
     Logger::get().setLogLevel(level);
-}
-
-void setLogFilePath(const char* path) {
-    Logger::get().setLogFilePath(path);
 }
 
 const char* getTmpFilePath() {

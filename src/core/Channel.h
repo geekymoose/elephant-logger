@@ -10,9 +10,9 @@ class IOutput;
 
 
 /**
- * A Channel is where logs are send.
+ * A Channel is where logs are sent.
  * Several outputs may be registered for a channel.
- * Writing in a channel writes in all registered outputs for this channel.
+ * Writting in a channel writes in all registered outputs for this channel.
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -20,13 +20,12 @@ class IOutput;
  */
 class Channel {
     private:
-        std::vector<IOutput*> m_listOutputs;
-
+        /** List of outputs. */
+        std::vector<IOutput*> m_outputs;
 
     public:
         Channel() = default;
         ~Channel() = default;
-
 
     public:
 
@@ -39,26 +38,28 @@ class Channel {
         void addOutput(IOutput* output);
 
         /**
-         * Write message in all output linked with this channel.
+         * Write message in all outputs linked with this channel.
          *
          * \param message Log message to write.
          */
         void write(const LogMessage & message);
 
         /**
-         * Flush all outputs.
+         * Save all outputs in a safe place.
+         *
+         * \param path Path to folder where to save logs.
          */
-        void flush();
-
-        /**
-         * Save all outputs.
-         */
-        void save();
+        void save(const char* path);
 
         /**
          * Clear all outputs.
          */
-        void  clear();
+        void clear();
+
+        /**
+         * Flush all outputs.
+         */
+        void flush();
 };
 
 

@@ -24,7 +24,6 @@ void Logger::startup() {
     this->m_defaultQueueSize    = DEFAULT_QUEUE_SIZE;
     this->m_currentLogLevel     = DEFAULT_LOGLEVEL;
     this->m_clearAtStart        = DEFAULT_CLEAR_AT_START;
-    this->m_logFilePath         = ELEPHANT_CONFIG_TMP_PATH;
 
     for(int k = 0; k < NB_CHANNELS; ++k) {
         this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
@@ -62,10 +61,10 @@ void Logger::queueLog(const LogLevel level,
     }
 }
 
-void Logger::saveAllLogs() const {
+void Logger::saveAllLogs(const char* path) const {
     for(int k = 0; k < NB_CHANNELS; ++k) {
         assert(this->m_lookupChannels[k] != nullptr);
-        this->m_lookupChannels[k]->save();
+        this->m_lookupChannels[k]->save(path);
     }
 }
 
@@ -132,12 +131,4 @@ void Logger::setLogLevel(const LogLevel level) {
 
 LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
-}
-
-std::string Logger::getLogFilePath() const {
-    return this->m_logFilePath;
-}
-
-void Logger::setLogFilePath(const char* path) {
-    this->m_logFilePath = path;
 }

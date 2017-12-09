@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     catch(...) {
         // Save logs because something went wrong.
         LOG_DEBUG(0, "Exception thrown. Save logs");
-        elephantlogger::saveLogs();
+        elephantlogger::saveLogs("/tmp/");
     }
     return 0;
 }
@@ -51,7 +51,7 @@ void throwException(int x) {
 void saveAndExit(int x) {
     isRunning = false;
     LOG_DEBUG(0, "Save logs and exist.");
-    elephantlogger::saveLogs();
+    elephantlogger::saveLogs("/tmp/");
     exit(EXIT_SUCCESS);
 }
 

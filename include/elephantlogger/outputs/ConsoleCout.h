@@ -9,7 +9,8 @@ class LogMessage;
 
 
 /**
- * A Debug console that print on std::cout.
+ * IOutput implementation for cout console.
+ * Simply print in std::cout.
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -25,14 +26,14 @@ class ConsoleCout : public IOutput {
         void write(const LogMessage & message) override;
 
         /**
+         * \copydoc IOutput::save(const char*)
+         */
+        bool save(const char* path) const override;
+
+        /**
          * \copydoc IOutput::flush()
          */
         void flush() override;
-
-        /**
-         * \copydoc IOutput::save()
-         */
-        bool save() const override;
 
         /**
          * \copydoc IOutput::clear()

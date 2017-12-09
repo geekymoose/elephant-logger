@@ -37,8 +37,8 @@ using namespace elephantlogger;
 #endif
 
 
-bool ConsoleVS::save() const {
-    // Nothing to do>
+bool ConsoleVS::save(const char* path) const {
+    // Nothing to do
     return true;
 }
 

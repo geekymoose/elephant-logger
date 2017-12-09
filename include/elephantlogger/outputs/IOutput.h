@@ -9,7 +9,7 @@ class LogMessage;
 
 
 /**
- * Abstract class that defines where to print a log.
+ * Interface that defines how to print a log.
  *
  * \author  Constantin Masson
  * \since   1.0
@@ -19,10 +19,8 @@ class IOutput {
 
     protected:
         IOutput() = default;
-
     public:
         virtual ~IOutput() = default;
-
 
     public:
 
@@ -35,25 +33,25 @@ class IOutput {
         virtual void write(const LogMessage & message) = 0;
 
         /**
-         * Flush output now.
+         * Save output in a safe place.
+         *
+         * \param path Path where to save.
+         * \return True if successfully saved, otherwise, return false.
+         */
+        virtual bool save(const char* path) const = 0;
+
+        /**
+         * Flush output content.
          */
         virtual void flush() = 0;
 
         /**
-         * Clear the output.
+         * Clear output content.
          */
         virtual void clear() = 0;
-
-        /**
-         * Save output.
-         * May not be supported by all outputs.
-         * Save location may be set (ex: constructor).
-         */
-        virtual bool save() const = 0;
 };
 
 
 } // End namespace
-
 
 

@@ -36,7 +36,7 @@ void initDefault();
  * Only certain log output are saved (Generally FileLog output).
  * Depends of the actual IOutput implementation.
  */
-void saveLogs();
+void saveLogs(const char* path);
 
 /**
  * Add an Output to the specific channel.
@@ -58,16 +58,6 @@ void addOutput(const int channelID, IOutput* output);
  * \param level LogLevel to apply.
  */
 void setLogLevel(const LogLevel level);
-
-/**
- * Change the path where log files are places.
- *
- * \warning
- * No validity check.
- *
- * \param path Where to place logs.
- */
-void setLogFilePath(const char* path);
 
 /**
  * Returns the temporary file path.

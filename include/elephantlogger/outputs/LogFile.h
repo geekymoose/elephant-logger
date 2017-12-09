@@ -13,7 +13,7 @@ class LogMessage;
 
 
 /**
- * File logging output.
+ * IOutput implementation for logs in files.
  *
  * \note
  * All functions are thread safe.
@@ -80,17 +80,18 @@ class LogFile : public IOutput {
         void write(const LogMessage & message) override;
 
         /**
-         * \copydoc IOutput::flush()
-         */
-        void flush() override;
-
-        /**
          * Save the content of the log file.
-         * Copy is placed in the same directory, but with current timestamp suffix.
+         * Place the copy in the given path.
+         * Create file has the same current filename prefixed with a timestamps.
          *
          * \return True if saved successfully, otherwise, return false.
          */
-        bool save() const override;
+        bool save(const char* path) const override;
+
+        /**
+         * \copydoc IOutput::flush()
+         */
+        void flush() override;
 
         /**
          * Clear content of the log file.
