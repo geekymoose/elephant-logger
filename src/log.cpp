@@ -5,7 +5,6 @@
 
 #include "utils/config.h"
 #include "core/Logger.h"
-#include "utils/LoggerAutoInstaller.h"
 
 #include <experimental/filesystem> // For tmp path
 
@@ -15,7 +14,7 @@ namespace elephantlogger {
 
 void init() {
     // Use of autoinstaller to properly cleanup logger thread before destroyed.
-    static LoggerAutoInstaller elephantLoggerEngine;
+    Logger::get().startup();
 }
 
 void initDefault() {

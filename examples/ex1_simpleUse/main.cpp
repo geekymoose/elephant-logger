@@ -26,10 +26,10 @@ int main(int argc, char** argv) {
     LOG_DEBUG(0, "String: %s / Integer: %d / Float: %f / Char: %c", "Hello", 2, 7.1, 'c');
 
     int counter = 0;
-    while(counter < 5) {
+    while(counter < 4) {
         counter++;
         LOG_DEBUG(0, "Log in loop (counter: %d)", counter);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
     return 0;
 }
