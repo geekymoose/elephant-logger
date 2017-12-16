@@ -1,3 +1,10 @@
+/*
+ * Example to show use of saveLogs function.
+ *
+ * Author:  Constantin Masson
+ * Date:    Nov 2017
+ */
+
 #include "elephantlogger/log.h"
 
 #include <chrono>
@@ -7,15 +14,22 @@
 #include <stdio.h>
 
 
+// Headers
 void sethandler(int sig, void(*f)(int));
 void saveAndExit(int x);
 void throwException(int x);
 
+
+// Global vars
 bool isRunning = true;
-const char* savePath = "/tmp/";
 
+const std::string logPath = elephantlogger::getTmpFilePath() + "/elephant_logs_saved/";
+const char* savePath = logPath.c_str();
 
-// Example to show use of saveLogs() function.
+// -----------------------------------------------------------------------------
+// Example Main
+// -----------------------------------------------------------------------------
+
 int main(int argc, char** argv) {
     elephantlogger::initDefault();
 
@@ -43,6 +57,11 @@ int main(int argc, char** argv) {
     }
     return 0;
 }
+
+
+// -----------------------------------------------------------------------------
+// Internal functions
+// -----------------------------------------------------------------------------
 
 void throwException(int x) {
     throw 1;

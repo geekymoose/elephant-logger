@@ -51,8 +51,7 @@ bool LogFile::save(const char* path) const {
         char timestamp[20];
         std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
 
-        std::string destination = std::string(path) + "/" + timestamp + "_" + this->m_fileName;
-        return this->internal_save(destination);
+        return this->internal_save(path, timestamp);
     }
     return false;
 }
@@ -78,15 +77,20 @@ void LogFile::clear() {
 // Internal
 // -----------------------------------------------------------------------------
 
-bool LogFile::internal_save(std::string& savePath) const {
-    auto destination = fs::path(savePath);
+bool LogFile::internal_save(const char* path, const char* timestamp) const {
 
-    if(fs::exists(destination) && !fs::is_directory(destination)) {
+    std::string fullSavePath = std::string(path) + "/" + timestamp + "_" + this->m_fileName;
+
+    auto saveDir            = fs::path(path);
+    auto saveDestination    = fs::path(fullSavePath);
+
+    if(fs::exists(saveDestination) && !fs::is_directory(saveDestination)) {
         return false; // Doesn't override existing file.
     }
 
     try{
-        fs::copy(this->m_fullPath, destination);
+        fs::create_directory(saveDir);
+        fs::copy(this->m_fullPath, saveDestination);
     }
     catch(const fs::filesystem_error& e) {
         return false;

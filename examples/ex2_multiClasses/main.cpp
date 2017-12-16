@@ -1,10 +1,17 @@
+/*
+ * A simple example with several files using the logger.
+ * Shows the use of the logger when included in several files.
+ *
+ * Author:  Constantin Masson
+ * Date:    Nov 2017
+ */
+
 #include "elephantlogger/log.h"
 #include "MyClass1.h"
 #include "MyClass2.h"
 
 #include <thread>
 
-// A simple example with several files using the logger.
 int main(int argc, char** argv) {
     elephantlogger::initDefault();
 

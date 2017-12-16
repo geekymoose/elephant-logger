@@ -1,9 +1,9 @@
 #include "elephantlogger/log.h"
+#include "elephantlogger/core/config.h"
 #include "elephantlogger/outputs/ConsoleCout.h"
 #include "elephantlogger/outputs/ConsoleVS.h"
 #include "elephantlogger/outputs/LogFile.h"
 
-#include "utils/config.h"
 #include "core/Logger.h"
 
 #include <experimental/filesystem> // For tmp path
@@ -49,7 +49,6 @@ void setLogLevel(const LogLevel level) {
 std::string getTmpFilePath() {
     namespace fs = std::experimental::filesystem;
     fs::path dir = fs::temp_directory_path();
-    dir += "/";
     return dir;
 }
 

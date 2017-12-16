@@ -20,8 +20,8 @@ LogMessage::LogMessage(const LogLevel logLevel,
       m_creationTime(std::time(nullptr)) {
           memcpy(this->m_file, file, strlen(file));
           memcpy(this->m_function, function, strlen(function));
-          vsnprintf(m_message, LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
-          this->m_message[LOG_MSG_SIZE-1] = '\0';
+          vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
+          this->m_message[config::LOG_MSG_SIZE-1] = '\0';
 }
 
 const std::string LogMessage::getFormattedMessage() const {

@@ -32,25 +32,34 @@ void initDefault();
 
 /**
  * Save all current logs.
- * Logs are placed in same current path set for logger and add date prefix.
+ * Logs are placed in given directory and add date prefix.
+ *
+ * \warning
+ * Path should exists (Execpt last parent folder).
+ * Example:
+ * saveLogs("/a/b/c/theSafeFile.log");
+ * - If c doesn't exists: creates it.
+ * - If if a or/and b doesn't exists: fails and do nothing.
  *
  * \note
- * Only certain log output are saved (Generally FileLog output).
+ * Only certain log output are saved (Generally, only FileLog output).
  * Depends of the actual IOutput implementation.
+ *
+ * \param path Path of the directory where to save logs.
  */
 void saveLogs(const char* path);
 
 /**
  * Add an Output to the specific channel.
- * This channel now write logs in this output as well.
+ * This channel now writes logs in this output as well.
  *
  * \note
  * Channel keeps a pointer only.
  * The output variable must live until you manually remove it from channel
- * or close the whole logger.
+ * or close the whole logger. (Otherwise, dangling pointer).
  *
- * \warning
- * Undefined behavior if output freed while logger still use it.
+ * \param channelID Channel where to add output.
+ * \param output Pointer to the output. Do nothing if null.
  */
 void addOutput(const int channelID, IOutput* output);
 
@@ -62,8 +71,8 @@ void addOutput(const int channelID, IOutput* output);
 void setLogLevel(const LogLevel level);
 
 /**
- * Returns the temporary file path. (Ended with /)
- * Ex: /tmp/ on Linux or %TEMP% on Windows.
+ * Returns the temporary file path.
+ * Ex: /tmp on Linux or %TEMP% on Windows.
  *
  * \return Path to temporary folder.
  */

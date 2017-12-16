@@ -3,9 +3,9 @@
 #include "Channel.h"
 #include "elephantlogger/core/LogLevel.h"
 #include "elephantlogger/core/LogMessage.h"
+#include "elephantlogger/core/config.h"
 
 #include "../utils/Singleton.h"
-#include "../utils/config.h"
 
 #include <vector>
 #include <mutex>
@@ -38,36 +38,13 @@ class Logger : private Singleton<Logger> {
     // -------------------------------------------------------------------------
     private:
         /** The current used log level (From LogLevel enum). */
-        std::atomic<std::int8_t> m_currentLogLevel; // atomic_int8_t
+        std::atomic_int m_currentLogLevel{config::DEFAULT_LOGLEVEL};
 
-        /** True if clear any output at start (ex: clear log file). */
-        bool m_clearAtStart;
-
-
-    // -------------------------------------------------------------------------
-    // Attributs (Internal use: general)
-    // -------------------------------------------------------------------------
-    private:
+        /** True if this Logger is currently Running. */
+        std::atomic_bool m_isRunning{false};
 
         /** Lookup array of all available channels. */
-        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(NB_CHANNELS)];
-
-        /** True if this Logger is Running. */
-        std::atomic_bool m_isRunning;
-
-        /** Update rate. */
-        int m_threadUpdateRate;
-
-        /**
-         * Initial size of the queue.
-         *
-         * Each time a message is queued, I use push_back,
-         * which is slow if has reached vector max size.
-         * To avoid this, we should initialize the queue with a size big enough
-         * to be hard to reach (Not enough logs in the queue)
-         * and small enough for memory use space.
-         */
-        int m_defaultQueueSize;
+        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(config::NB_CHANNELS)];
 
 
     // -------------------------------------------------------------------------
@@ -82,10 +59,10 @@ class Logger : private Singleton<Logger> {
         std::vector<LogMessage> m_queueLogs2;
 
         /** Point to the vector where logs are queued. */
-        std::vector<LogMessage>* m_queueLogsFront;
+        std::vector<LogMessage>* m_queueLogsFront = &m_queueLogs1;
 
         /** Point to the vector currently processed by the Logger. */
-        std::vector<LogMessage>* m_queueLogsBack;
+        std::vector<LogMessage>* m_queueLogsBack = &m_queueLogs2;;
 
         /** Mutex for Front Logs queue access. */
         std::mutex m_queuesFrontAccessMutex;
@@ -103,9 +80,20 @@ class Logger : private Singleton<Logger> {
         ~Logger();
 
     public:
-        using Singleton<Logger>::get;
+        using Singleton<Logger>::get; // Required for singleton
 
+    public:
+        /**
+         * Start running this logger.
+         * Do nothing if already running.
+         */
         void startup();
+
+        /**
+         * Stop running this logger.
+         * Cleanup queues and stop running logger.
+         * Logs are no more queued.
+         */
         void shutdown();
 
 
@@ -143,6 +131,8 @@ class Logger : private Singleton<Logger> {
 
         /**
          * Save all logs in a safe directory.
+         *
+         * \param path Directory where to save logs.
          */
         void saveAllLogs(const char* path) const;
 
@@ -164,6 +154,7 @@ class Logger : private Singleton<Logger> {
 
         /**
          * Start logger loop.
+         * Block until logger is stopped.
          */
         void run();
 

@@ -14,6 +14,7 @@ Logger::~Logger() {
 }
 
 void Logger::startup() {
+    assert(this->m_isRunning == false);
     if (this->m_isRunning) {
         return;
     }
@@ -21,16 +22,15 @@ void Logger::startup() {
     this->m_isRunning           = true;
     this->m_queueLogsFront      = &m_queueLogs1;
     this->m_queueLogsBack       = &m_queueLogs2;
-    this->m_queueLogs1          .reserve(this->m_defaultQueueSize);
-    this->m_queueLogs2          .reserve(this->m_defaultQueueSize);
+    this->m_queueLogs1          .reserve(config::DEFAULT_QUEUE_SIZE);
+    this->m_queueLogs2          .reserve(config::DEFAULT_QUEUE_SIZE);
 
-    this->m_defaultQueueSize    = DEFAULT_QUEUE_SIZE;
-    this->m_currentLogLevel     = DEFAULT_LOGLEVEL;
-    this->m_clearAtStart        = DEFAULT_CLEAR_AT_START;
+    assert(this->m_queueLogsFront != nullptr);
+    assert(this->m_queueLogsBack  != nullptr);
 
-    for(int k = 0; k < NB_CHANNELS; ++k) {
+    for(int k = 0; k < config::NB_CHANNELS; ++k) {
         this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
-        if(this->m_clearAtStart) {
+        if(config::CLEAR_AT_START) {
             assert(this->m_lookupChannels[k] != nullptr);
             this->m_lookupChannels[k]->clear();
         }
@@ -40,11 +40,11 @@ void Logger::startup() {
 }
 
 void Logger::shutdown() {
+    this->swapQueues();
+    this->processBackQueue();
+    this->swapQueues();
+    this->processBackQueue();
     this->m_isRunning = false;
-    this->swapQueues();
-    this->processBackQueue();
-    this->swapQueues();
-    this->processBackQueue();
 }
 
 
@@ -59,14 +59,17 @@ void Logger::queueLog(const LogLevel level,
                       const char* function,
                       const char* format,
                       va_list argList) {
+
     std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
+
     if (this->m_isRunning) {
-        this->m_queueLogsFront->emplace_back(level, channelID, file, line, function, format, argList);
+        this->m_queueLogsFront->emplace_back(
+                level, channelID, file, line, function, format, argList);
     }
 }
 
 void Logger::saveAllLogs(const char* path) const {
-    for(int k = 0; k < NB_CHANNELS; ++k) {
+    for(int k = 0; k < config::NB_CHANNELS; ++k) {
         assert(this->m_lookupChannels[k] != nullptr);
         this->m_lookupChannels[k]->save(path);
     }
@@ -79,10 +82,13 @@ void Logger::saveAllLogs(const char* path) const {
 
 void Logger::processBackQueue() {
     std::lock_guard<std::mutex> lock(m_queuesBackAccessMutex);
+
     for (LogMessage& msg : *this->m_queueLogsBack) {
+
         int channelID = msg.getChannelID();
-        assert(channelID < NB_CHANNELS);
-        if(channelID < NB_CHANNELS) {
+        assert(channelID < config::NB_CHANNELS);
+
+        if(channelID < config::NB_CHANNELS) {
             auto& coco = m_lookupChannels[static_cast<size_t>(channelID)];
             coco->write(msg);
         }
@@ -99,7 +105,7 @@ void Logger::swapQueues() {
 void Logger::run() {
     while (this->m_isRunning) {
         std::this_thread::sleep_for(std::chrono::milliseconds{
-            this->m_threadUpdateRate
+                config::THREAD_UPDATE_RATE
         });
         this->processBackQueue();
         this->swapQueues();
@@ -125,14 +131,14 @@ bool Logger::isAcceptedLogLevel(const LogLevel level) const {
 
 void Logger::addOutput(const int channelID, IOutput* output) {
     assert(output != nullptr);
-    assert(channelID >= 0 && channelID < NB_CHANNELS);
-    if(channelID >= 0 && channelID < NB_CHANNELS) {
+    assert(channelID >= 0 && channelID < config::NB_CHANNELS);
+    if(channelID >= 0 && channelID < config::NB_CHANNELS) {
         this->m_lookupChannels[channelID]->addOutput(output);
     }
 }
 
 void Logger::setLogLevel(const LogLevel level) {
-    this->m_currentLogLevel = static_cast<int8_t>(level);
+    this->m_currentLogLevel = static_cast<int>(level);
 }
 
 LogLevel Logger::getLogLevel() const {

@@ -82,7 +82,6 @@ class LogFile : public IOutput {
         /**
          * Save the content of the log file.
          * Place the copy in the given path.
-         * Create file has the same current filename prefixed with a timestamps.
          *
          * \return True if saved successfully, otherwise, return false.
          */
@@ -103,7 +102,7 @@ class LogFile : public IOutput {
     // Internal methods
     // -------------------------------------------------------------------------
     private:
-        bool internal_save(std::string & savePath) const;
+        bool internal_save(const char* path, const char* timestamp) const;
 };
 
 

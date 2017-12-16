@@ -1,3 +1,10 @@
+/*
+ * Example that uses custom configuration.
+ *
+ * Author:  Constantin Masson
+ * Date:    Nov 2017
+ */
+
 #include <elephantlogger/log.h>
 
 // Include Outputs headers
@@ -8,9 +15,11 @@
 #include <string>
 
 
-// Initialize the logger with custom outputs and channels.
-void customInitElephant() {
-    const std::string logPath = elephantlogger::getTmpFilePath() + "/Elephant/";
+/*
+ * Initialize the logger with custom outputs and channels.
+ */
+static void customInitElephant() {
+    const std::string logPath = elephantlogger::getTmpFilePath() + "/elephant_logs_ex4/";
 
     static elephantlogger::ConsoleCout  coutConsole;
     static elephantlogger::ConsoleVS    visualConsole;
@@ -29,6 +38,8 @@ void customInitElephant() {
     elephantlogger::addOutput(0, &generalFile);
     elephantlogger::addOutput(1, &generalFile);
     elephantlogger::addOutput(2, &generalFile);
+
+    LOG_INFO(0, "Logs are placed in custom folder: %s", logPath.c_str());
 }
 
 void foo() {
@@ -42,6 +53,7 @@ void foo() {
 
 int main(int argc, char** argv) {
     customInitElephant();
+
 
     LOG_CONFIG(0, "Start example 4");
 

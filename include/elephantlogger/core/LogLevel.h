@@ -1,7 +1,5 @@
 #pragma once
 
-#include "cstdint" // For int8_t
-
 
 namespace elephantlogger {
 
@@ -10,14 +8,10 @@ namespace elephantlogger {
  * Defines the level of logs.
  * Lowest value is for more critical logs. (ex: Error < DEBUG).
  *
- * \remark
- * int8_t is only for little place optim to use with atomic_int8_t.
- * (Though it's probably not that usefull).
- *
  * \author  Constantin Masson
  * \since   1.0
  */
-enum LogLevel : std::int8_t {
+enum LogLevel : int {
     Wtf = 0,        // What the fuck: Something that may have never happened.
     Error,          // Lowest Log level: Critical.
     Warning,        // Log that is not critical but may represent a threat.
@@ -32,6 +26,13 @@ enum LogLevel : std::int8_t {
 };
 
 
+/**
+ * Abstract class with only static methods.
+ * Helper for LogLevel enum.
+ *
+ * \author  Constantin Masson
+ * \since   1.0
+ */
 class LogLevelHelper {
     private:
         LogLevelHelper() = delete;
@@ -40,6 +41,8 @@ class LogLevelHelper {
     public:
         static const char* logLevelToString(LogLevel level) {
             switch(level) {
+                case LogLevel::Wtf:
+                    return "WTF";
                 case LogLevel::Error:
                     return "Error";
                 case LogLevel::Warning:
@@ -53,7 +56,7 @@ class LogLevelHelper {
                 case LogLevel::Debug:
                     return "Debug";
                 default:
-                    return "WTF";
+                    return "Unknown";
             }
         }
 };
