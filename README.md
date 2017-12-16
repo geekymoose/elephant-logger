@@ -27,9 +27,10 @@ C++ logger library for multi-threads realtime system with printf like format.
 > (Doc may be not UpToDate)
 
 ## Performance
-> My goal is to implement a logger with high performance.
-> However, I haven't done profiling and performance test yet!!
-> (My solution could be even slower than simple cout -> profiling required)
+> I've done literally no profiling / performance test so far!!
+> This is evil! I will (and have to) do it soon!
+> I will also check the actual performance with several threads logging concurrently.
+> For now, my solution could be even slower than simple cout.
 
 
 
@@ -38,9 +39,9 @@ C++ logger library for multi-threads realtime system with printf like format.
 # Overview
 
 ## Description
-This project is a C++ logger designed for Realtime softwares.
-In this case, Realtime doesn't mean that logs are displayed in realtime.
-Instead, the goal is that logging shouldn't affect the programme execution time.
+This project is a C++ logger designed for realtime softwares.
+In this case, realtime doesn't actual mean that logs are displayed in realtime.
+Instead, my goal is that logging shouldn't affect the programme execution time.
 (The least we can).
 Inside the software thread (Your running programme), logs call only queue the message.
 The logger is started on its own thread which then process the logs, print them, write in files etc...
@@ -56,7 +57,7 @@ The logger is started on its own thread which then process the logs, print them,
     - LOG_DEBUG
 - Printf like log format
     - Log message works like printf message format.
-    - Log max size is 255 char (truncated if higher).
+    - Log max size is 255 char (Truncated if higher).
 - Outputs
     - Write logs in several outputs.
         - File
@@ -84,6 +85,7 @@ The logger is started on its own thread which then process the logs, print them,
 - Add static library in your project dependencies.
 - Add `#include <elephantlogger/log.h>` into your cpp/h files.
 - Call `elephant::initDefault()` in your main.
+- Log things with `LOG_X` macro (Change X with log level).
 - You're done!
 
 ## Setup channels and outputs
@@ -202,6 +204,38 @@ make ex1
 
 
 
+# API Reference overview
+All end-user function are accessible through `elephantlogger` namespace
+and are all listed in `include/elephantlogger/log.h` header.
+
+> For further details,
+> see exact function documentation from the `log.h` header or in doxygen doc.
+
+
+## Log macros
+> Probably what you will use the most
+
+- `LOG_WTF(channelID, msg)` Log something that should never happen (For strange behavior etc)
+- `LOG_ERROR(channelID, msg)` Log an error.
+- `LOG_WARNING(channelID, msg)` Log a warning.
+- `LOG_CONFIG(channelID, msg)` Log a configuration.
+- `LOG_INFO(channelID, msg)` Log an information.
+- `LOG_TRACE(channelID, msg)` Log a trace information.
+- `LOG_DEBUG(channelID, msg)` Log a debug.
+
+## Settings and other functions
+- `init()` Initialize the logger.
+- `initDefault()` Initialize the logger with default parameters.
+- `saveLogs(where)` Save all current logs in a safe place.
+- `addOutput(channelID, channelPtr)` Add an output for a specific channel.
+- `setLogLevel(level)` Change the used log level.
+- `getTmpFilePath()` Get the temporary folder path (May change on each OS).
+- `log(...)` Log something (You won't call it directly, use log macros instead).
+
+
+
+
+
 # Example
 > Several examples are available in `examples` directory.
 
@@ -261,6 +295,7 @@ See the github [issues-section](https://github.com/GeekyMoose/elephant-logger/is
 > Beware with the format in logs.
 > In case of wrong format (Ex: %s instead of %d),
 > you may have weird errors without nice warning information.
+> (It may even be a `segfault` error.)
 
 
 
