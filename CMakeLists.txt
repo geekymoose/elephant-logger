@@ -7,12 +7,30 @@ if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
 endif()
 
 
-include(CMake/CompilerFlags.cmake)
-include(CMake/CreateLibrary.cmake)
+# ------------------------------------------------------------------------------
+# Misc
+# ------------------------------------------------------------------------------
+include("CMake/AddCompilerFlags.cmake")
 
-option(BUILD_EXAMPLES "Generate all examples executables" OFF)
-if(BUILD_EXAMPLES)
+
+# ------------------------------------------------------------------------------
+# Create Lib
+# ------------------------------------------------------------------------------
+include_directories("${CMAKE_SOURCE_DIR}/include")
+
+file(GLOB_RECURSE srcFiles src/*.cpp)
+add_library(elephantlogger STATIC ${srcFiles})
+target_link_libraries(elephantlogger
+    stdc++fs
+    pthread)
+
+
+# ------------------------------------------------------------------------------
+# Examples
+# ------------------------------------------------------------------------------
+option(elephant_examples "Generate all examples" OFF)
+if(elephant_examples)
     message(STATUS "Generate examples")
-    include(CMake/Examples.cmake)
+    include("CMake/AddExamples.cmake")
 endif()
 
