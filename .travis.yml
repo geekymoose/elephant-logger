@@ -12,5 +12,5 @@ compiler:
 
 script: ./build.sh
 
-notification:
-    email: false
+notifications:
+  email: false
