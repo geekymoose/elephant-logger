@@ -26,10 +26,6 @@ class IOutput;
  *
  * Run inside it's own thread (all functions are thread safe).
  * The user thread only queue message to be processed.
- *
- * \author  Constantin Masson
- * \since   1.0
- * \date    Oct, 2017
  */
 class Logger : private Singleton<Logger> {
 
@@ -128,13 +124,6 @@ class Logger : private Singleton<Logger> {
                       const char* function,
                       const char* format,
                       va_list argList);
-
-        /**
-         * Save all logs in a safe directory.
-         *
-         * \param path Directory where to save logs.
-         */
-        void saveAllLogs(const char* path) const;
 
 
     // -------------------------------------------------------------------------

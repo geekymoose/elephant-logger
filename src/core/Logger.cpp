@@ -3,8 +3,7 @@
 #include <cassert>
 
 
-using namespace elephantlogger;
-
+namespace elephantlogger {
 
 // -----------------------------------------------------------------------------
 // Init
@@ -30,10 +29,7 @@ void Logger::startup() {
 
     for(int k = 0; k < config::NB_CHANNELS; ++k) {
         this->m_lookupChannels[k] = std::unique_ptr<Channel>(new Channel());
-        if(config::CLEAR_AT_START) {
-            assert(this->m_lookupChannels[k] != nullptr);
-            this->m_lookupChannels[k]->clear();
-        }
+        assert(this->m_lookupChannels[k] != nullptr);
     }
 
     this->runInThread();
@@ -65,13 +61,6 @@ void Logger::queueLog(const LogLevel level,
     if (this->m_isRunning) {
         this->m_queueLogsFront->emplace_back(
                 level, channelID, file, line, function, format, argList);
-    }
-}
-
-void Logger::saveAllLogs(const char* path) const {
-    for(int k = 0; k < config::NB_CHANNELS; ++k) {
-        assert(this->m_lookupChannels[k] != nullptr);
-        this->m_lookupChannels[k]->save(path);
     }
 }
 
@@ -144,3 +133,7 @@ void Logger::setLogLevel(const LogLevel level) {
 LogLevel Logger::getLogLevel() const {
     return static_cast<LogLevel>(this->m_currentLogLevel.load());
 }
+
+
+} // End namespace
+

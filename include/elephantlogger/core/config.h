@@ -9,15 +9,6 @@ namespace elephantlogger {
 namespace config {
 
 
-enum : bool {
-    /**
-     * Clear past logs when logger start.
-     * For instance, erase content of logfiles before starting the logger.
-     */
-    CLEAR_AT_START = true
-};
-
-
 enum : int {
 
 
@@ -62,7 +53,7 @@ enum : int {
     /**
      * Default log level used when logger is created.
      */
-    DEFAULT_LOGLEVEL        = static_cast<int>(elephantlogger::LogLevel::Debug)
+    DEFAULT_LOGLEVEL = static_cast<int>(elephantlogger::LogLevel::Debug)
 };
 
 

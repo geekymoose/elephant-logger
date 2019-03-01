@@ -19,13 +19,11 @@
  * Initialize the logger with custom outputs and channels.
  */
 static void customInitElephant() {
-    const std::string logPath = elephantlogger::getTmpFilePath() + "/elephant_logs_ex4/";
-
     static elephantlogger::ConsoleCout  coutConsole;
     static elephantlogger::ConsoleVS    visualConsole;
-    static elephantlogger::LogFile      coutFile(logPath,    "elephant-cout.log");
-    static elephantlogger::LogFile      visualFile(logPath,  "elephant-vs.log");
-    static elephantlogger::LogFile      generalFile(logPath, "elephant.log");
+    static elephantlogger::LogFile      coutFile("elephant_cout.log");
+    static elephantlogger::LogFile      visualFile("elephant_vs.log");
+    static elephantlogger::LogFile      generalFile("elephant.log");
 
     elephantlogger::init();
 
@@ -38,8 +36,6 @@ static void customInitElephant() {
     elephantlogger::addOutput(0, &generalFile);
     elephantlogger::addOutput(1, &generalFile);
     elephantlogger::addOutput(2, &generalFile);
-
-    LOG_INFO(0, "Logs are placed in custom folder: %s", logPath.c_str());
 }
 
 void foo() {

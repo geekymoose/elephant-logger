@@ -1,7 +1,7 @@
 #include "Channel.h"
 #include "elephantlogger/outputs/IOutput.h"
 
-using namespace elephantlogger;
+namespace elephantlogger {
 
 
 void Channel::addOutput(IOutput* output) {
@@ -15,23 +15,6 @@ void Channel::write(const LogMessage & message) {
     }
 }
 
-void Channel::save(const char* path) {
-    std::vector<IOutput*>::iterator it = this->m_outputs.begin();
-    for(; it != this->m_outputs.end(); ++it) {
-        (*it)->save(path);
-    }
-}
 
-void Channel::clear() {
-    std::vector<IOutput*>::iterator it = this->m_outputs.begin();
-    for(; it != this->m_outputs.end(); ++it) {
-        (*it)->clear();
-    }
-}
+} // End namespace
 
-void Channel::flush() {
-    std::vector<IOutput*>::iterator it = this->m_outputs.begin();
-    for(; it != this->m_outputs.end(); ++it) {
-        (*it)->flush();
-    }
-}

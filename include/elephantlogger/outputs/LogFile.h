@@ -1,26 +1,20 @@
 #pragma once
 
-#include "IOutput.h"
-
-#include <string>
 #include <mutex>
+#include <string>
 #include <fstream> //for ofstream
+#include <chrono>
 
+#include "IOutput.h"
+#include "elephantlogger/core/LogMessage.h"
 
 namespace elephantlogger {
-
-class LogMessage;
 
 
 /**
  * IOutput implementation for logs in files.
  *
- * \note
  * All functions are thread safe.
- *
- * \author  Constantin Masson
- * \since   1.0
- * \date    Nov 2017
  */
 class LogFile : public IOutput {
 
@@ -28,19 +22,8 @@ class LogFile : public IOutput {
     // Variables
     // -------------------------------------------------------------------------
     private:
-        /** Path of the log file (Without it's name). */
-        std::string m_filePath;
-
-        /** Name of the log file. */
-        std::string m_fileName;
-
-        /** Combination of path + file name. */
-        std::string m_fullPath;
-
-        /** Stream to the file. May be opened during all LogFile lifetime. */
+        std::string m_filename;
         std::ofstream m_stream;
-
-        /** Mutex for thread safe methods. */
         mutable std::mutex m_streamAccess;
 
 
@@ -51,22 +34,21 @@ class LogFile : public IOutput {
 
         /**
          * Create a new log file.
-         * If filePath doesn't exists, tries to create id. (Parent must exists).
-         * If file doesn't exists, create it, otherwise, open it (Append mode).
          *
-         * \warning
-         * If it's impossible to create the directory,
-         * all methods return false and do nothing.
-         *
-         * \param filePath Directory where file may live.
-         * \param fileName Name of the file.
+         * \param filename Name of the file.
          */
-        LogFile(const std::string filePath, const std::string fileName);
+        LogFile(const std::string & filename) : m_filename(filename) {
+            this->m_stream.open(m_filename);
+        }
 
         /**
          * Close file stream and destroye this poor object.
          */
-        ~LogFile();
+        ~LogFile() {
+            if(this->m_stream.is_open()) {
+                this->m_stream.close();
+            }
+        }
 
 
     // -------------------------------------------------------------------------
@@ -74,10 +56,19 @@ class LogFile : public IOutput {
     // -------------------------------------------------------------------------
     public:
 
-        /**
-         * \copydoc IOutput::write()
-         */
-        void write(const LogMessage & message) override;
+        /** \copydoc IOutput::write() */
+        void write(const LogMessage & message) override {
+            std::lock_guard<std::mutex> lock(m_streamAccess);
+
+            if(m_stream.is_open()) {
+                m_stream << message.getFormattedMessage() << std::endl;
+            }
+        }
+
+
+    // -------------------------------------------------------------------------
+    // Extra methods
+    // -------------------------------------------------------------------------
 
         /**
          * Save the content of the log file.
@@ -85,27 +76,26 @@ class LogFile : public IOutput {
          *
          * \return True if saved successfully, otherwise, return false.
          */
-        bool save(const char* path) const override;
+        bool save(const char* path) const {
+            /* TODO
+            std::lock_guard<std::mutex> lock(m_streamAccess);
 
-        /**
-         * \copydoc IOutput::flush()
-         */
-        void flush() override;
+            if(this->m_stream.is_open()) {
+                using Clock = std::chrono::system_clock;
+                std::time_t startTime = Clock::to_time_t(Clock::now());
 
-        /**
-         * Clear content of the log file.
-         */
-        void clear() override;
+                char timestamp[20];
+                std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
 
-
-    // -------------------------------------------------------------------------
-    // Internal methods
-    // -------------------------------------------------------------------------
-    private:
-        bool internal_save(const char* path, const char* timestamp) const;
+                return this->internal_save(path, timestamp);
+                // std::string fullSavePath = std::string(path) 
+                // + "/" + timestamp + "_" + this->m_fileName;
+            }
+            */
+           return false; // TODO TMP
+        }
 };
 
 
 } // End namespace
-
 

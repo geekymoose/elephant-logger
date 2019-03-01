@@ -23,8 +23,6 @@ void throwException(int x);
 // Global vars
 bool isRunning = true;
 
-const std::string logPath = elephantlogger::getTmpFilePath() + "/elephant_logs_saved/";
-const char* savePath = logPath.c_str();
 
 // -----------------------------------------------------------------------------
 // Example Main
@@ -52,8 +50,7 @@ int main(int argc, char** argv) {
     }
     catch(...) {
         // Save logs because something went wrong.
-        LOG_DEBUG(0, "Exception thrown. Save logs in %s", savePath);
-        elephantlogger::saveLogs(savePath);
+        LOG_DEBUG(0, "Exception thrown");
     }
     return 0;
 }
@@ -69,8 +66,7 @@ void throwException(int x) {
 
 void saveAndExit(int x) {
     isRunning = false;
-    LOG_DEBUG(0, "Save logs in %s", savePath);
-    elephantlogger::saveLogs(savePath);
+    LOG_DEBUG(0, "Exit requested");
     exit(EXIT_SUCCESS);
 }
 

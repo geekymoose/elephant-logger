@@ -1,8 +1,8 @@
 #pragma once
-#include "core/LogLevel.h"
 
 #include <stdarg.h>
-#include <string>
+
+#include "core/LogLevel.h"
 
 
 // ENTRY POINT for this terrible Elephant Logger.
@@ -31,31 +31,12 @@ void init();
 void initDefault();
 
 /**
- * Save all current logs.
- * Logs are placed in given directory and add date prefix.
- *
- * \warning
- * Path should exists (Execpt last parent folder).
- * Example:
- * saveLogs("/a/b/c/theSafeFile.log");
- * - If c doesn't exists: creates it.
- * - If if a or/and b doesn't exists: fails and do nothing.
- *
- * \note
- * Only certain log output are saved (Generally, only FileLog output).
- * Depends of the actual IOutput implementation.
- *
- * \param path Path of the directory where to save logs.
- */
-void saveLogs(const char* path);
-
-/**
  * Add an Output to the specific channel.
  * This channel now writes logs in this output as well.
  *
  * \note
  * Channel keeps a pointer only.
- * The output variable must live until you manually remove it from channel
+ * The output vaflushriable must live until you manually remove it from channel
  * or close the whole logger. (Otherwise, dangling pointer).
  *
  * \param channelID Channel where to add output.
@@ -69,14 +50,6 @@ void addOutput(const int channelID, IOutput* output);
  * \param level LogLevel to apply.
  */
 void setLogLevel(const LogLevel level);
-
-/**
- * Returns the temporary file path.
- * Ex: /tmp on Linux or %TEMP% on Windows.
- *
- * \return Path to temporary folder.
- */
-std::string getTmpFilePath();
 
 /**
  * Log a message.
@@ -113,5 +86,4 @@ void log(const LogLevel level,
 #define LOG_INFO(channelID, format, ...)    elephantlogger::log(elephantlogger::LogLevel::Info,     channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_TRACE(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Trace,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_DEBUG(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Debug,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-
 
