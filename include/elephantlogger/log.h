@@ -17,6 +17,8 @@
 namespace elephantlogger {
 
 
+#ifndef ELEPHANTLOGGER_DISABLED
+
 /**
  * Initialize the logger and all its subsystems.
  * By default, the first channel has a ConsoleOutput setup.
@@ -83,9 +85,6 @@ inline void log(const LogLevel level,
 }
 
 
-} // End namespace
-
-
 // -----------------------------------------------------------------------------
 // End user macros
 // -----------------------------------------------------------------------------
@@ -97,4 +96,30 @@ inline void log(const LogLevel level,
 #define LOG_INFO(channelID, format, ...)    elephantlogger::log(elephantlogger::LogLevel::Info,     channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_TRACE(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Trace,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define LOG_DEBUG(channelID, format, ...)   elephantlogger::log(elephantlogger::LogLevel::Debug,    channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+
+
+#else
+
+// Totally disable the elephant logger library
+// Any logger call are replaced by an empty method
+
+inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
+inline void addOutput(const int channelID, IOutput * output) {}
+inline void setLogLevel(const LogLevel level) {}
+inline void log(const LogLevel level, const int channelID, const char* file,
+         const int line, const char* function, const char* format, ...) {}
+
+#define LOG_WTF(channelID, format, ...)
+#define LOG_ERROR(channelID, format, ...)
+#define LOG_WARNING(channelID, format, ...)
+#define LOG_CONFIG(channelID, format, ...)
+#define LOG_INFO(channelID, format, ...)
+#define LOG_TRACE(channelID, format, ...)
+#define LOG_DEBUG(channelID, format, ...)
+
+
+#endif
+
+
+} // End namespace
 
