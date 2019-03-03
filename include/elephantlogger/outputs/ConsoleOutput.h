@@ -1,20 +1,18 @@
 #pragma once
 
-#include "IOutput.h"
-#include "elephantlogger/core/LogMessage.h"
-
 #include <iostream>
 
+#include "IOutput.h"
+#include "elephantlogger/core/LogMessage.h"
 
 
 namespace elephantlogger {
 
 
 /**
- * IOutput implementation for cout console.
- * Simply print in std::cout.
+ * This output writes logs in the cout console.
  */
-class ConsoleCout : public IOutput {
+class ConsoleOutput : public IOutput {
 
     public:
 

@@ -10,25 +10,18 @@
 
 
 namespace elephantlogger {
+
 class IOutput;
 
 
 /**
  * Initialize the logger and all its subsystems.
+ * This by default adds a ConsoleOutput in the first channel.
  *
  * \warning
- * Must be called once at the beginning. (Ex: in main)
+ * Must be called once at the beginning. (e.g. in main)
  */
 void init();
-
-/**
- * Initialize the logger and all its subsystems.
- * Set channels with default outputs.
- *
- * \warning
- * Must be called once at the beginning. (Ex: In main)
- */
-void initDefault();
 
 /**
  * Add an Output to the specific channel.

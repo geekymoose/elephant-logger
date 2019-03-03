@@ -1,8 +1,6 @@
 #include "elephantlogger/log.h"
 #include "elephantlogger/core/config.h"
-#include "elephantlogger/outputs/ConsoleCout.h"
-#include "elephantlogger/outputs/ConsoleVS.h"
-#include "elephantlogger/outputs/LogFile.h"
+#include "elephantlogger/outputs/ConsoleOutput.h"
 
 #include "core/Logger.h"
 
@@ -11,21 +9,9 @@ namespace elephantlogger {
 
 
 void init() {
+    static ConsoleOutput console;
     Logger::get().startup();
-}
-
-void initDefault() {
-    static ConsoleVS    visualConsole;
-    static LogFile      coutFile("elephant_cout.log");
-    static LogFile      visualFile("elephant_vs.log");
-    static LogFile      generalFile("elephant_normal.log");
-
-    init();
-
-    Logger::get().addOutput(0, &coutFile);
-    Logger::get().addOutput(1, &visualConsole);
-    Logger::get().addOutput(1, &visualFile);
-    Logger::get().addOutput(2, &generalFile);
+    Logger::get().addOutput(0, &console);
 }
 
 void addOutput(const int channelID, IOutput* output) {

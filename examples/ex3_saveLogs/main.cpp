@@ -29,7 +29,7 @@ bool isRunning = true;
 // -----------------------------------------------------------------------------
 
 int main(int argc, char** argv) {
-    elephantlogger::initDefault();
+    elephantlogger::init();
 
     fprintf(stdout, " ----- Start example 3 - SaveLogs -----\n");
     fprintf(stdout, " - Ctrl+C to stop (Interrupt signal)\n");

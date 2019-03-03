@@ -13,7 +13,7 @@
 
 int main(int argc, char** argv) {
 
-    elephantlogger::initDefault();
+    elephantlogger::init();
 
     LOG_WTF(0, "Log WTF");
     LOG_ERROR(0, "Log error");

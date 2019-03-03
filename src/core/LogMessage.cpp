@@ -18,26 +18,26 @@ LogMessage::LogMessage(const LogLevel logLevel,
       m_channelID(channelID),
       m_line(line),
       m_creationTime(std::time(nullptr)) {
-          memcpy(this->m_file, file, strlen(file));
-          memcpy(this->m_function, function, strlen(function));
-          vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
-          this->m_message[config::LOG_MSG_SIZE-1] = '\0';
+    memcpy(m_file, file, strlen(file));
+    memcpy(m_function, function, strlen(function));
+    vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
+    this->m_message[config::LOG_MSG_SIZE-1] = '\0';
 }
 
 const std::string LogMessage::getFormattedMessage() const {
-    std::string dateStr = ctime(&this->m_creationTime);
+    std::string dateStr = ctime(&m_creationTime);
     dateStr.pop_back(); // Remove line return
 
     std::string msg = "[" + dateStr +"] ";
     msg += "[";
-    msg += LogLevelHelper::logLevelToString(this->m_logLevel);
+    msg += LogLevelHelper::logLevelToString(m_logLevel);
     msg += "]: ";
-    msg += this->m_message;
+    msg += m_message;
     return msg;
 }
 
 const int LogMessage::getChannelID() const {
-    return this->m_channelID;
+    return m_channelID;
 }
 
 

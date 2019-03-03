@@ -48,16 +48,10 @@ class Logger : private Singleton<Logger> {
     // -------------------------------------------------------------------------
     private:
 
-        /** Vector of logs (List 1). */
         std::vector<LogMessage> m_queueLogs1;
-
-        /** Vector of logs (List 2). */
         std::vector<LogMessage> m_queueLogs2;
 
-        /** Point to the vector where logs are queued. */
         std::vector<LogMessage>* m_queueLogsFront = &m_queueLogs1;
-
-        /** Point to the vector currently processed by the Logger. */
         std::vector<LogMessage>* m_queueLogsBack = &m_queueLogs2;;
 
         /** Mutex for Front Logs queue access. */

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <mutex>
 #include <string>
-#include <fstream> //for ofstream
+#include <fstream>
 #include <chrono>
+#include <mutex>
 
 #include "IOutput.h"
 #include "elephantlogger/core/LogMessage.h"
@@ -12,11 +12,10 @@ namespace elephantlogger {
 
 
 /**
- * IOutput implementation for logs in files.
- *
+ * This output writes logs in a file.
  * All functions are thread safe.
  */
-class LogFile : public IOutput {
+class FileOutput : public IOutput {
 
     // -------------------------------------------------------------------------
     // Variables
@@ -37,14 +36,14 @@ class LogFile : public IOutput {
          *
          * \param filename Name of the file.
          */
-        LogFile(const std::string & filename) : m_filename(filename) {
+        FileOutput(const std::string & filename) : m_filename(filename) {
             this->m_stream.open(m_filename);
         }
 
         /**
          * Close file stream and destroye this poor object.
          */
-        ~LogFile() {
+        ~FileOutput() {
             if(this->m_stream.is_open()) {
                 this->m_stream.close();
             }
@@ -69,13 +68,8 @@ class LogFile : public IOutput {
     // -------------------------------------------------------------------------
     // Extra methods
     // -------------------------------------------------------------------------
+    private:
 
-        /**
-         * Save the content of the log file.
-         * Place the copy in the given path.
-         *
-         * \return True if saved successfully, otherwise, return false.
-         */
         bool save(const char* path) const {
             /* TODO
             std::lock_guard<std::mutex> lock(m_streamAccess);
