@@ -22,21 +22,21 @@ static void customInitElephant() {
 }
 
 void foo() {
-    LOG_WARNING(1, "Some warning log");
-    LOG_DEBUG(1, "Some debug log");
-    LOG_ERROR(1, "Some error log");
-    LOG_CONFIG(1, "Some config log");
-    LOG_TRACE(1, "Some trace log");
-    LOG_INFO(1, "Some information log");
+    LOG_WARNING_(1, "Some warning log");
+    LOG_DEBUG_(1, "Some debug log");
+    LOG_ERROR_(1, "Some error log");
+    LOG_CONFIG_(1, "Some config log");
+    LOG_TRACE_(1, "Some trace log");
+    LOG_INFO_(1, "Some information log");
 }
 
 int main(int argc, char** argv) {
     customInitElephant();
 
-    LOG_CONFIG(0, "Start custom init example");
+    LOG_CONFIG_(0, "Start custom init example");
 
     foo(); // Your code
 
-    LOG_CONFIG(0, "Stop custom init example");
+    LOG_CONFIG_(0, "Stop custom init example");
     return 0;
 }

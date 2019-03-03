@@ -1,6 +1,4 @@
-/*
- * A simple example with default configuration.
- */
+// A simple example with default configuration
 
 #include "elephantlogger/log.h"
 
@@ -12,27 +10,28 @@ int main(int argc, char** argv) {
 
     elephantlogger::init();
 
-    LOG_WTF(0, "Log WTF");
-    LOG_ERROR(0, "Log error");
-    LOG_WARNING(0, "Log warning");
-    LOG_CONFIG(0, "Log config");
-    LOG_INFO(0, "Log info");
-    LOG_TRACE(0, "Log trace");
-    LOG_DEBUG(0, "Log debug");
+    LOG_WTF("Log WTF");
+    LOG_ERROR("Log error");
+    LOG_WARNING("Log warning");
+    LOG_CONFIG("Log config");
+    LOG_INFO("Log info");
+    LOG_TRACE("Log trace");
+    LOG_DEBUG("Log debug");
 
-    LOG_DEBUG(0, "Integer value: %d", 42);
-    LOG_DEBUG(0, "Float value: %f", 31.9);
-    LOG_DEBUG(0, "Bool value (true): %d", true);
-    LOG_DEBUG(0, "NULL (Using d): %d", NULL);
-    LOG_DEBUG(0, "NULL (Using s): %s", NULL);
+    LOG_DEBUG("Integer value: %d", 42);
+    LOG_DEBUG("Float value: %f", 31.9);
+    LOG_DEBUG("Bool value (true): %d", true);
+    LOG_DEBUG("NULL (Using d): %d", NULL);
+    LOG_DEBUG("NULL (Using s): %s", NULL);
 
-    LOG_DEBUG(0, "String: %s / Integer: %d / Float: %f / Char: %c", "Hello", 2, 7.1, 'c');
+    LOG_DEBUG("String: %s / Integer: %d / Float: %f / Char: %c", "Hello", 2, 7.1, 'c');
 
     int counter = 0;
     while(counter < 4) {
         counter++;
-        LOG_DEBUG(0, "Log in loop (counter: %d)", counter);
+        LOG_DEBUG("Log in loop (counter: %d)", counter);
         std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
+
     return 0;
 }

@@ -41,13 +41,13 @@ int main(int argc, char** argv) {
         int counter = 0;
         while(isRunning) {
             counter++;
-            LOG_DEBUG(0, "Log in loop (counter: %d)", counter);
+            LOG_DEBUG("Log in loop (counter: %d)", counter);
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     }
     catch(...) {
         // Save logs because something went wrong.
-        LOG_DEBUG(0, "Exception thrown");
+        LOG_DEBUG("Exception thrown");
     }
     return 0;
 }
@@ -63,7 +63,7 @@ void throwException(int x) {
 
 void saveAndExit(int x) {
     isRunning = false;
-    LOG_DEBUG(0, "Exit requested");
+    LOG_DEBUG("Exit requested");
     exit(EXIT_SUCCESS);
 }
 

@@ -12,16 +12,16 @@
 int main(int argc, char** argv) {
     elephantlogger::init();
 
-    LOG_INFO(0, "Start example 2");
+    LOG_INFO_(0, "Start example 2");
 
-    LOG_DEBUG(0, "Create MyClass%d", 1);
+    LOG_DEBUG_(0, "Create MyClass%d", 1);
     MyClass1 myClass1;
     myClass1.foo();
 
-    LOG_DEBUG(0, "Create MyClass%d", 2);
+    LOG_DEBUG_(0, "Create MyClass%d", 2);
     MyClass2 myClass2;
     myClass2.foo();
 
-    LOG_INFO(0, "End exmaple 2");
+    LOG_INFO_(0, "End exmaple 2");
     return 0;
 }
