@@ -50,6 +50,7 @@ class Logger : private Singleton<Logger> {
     // Initialization / Constructors
     // -------------------------------------------------------------------------
     public:
+        Logger(const LogLevel loglevel);
 
         /**
          * Start running this logger.

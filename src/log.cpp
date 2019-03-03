@@ -1,5 +1,5 @@
 #include "elephantlogger/log.h"
-#include "elephantlogger/core/config.h"
+
 #include "elephantlogger/outputs/ConsoleOutput.h"
 
 #include "core/Logger.h"
@@ -8,9 +8,10 @@
 namespace elephantlogger {
 
 
-void init() {
+void init(const LogLevel level) {
     static ConsoleOutput console;
     Logger::get().addOutput(0, &console);
+    Logger::get().setLogLevel(level);
     Logger::get().startup();
 }
 

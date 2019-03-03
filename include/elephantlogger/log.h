@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 
+#include "core/config.h"
 #include "core/LogLevel.h"
 
 
@@ -18,8 +19,10 @@ class IOutput;
  * Initialize the logger and all its subsystems.
  * By default, the first channel has a ConsoleOutput setup.
  * This method must be called once before any loggin call.
+ * 
+ * \param level Log level to use. Uses a default value if empty.
  */
-void init();
+void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL);
 
 /**
  * Adds an Output to the specific channel.
@@ -35,6 +38,7 @@ void addOutput(const int channelID, IOutput * output);
 
 /**
  * Change the log level.
+ * This may be called at runtime.
  *
  * \param level LogLevel to apply.
  */

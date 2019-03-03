@@ -10,8 +10,12 @@ namespace elephantlogger {
 // Init
 // -----------------------------------------------------------------------------
 
-Logger::Logger() :
-    m_currentLogLevel(config::DEFAULT_LOGLEVEL),
+Logger::Logger() {
+    assert(false); // This constructor is not used. Only because Singleton macro
+}
+
+Logger::Logger(const LogLevel loglevel) :
+    m_currentLogLevel(loglevel),
     m_isRunning(false) {
 }
 

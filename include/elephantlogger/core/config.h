@@ -1,5 +1,7 @@
 #pragma once
 
+#include "LogLevel.h"
+
 
 // Mostly for internal logger configurations
 // WARNING: if you want to change a value, you need to recompile the logger.
@@ -49,12 +51,12 @@ enum : int {
      * and small enough for memory use space.
      */
     DEFAULT_QUEUE_SIZE = 40,
-
-    /**
-     * Default log level used when logger is created.
-     */
-    DEFAULT_LOGLEVEL = static_cast<int>(elephantlogger::LogLevel::Debug)
 };
+
+
+
+// Default log level to use if no explicite value given.
+#define ELEPHANTLOGGER_DEFAULT_LOGLEVEL elephantlogger::LogLevel::Debug
 
 
 } // End namespace

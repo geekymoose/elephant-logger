@@ -1,11 +1,11 @@
 #pragma once
 
-#include "LogLevel.h"
-#include "config.h"
-
 #include <ctime>
 #include <string>
 #include <stdarg.h> // va_list
+
+#include "LogLevel.h"
+#include "config.h"
 
 
 namespace elephantlogger {

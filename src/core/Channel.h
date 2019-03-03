@@ -2,11 +2,11 @@
 
 #include <vector>
 
+#include "elephantlogger/outputs/IOutput.h"
+#include "elephantlogger/core/LogMessage.h"
+
 
 namespace elephantlogger {
-
-class LogMessage;
-class IOutput;
 
 
 /**
@@ -28,14 +28,20 @@ class Channel {
          *
          * \param output Pointer to the output.
          */
-        void addOutput(IOutput * output);
+        void addOutput(IOutput * output) {
+            m_outputs.push_back(output);
+        }
 
         /**
          * Write message in all outputs linked with this channel.
          *
          * \param message Log message to write.
          */
-        void write(const LogMessage & message);
+        void write(const LogMessage & message) {
+            for(auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+                (*it)->write(message);
+            }
+        }
 };
 
 
