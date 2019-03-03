@@ -7,9 +7,6 @@ namespace elephantlogger {
 /**
  * Defines the level of logs.
  * Lowest value is for more critical logs. (ex: Error < DEBUG).
- *
- * \author  Constantin Masson
- * \since   1.0
  */
 enum LogLevel : int {
     Wtf = 0,        // What the fuck: Something that may have never happened.
@@ -29,9 +26,6 @@ enum LogLevel : int {
 /**
  * Abstract class with only static methods.
  * Helper for LogLevel enum.
- *
- * \author  Constantin Masson
- * \since   1.0
  */
 class LogLevelHelper {
     private:

@@ -10,11 +10,11 @@ namespace elephantlogger {
 
 void init() {
     static ConsoleOutput console;
-    Logger::get().startup();
     Logger::get().addOutput(0, &console);
+    Logger::get().startup();
 }
 
-void addOutput(const int channelID, IOutput* output) {
+void addOutput(const int channelID, IOutput * output) {
     Logger::get().addOutput(channelID, output);
 }
 
@@ -24,12 +24,12 @@ void setLogLevel(const LogLevel level) {
 
 void log(const LogLevel level,
          const int channelID,
-         const char* file,
+         const char * file,
          const int line,
-         const char* function,
-         const char* format,
+         const char * function,
+         const char * format,
          ...) {
-    if(Logger::get().isAcceptedLogLevel(level)) {
+    if(Logger::get().isLogLevelAccepted(level)) {
         va_list argList;
         va_start(argList, format);
         Logger::get().queueLog(level, channelID, file, line, function, format, argList);

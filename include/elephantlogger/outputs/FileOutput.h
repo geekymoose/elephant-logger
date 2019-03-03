@@ -37,15 +37,15 @@ class FileOutput : public IOutput {
          * \param filename Name of the file.
          */
         FileOutput(const std::string & filename) : m_filename(filename) {
-            this->m_stream.open(m_filename);
+            m_stream.open(m_filename);
         }
 
         /**
          * Close file stream and destroye this poor object.
          */
         ~FileOutput() {
-            if(this->m_stream.is_open()) {
-                this->m_stream.close();
+            if(m_stream.is_open()) {
+                m_stream.close();
             }
         }
 
@@ -74,16 +74,16 @@ class FileOutput : public IOutput {
             /* TODO
             std::lock_guard<std::mutex> lock(m_streamAccess);
 
-            if(this->m_stream.is_open()) {
+            if(m_stream.is_open()) {
                 using Clock = std::chrono::system_clock;
                 std::time_t startTime = Clock::to_time_t(Clock::now());
 
                 char timestamp[20];
                 std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
 
-                return this->internal_save(path, timestamp);
+                return internal_save(path, timestamp);
                 // std::string fullSavePath = std::string(path) 
-                // + "/" + timestamp + "_" + this->m_fileName;
+                // + "/" + timestamp + "_" + m_fileName;
             }
             */
            return false; // TODO TMP

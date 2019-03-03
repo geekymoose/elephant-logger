@@ -1,8 +1,5 @@
 /*
  * A simple example with default configuration.
- *
- * Author:  Constantin Masson
- * Date:    Nov 2017
  */
 
 #include "elephantlogger/log.h"

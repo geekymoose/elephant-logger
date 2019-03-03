@@ -16,26 +16,22 @@ class IOutput;
 
 /**
  * Initialize the logger and all its subsystems.
- * This by default adds a ConsoleOutput in the first channel.
- *
- * \warning
- * Must be called once at the beginning. (e.g. in main)
+ * By default, the first channel has a ConsoleOutput setup.
+ * This method must be called once before any loggin call.
  */
 void init();
 
 /**
- * Add an Output to the specific channel.
- * This channel now writes logs in this output as well.
+ * Adds an Output to the specific channel.
  *
- * \note
- * Channel keeps a pointer only.
- * The output vaflushriable must live until you manually remove it from channel
- * or close the whole logger. (Otherwise, dangling pointer).
+ * \warning
+ * Channel keeps a pointer only, therefore the output variable must live
+ * until the logger is stopped (dangling pointer otherwise).
  *
  * \param channelID Channel where to add output.
  * \param output Pointer to the output. Do nothing if null.
  */
-void addOutput(const int channelID, IOutput* output);
+void addOutput(const int channelID, IOutput * output);
 
 /**
  * Change the log level.

@@ -15,10 +15,6 @@ namespace elephantlogger {
 /**
  * Internal representation of a log message.
  * A message can't excess a defined size. (Usually 256 characters).
- *
- * \author  Constantin Masson
- * \since   1.0
- * \date    Oct, 2017
  */
 class LogMessage {
     // -------------------------------------------------------------------------

@@ -21,7 +21,7 @@ LogMessage::LogMessage(const LogLevel logLevel,
     memcpy(m_file, file, strlen(file));
     memcpy(m_function, function, strlen(function));
     vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
-    this->m_message[config::LOG_MSG_SIZE-1] = '\0';
+    m_message[config::LOG_MSG_SIZE-1] = '\0';
 }
 
 const std::string LogMessage::getFormattedMessage() const {

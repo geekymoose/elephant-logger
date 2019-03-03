@@ -7,12 +7,9 @@ namespace elephantlogger {
 
 
 /**
- * Singleton interface.
- * Any class that inherits from Singleton is not more instanciable.
- * Singleton can't be copied nor instanciated (ex: new).
- *
- * \note
- * Example to implement a singleton class A:
+ * Singleton template interface.
+ * Singleton can not be copied or instanciated (e.g. new).
+ * You should use the static getter method instead.
  *
  * \code{.cpp}
  * class A : private Singleton<A> {
@@ -26,11 +23,6 @@ namespace elephantlogger {
  *          void destroy() override;
  * };
  * \endcode
- *
- *
- * \author  Constantin Masson
- * \since   1.0
- * \date    Oct 2017
  */
 template <class T>
 class Singleton : private Uncopyable<Singleton<T>> {
@@ -47,7 +39,14 @@ class Singleton : private Uncopyable<Singleton<T>> {
 };
 
 
+#define ELEPHANTLOGGER_MAKE_SINGLETON(ClassName) \
+    public: \
+        using Singleton<ClassName>::get; \
+    private: \
+        friend Singleton<ClassName>; \
+        ClassName(); \
+        ~ClassName()
+
+
 } // End namespace
-
-
 

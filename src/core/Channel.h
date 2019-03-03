@@ -16,13 +16,11 @@ class IOutput;
  */
 class Channel {
     private:
-        std::vector<IOutput*> m_outputs;
+        std::vector<IOutput *> m_outputs;
 
     public:
         Channel() = default;
         ~Channel() = default;
-
-    public:
 
         /**
          * A an output linked with this Channel.

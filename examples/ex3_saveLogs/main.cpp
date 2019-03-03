@@ -1,8 +1,5 @@
 /*
  * Example to show use of saveLogs function.
- *
- * Author:  Constantin Masson
- * Date:    Nov 2017
  */
 
 #include "elephantlogger/log.h"

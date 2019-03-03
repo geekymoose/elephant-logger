@@ -6,20 +6,13 @@ namespace elephantlogger {
 
 /**
  * Uncopyable interface.
- * Any class that inherits from Uncopyable cannot be copied anymore.
- * (Disable copy constructor and copy operator.)
- *
+ * Disables the copy constructor and the copy operator.
  *
  * \code{.cpp}
  * class A : private Uncopyable<A> {
  *     // Your code
  * };
  * \endcode
- *
- *
- * \author  Constantin Masson
- * \since   1.0
- * \date    Oct 2017
  */
 template <class T>
 class Uncopyable {
@@ -34,5 +27,4 @@ class Uncopyable {
 
 
 } // End namespace
-
 

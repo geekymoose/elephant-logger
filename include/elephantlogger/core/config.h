@@ -37,7 +37,7 @@ enum : int {
     /**
      * Max number of available channels.
      */
-    NB_CHANNELS = 10,
+    NB_CHANNELS = 5,
 
     /**
      * Initial size of the log queue.

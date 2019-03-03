@@ -5,12 +5,11 @@ namespace elephantlogger {
 
 
 void Channel::addOutput(IOutput* output) {
-    this->m_outputs.push_back(output);
+    m_outputs.push_back(output);
 }
 
 void Channel::write(const LogMessage & message) {
-    std::vector<IOutput*>::iterator it = this->m_outputs.begin();
-    for(; it != this->m_outputs.end(); ++it) {
+    for(auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
         (*it)->write(message);
     }
 }

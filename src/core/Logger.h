@@ -1,12 +1,5 @@
 #pragma once
 
-#include "Channel.h"
-#include "elephantlogger/core/LogLevel.h"
-#include "elephantlogger/core/LogMessage.h"
-#include "elephantlogger/core/config.h"
-
-#include "../utils/Singleton.h"
-
 #include <vector>
 #include <mutex>
 #include <atomic>
@@ -14,10 +7,15 @@
 #include <memory>   // unique_ptr
 #include <cstdarg>  // va_list
 
+#include "../utils/Singleton.h"
+#include "Channel.h"
+#include "elephantlogger/core/LogLevel.h"
+#include "elephantlogger/core/LogMessage.h"
+#include "elephantlogger/core/config.h"
+
 
 namespace elephantlogger {
 
-class Channel;
 class IOutput;
 
 
@@ -28,51 +26,31 @@ class IOutput;
  * The user thread only queue message to be processed.
  */
 class Logger : private Singleton<Logger> {
+    ELEPHANTLOGGER_MAKE_SINGLETON(Logger);
 
     // -------------------------------------------------------------------------
-    // Attributs (Config)
-    // -------------------------------------------------------------------------
-    private:
-        /** The current used log level (From LogLevel enum). */
-        std::atomic_int m_currentLogLevel{config::DEFAULT_LOGLEVEL};
-
-        /** True if this Logger is currently Running. */
-        std::atomic_bool m_isRunning{false};
-
-        /** Lookup array of all available channels. */
-        std::unique_ptr<Channel> m_lookupChannels[static_cast<size_t>(config::NB_CHANNELS)];
-
-
-    // -------------------------------------------------------------------------
-    // Attributs (Internal use: queue)
+    // Attributs
     // -------------------------------------------------------------------------
     private:
+        std::atomic_int m_currentLogLevel;
+        std::atomic_bool m_isRunning;
+        Channel m_lookupChannels[static_cast<size_t>(config::NB_CHANNELS)];
 
         std::vector<LogMessage> m_queueLogs1;
         std::vector<LogMessage> m_queueLogs2;
 
-        std::vector<LogMessage>* m_queueLogsFront = &m_queueLogs1;
-        std::vector<LogMessage>* m_queueLogsBack = &m_queueLogs2;;
+        std::vector<LogMessage> * m_queueLogsFront = &m_queueLogs1;
+        std::vector<LogMessage> * m_queueLogsBack = &m_queueLogs2;;
 
-        /** Mutex for Front Logs queue access. */
         std::mutex m_queuesFrontAccessMutex;
-
-        /** Mutex for Back Logs queue access. */
         std::mutex m_queuesBackAccessMutex;
 
 
     // -------------------------------------------------------------------------
     // Initialization / Constructors
     // -------------------------------------------------------------------------
-    private:
-        friend Singleton<Logger>;
-        Logger() = default;
-        ~Logger();
-
     public:
-        using Singleton<Logger>::get; // Required for singleton
 
-    public:
         /**
          * Start running this logger.
          * Do nothing if already running.
@@ -125,26 +103,14 @@ class Logger : private Singleton<Logger> {
     // -------------------------------------------------------------------------
     private:
 
-        /**
-         * Process each elements from the back queue and clear it.
-         */
+        /** Process each elements from the back queue, then clear it. */
         void processBackQueue();
 
-        /**
-         * Swap front and back queue buffers.
-         */
+        /** Swap front and back queue buffers. */
         void swapQueues();
 
-        /**
-         * Start logger loop.
-         * Block until logger is stopped.
-         */
-        void run();
-
-        /**
-         * Start logger loop in a thread.
-         */
-        void runInThread();
+        /** Start logger loop in a thread. */
+        void startBackThread();
 
 
     // -------------------------------------------------------------------------
@@ -157,7 +123,7 @@ class Logger : private Singleton<Logger> {
          *
          * \return True if accepted, otherwise, return false.
          */
-        bool isAcceptedLogLevel(const LogLevel level) const;
+        bool isLogLevelAccepted(const LogLevel level) const;
 
         /**
          * Add an ouptut to a specific channel.
@@ -166,7 +132,7 @@ class Logger : private Singleton<Logger> {
          * \param channelID The channel where to add output.
          * \param output The output to add in the channel.
          */
-        void addOutput(const int channelID, IOutput* output);
+        void addOutput(const int channelID, IOutput * output);
 
         /**
          * Changes the current log level.
@@ -182,5 +148,4 @@ class Logger : private Singleton<Logger> {
 
 
 } // End namespace
-
 
