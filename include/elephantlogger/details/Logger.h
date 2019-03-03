@@ -4,14 +4,14 @@
 #include <mutex>
 #include <atomic>
 #include <thread>
-#include <memory>   // unique_ptr
-#include <cstdarg>  // va_list
+#include <cstdarg>
+#include <assert.h>
 
-#include "../utils/Singleton.h"
 #include "Channel.h"
-#include "elephantlogger/core/LogLevel.h"
-#include "elephantlogger/core/LogMessage.h"
-#include "elephantlogger/core/config.h"
+#include "LogLevel.h"
+#include "LogMessage.h"
+#include "Singleton.h"
+#include "config.h"
 
 
 namespace elephantlogger {
@@ -26,7 +26,7 @@ class IOutput;
  * The user thread only queue message to be processed.
  */
 class Logger : private Singleton<Logger> {
-    ELEPHANTLOGGER_MAKE_SINGLETON(Logger);
+    ELEPHANTLOGGER_ADD_SINGLETON_UTILS(Logger);
 
     // -------------------------------------------------------------------------
     // Attributs
@@ -49,21 +49,47 @@ class Logger : private Singleton<Logger> {
     // -------------------------------------------------------------------------
     // Initialization / Constructors
     // -------------------------------------------------------------------------
+    private:
+        Logger() {}
+        ~Logger() { shutdown(); }
+
     public:
-        Logger(const LogLevel loglevel);
 
         /**
          * Start running this logger.
          * Do nothing if already running.
          */
-        void startup();
+        void startup() {
+            assert(m_isRunning == false);
+            if (m_isRunning) {
+                return;
+            }
+
+            m_isRunning         = true;
+            m_queueLogsFront    = &m_queueLogs1;
+            m_queueLogsBack     = &m_queueLogs2;
+            m_queueLogs1.reserve(config::DEFAULT_QUEUE_SIZE);
+            m_queueLogs2.reserve(config::DEFAULT_QUEUE_SIZE);
+
+            assert(m_queueLogsFront != nullptr);
+            assert(m_queueLogsBack  != nullptr);
+
+            startBackThread();
+        }
+
 
         /**
          * Stop running this logger.
          * Cleanup queues and stop running logger.
          * Logs are no more queued.
          */
-        void shutdown();
+        void shutdown() {
+            m_isRunning = false;
+            swapQueues();
+            processBackQueue();
+            swapQueues();
+            processBackQueue();
+        }
 
 
     // -------------------------------------------------------------------------
@@ -96,7 +122,15 @@ class Logger : private Singleton<Logger> {
                       const int line,
                       const char* function,
                       const char* format,
-                      va_list argList);
+                      va_list argList) {
+
+            std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
+
+            if (m_isRunning) {
+                m_queueLogsFront->emplace_back(
+                        level, channelID, file, line, function, format, argList);
+            }
+        }
 
 
     // -------------------------------------------------------------------------
@@ -105,13 +139,43 @@ class Logger : private Singleton<Logger> {
     private:
 
         /** Process each elements from the back queue, then clear it. */
-        void processBackQueue();
+        void processBackQueue() {
+            std::lock_guard<std::mutex> lock(m_queuesBackAccessMutex);
+
+            for (LogMessage& msg : *m_queueLogsBack) {
+                int channelID = msg.getChannelID();
+                assert(channelID < config::NB_CHANNELS);
+
+                if(channelID < config::NB_CHANNELS) {
+                    auto& coco = m_lookupChannels[static_cast<size_t>(channelID)];
+                    coco.write(msg);
+                }
+            }
+            m_queueLogsBack->clear();
+        }
 
         /** Swap front and back queue buffers. */
-        void swapQueues();
+        void swapQueues() {
+            std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
+            std::lock_guard<std::mutex> lock2(m_queuesBackAccessMutex);
+            std::swap(m_queueLogsFront, m_queueLogsBack);
+        }
 
         /** Start logger loop in a thread. */
-        void startBackThread();
+        void startBackThread() {
+            std::thread {
+                [this]() {
+                    while (m_isRunning) {
+                        // TODO this is ugly. To change with condition var for instance
+                        std::this_thread::sleep_for(std::chrono::milliseconds{
+                                config::THREAD_UPDATE_RATE
+                        });
+                        processBackQueue();
+                        swapQueues();
+                    }
+                }
+            }.detach();
+        }
 
 
     // -------------------------------------------------------------------------
@@ -124,7 +188,9 @@ class Logger : private Singleton<Logger> {
          *
          * \return True if accepted, otherwise, return false.
          */
-        bool isLogLevelAccepted(const LogLevel level) const;
+        bool isLogLevelAccepted(const LogLevel level) const {
+            return m_currentLogLevel >= level;
+        }
 
         /**
          * Add an ouptut to a specific channel.
@@ -133,17 +199,27 @@ class Logger : private Singleton<Logger> {
          * \param channelID The channel where to add output.
          * \param output The output to add in the channel.
          */
-        void addOutput(const int channelID, IOutput * output);
+        void addOutput(const int channelID, IOutput * output) {
+            assert(output != nullptr);
+            assert(channelID >= 0 && channelID < config::NB_CHANNELS);
+            if(channelID >= 0 && channelID < config::NB_CHANNELS) {
+                m_lookupChannels[channelID].addOutput(output);
+            }
+        }
 
         /**
          * Changes the current log level.
          */
-        void setLogLevel(const LogLevel level);
+        void setLogLevel(const LogLevel level) {
+            m_currentLogLevel = static_cast<int>(level);
+        }
 
         /**
          * Returns the current log level.
          */
-        LogLevel getLogLevel() const;
+        LogLevel getLogLevel() const {
+            return static_cast<LogLevel>(m_currentLogLevel.load());
+        }
 
 }; // End Logger class
 

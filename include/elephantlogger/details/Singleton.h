@@ -39,13 +39,11 @@ class Singleton : private Uncopyable<Singleton<T>> {
 };
 
 
-#define ELEPHANTLOGGER_MAKE_SINGLETON(ClassName) \
+#define ELEPHANTLOGGER_ADD_SINGLETON_UTILS(ClassName) \
     public: \
         using Singleton<ClassName>::get; \
     private: \
-        friend Singleton<ClassName>; \
-        ClassName(); \
-        ~ClassName()
+        friend Singleton<ClassName>
 
 
 } // End namespace

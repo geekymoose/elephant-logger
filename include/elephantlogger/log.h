@@ -2,17 +2,19 @@
 
 #include <stdarg.h>
 
-#include "core/config.h"
-#include "core/LogLevel.h"
+#include "details/config.h"
+#include "details/LogLevel.h"
+#include "details/Logger.h"
+#include "outputs/IOutput.h"
+#include "outputs/ConsoleOutput.h"
 
 
-// ENTRY POINT for this terrible Elephant Logger.
+// ENTRY POINT
 // This is the only header to include in your project.
+// Nellie the elephant will remember everything then
 
 
 namespace elephantlogger {
-
-class IOutput;
 
 
 /**
@@ -22,7 +24,12 @@ class IOutput;
  * 
  * \param level Log level to use. Uses a default value if empty.
  */
-void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL);
+inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
+    static ConsoleOutput console;
+    Logger::get().addOutput(0, &console);
+    Logger::get().setLogLevel(level);
+    Logger::get().startup();
+}
 
 /**
  * Adds an Output to the specific channel.
@@ -34,7 +41,9 @@ void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL);
  * \param channelID Channel where to add output.
  * \param output Pointer to the output. Do nothing if null.
  */
-void addOutput(const int channelID, IOutput * output);
+inline void addOutput(const int channelID, IOutput * output) {
+    Logger::get().addOutput(channelID, output);
+}
 
 /**
  * Change the log level.
@@ -42,7 +51,9 @@ void addOutput(const int channelID, IOutput * output);
  *
  * \param level LogLevel to apply.
  */
-void setLogLevel(const LogLevel level);
+inline void setLogLevel(const LogLevel level) {
+    Logger::get().setLogLevel(level);
+}
 
 /**
  * Log a message.
@@ -56,13 +67,20 @@ void setLogLevel(const LogLevel level);
  * \param format    Row message, using printf convention (%s, %d etc).
  * \param argList   Variable list of parameters.
  */
-void log(const LogLevel level,
+inline void log(const LogLevel level,
          const int channelID,
          const char* file,
          const int line,
          const char* function,
          const char* format,
-         ...);
+         ...) {
+    if(Logger::get().isLogLevelAccepted(level)) {
+        va_list argList;
+        va_start(argList, format);
+        Logger::get().queueLog(level, channelID, file, line, function, format, argList);
+        va_end(argList);
+    }
+}
 
 
 } // End namespace

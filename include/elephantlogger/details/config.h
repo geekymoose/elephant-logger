@@ -13,7 +13,6 @@ namespace config {
 
 enum : int {
 
-
     /**
      * Max size of the message content of a log. (Your message).
      */
@@ -52,7 +51,6 @@ enum : int {
      */
     DEFAULT_QUEUE_SIZE = 40,
 };
-
 
 
 // Default log level to use if no explicite value given.

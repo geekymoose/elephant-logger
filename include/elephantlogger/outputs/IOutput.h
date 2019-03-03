@@ -1,17 +1,15 @@
 #pragma once
 
+#include "../details/LogMessage.h"
+
 
 namespace elephantlogger {
-
-class LogMessage;
 
 
 /**
  * Interface that defines how to write a log.
  */
 class IOutput {
-    protected:
-        IOutput() = default;
     public:
         virtual ~IOutput() = default;
 
@@ -22,9 +20,11 @@ class IOutput {
          * \param message The message to print in the channel.
          */
         virtual void write(const LogMessage & message) = 0;
+
+    protected:
+        IOutput() = default;
 };
 
 
 } // End namespace
-
 

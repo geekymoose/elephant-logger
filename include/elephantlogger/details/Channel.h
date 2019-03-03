@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "elephantlogger/outputs/IOutput.h"
-#include "elephantlogger/core/LogMessage.h"
+#include "LogMessage.h"
 
 
 namespace elephantlogger {

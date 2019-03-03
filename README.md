@@ -1,7 +1,7 @@
 ![Elephant-Logger](https://i.imgur.com/vRG1Dsx.png)
 
 [![release-version](https://img.shields.io/badge/release-beta--version-red.svg)]()
-[![build-status](https://travis-ci.org/GeekyMoose/elephant-logger-realtime.svg?branch=master)](https://travis-ci.org/GeekyMoose/elephant-logger-realtime)
+[![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger.svg?branch=dev)](https://travis-ci.org/GeekyMoose/elephant-logger)
 [![license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/GeekyMoose/elephant-logger-realtime/blob/dev/LICENSE.txt)
 
 C++ logger library for multi-threads realtime system with printf like format.

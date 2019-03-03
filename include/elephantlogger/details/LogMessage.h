@@ -2,6 +2,7 @@
 
 #include <ctime>
 #include <string>
+#include <cstring>
 #include <stdarg.h> // va_list
 
 #include "LogLevel.h"
@@ -40,7 +41,15 @@ class LogMessage {
                    const int line,
                    const char* function,
                    const char* format,
-                   va_list argList);
+                   va_list argList) : m_logLevel(logLevel),
+                                      m_channelID(channelID),
+                                      m_line(line),
+                                      m_creationTime(std::time(nullptr)) {
+            memcpy(m_file, file, strlen(file));
+            memcpy(m_function, function, strlen(function));
+            vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
+            m_message[config::LOG_MSG_SIZE-1] = '\0';
+        }
 
 
     // -------------------------------------------------------------------------
@@ -54,14 +63,25 @@ class LogMessage {
          *
          * \return Formatted version of the message.
          */
-        const std::string getFormattedMessage() const;
+        const std::string getFormattedMessage() const {
+
+            std::string dateStr = ctime(&m_creationTime);
+            dateStr.pop_back(); // Remove line return
+
+            std::string msg = "[" + dateStr +"] ";
+            msg += "[";
+            msg += LogLevelHelper::logLevelToString(m_logLevel);
+            msg += "]: ";
+            msg += m_message;
+            return msg;
+        }
 
         /**
          * Returns channel ID where to write this message.
          *
          * \return Channel ID.
          */
-        const int getChannelID() const;
+        const int getChannelID() const { return m_channelID; }
 };
 
 

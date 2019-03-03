@@ -14,16 +14,6 @@ include("CMake/AddCompilerFlags.cmake")
 
 
 # ------------------------------------------------------------------------------
-# Create Lib
-# ------------------------------------------------------------------------------
-include_directories("${CMAKE_SOURCE_DIR}/include")
-
-file(GLOB_RECURSE srcFiles src/*.cpp)
-add_library(elephantlogger STATIC ${srcFiles})
-target_link_libraries(elephantlogger pthread)
-
-
-# ------------------------------------------------------------------------------
 # Examples
 # ------------------------------------------------------------------------------
 option(elephant_examples "Generate all examples" OFF)
