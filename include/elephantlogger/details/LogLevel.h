@@ -17,9 +17,8 @@ enum LogLevel : int {
     Trace,          // Informative log that are less important.
     Debug,          // For debug.
 
-
     // Internal
-    Size            // Enum's size: Number of defined LogLevels (TO KEEP LAST).
+    COUNT           // Enum's size: Number of defined LogLevels (TO KEEP LAST).
 };
 
 

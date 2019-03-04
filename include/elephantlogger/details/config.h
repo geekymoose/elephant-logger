@@ -29,13 +29,6 @@ enum : int {
     LOG_FILE_SIZE = 200,
 
     /**
-     * Time between two queue processing and swap.
-     * This is used to slow down logger thread,
-     * otherwise, thread would probably use too many resources.
-     */
-    THREAD_UPDATE_RATE = 250,
-
-    /**
      * Max number of available channels.
      */
     NB_CHANNELS = 5,

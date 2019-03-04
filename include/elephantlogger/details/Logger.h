@@ -3,6 +3,7 @@
 #include <vector>
 #include <mutex>
 #include <atomic>
+#include <condition_variable>
 #include <thread>
 #include <cstdarg>
 
@@ -41,8 +42,9 @@ class Logger : private Singleton<Logger> {
         std::vector<LogMessage> * m_queueLogsFront = &m_queueLogs1;
         std::vector<LogMessage> * m_queueLogsBack = &m_queueLogs2;;
 
-        std::mutex m_queuesFrontAccessMutex;
-        std::mutex m_queuesBackAccessMutex;
+        std::condition_variable m_conditionvar;
+        std::mutex m_mutexFront;
+        std::mutex m_mutexBack;
 
 
     // -------------------------------------------------------------------------
@@ -76,7 +78,6 @@ class Logger : private Singleton<Logger> {
             startBackThread();
         }
 
-
         /**
          * Stop running this logger.
          * Cleanup queues and stop running logger.
@@ -84,10 +85,13 @@ class Logger : private Singleton<Logger> {
          */
         void shutdown() {
             m_isRunning = false;
-            swapQueues();
+            std::lock_guard<std::mutex> lock(m_mutexBack);
+
             processBackQueue();
             swapQueues();
             processBackQueue();
+
+            m_conditionvar.notify_all(); // To step the back thread if was waiting
         }
 
 
@@ -117,18 +121,17 @@ class Logger : private Singleton<Logger> {
          */
         void queueLog(const LogLevel level,
                       const int channelID,
-                      const char* file,
+                      const char * file,
                       const int line,
-                      const char* function,
-                      const char* format,
+                      const char * function,
+                      const char * format,
                       va_list argList) {
-
-            std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
-
             if (m_isRunning) {
-                m_queueLogsFront->emplace_back(
-                        level, channelID, file, line, function, format, argList);
+                std::lock_guard<std::mutex> lock(m_mutexFront);
+                m_queueLogsFront->emplace_back(level, channelID, file, line,
+                                            function, format, argList);
             }
+            m_conditionvar.notify_all();
         }
 
 
@@ -139,10 +142,8 @@ class Logger : private Singleton<Logger> {
 
         /** Process each elements from the back queue, then clear it. */
         void processBackQueue() {
-            std::lock_guard<std::mutex> lock(m_queuesBackAccessMutex);
-
             for (LogMessage& msg : *m_queueLogsBack) {
-                int channelID = msg.getChannelID();
+                const int channelID = msg.getChannelID();
                 ELEPHANTLOGGER_ASSERT(channelID < config::NB_CHANNELS);
 
                 if(channelID < config::NB_CHANNELS) {
@@ -155,8 +156,6 @@ class Logger : private Singleton<Logger> {
 
         /** Swap front and back queue buffers. */
         void swapQueues() {
-            std::lock_guard<std::mutex> lock(m_queuesFrontAccessMutex);
-            std::lock_guard<std::mutex> lock2(m_queuesBackAccessMutex);
             std::swap(m_queueLogsFront, m_queueLogsBack);
         }
 
@@ -165,12 +164,17 @@ class Logger : private Singleton<Logger> {
             std::thread {
                 [this]() {
                     while (m_isRunning) {
-                        // TODO this is ugly. To change with condition var for instance
-                        std::this_thread::sleep_for(std::chrono::milliseconds{
-                                config::THREAD_UPDATE_RATE
-                        });
-                        processBackQueue();
-                        swapQueues();
+                        if(!m_queueLogsFront->empty()) {
+                            std::lock_guard<std::mutex> lock(m_mutexBack);
+                            m_mutexFront.lock();
+                            swapQueues();
+                            m_mutexFront.unlock();
+                            processBackQueue();
+                        }
+                        else {
+                            std::unique_lock<std::mutex> lock(m_mutexFront);
+                            m_conditionvar.wait(lock);
+                        }
                     }
                 }
             }.detach();
@@ -183,7 +187,7 @@ class Logger : private Singleton<Logger> {
     public:
 
         /**
-         * Check wether the given loglevel value is accepted by this logger.
+         * Check whether the given loglevel value is accepted by this logger.
          *
          * \return True if accepted, otherwise, return false.
          */
@@ -192,7 +196,7 @@ class Logger : private Singleton<Logger> {
         }
 
         /**
-         * Add an ouptut to a specific channel.
+         * Add an output to the specific channel.
          * Keep a pointer to this output (Beware with variable scope).
          *
          * \param channelID The channel where to add output.

@@ -2,9 +2,6 @@
 
 #include "elephantlogger/log.h"
 
-#include <chrono>
-#include <thread>
-
 
 int main(int argc, char** argv) {
 
@@ -27,10 +24,9 @@ int main(int argc, char** argv) {
     LOG_DEBUG("String: %s / Integer: %d / Float: %f / Char: %c", "Hello", 2, 7.1, 'c');
 
     int counter = 0;
-    while(counter < 4) {
+    while(counter < 12) {
         counter++;
         LOG_DEBUG("Log in loop (counter: %d)", counter);
-        std::this_thread::sleep_for(std::chrono::milliseconds(250));
     }
 
     return 0;
