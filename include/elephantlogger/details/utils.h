@@ -1,9 +1,38 @@
 #pragma once
 
-#include "Uncopyable.h"
-
 
 namespace elephantlogger {
+
+
+// Assertions
+#ifdef ELEPHANTLOGGER_ASSERT_ENABLED
+#include <cassert>
+#define ELEPHANTLOGGER_ASSERT(condition) assert(condition)
+#else
+#define ELEPHANTLOGGER_ASSERT(condition)
+#endif // ELEPHANTLOGGER_ASSERT_DISABLED
+
+
+/**
+ * Uncopyable interface.
+ * Disables the copy constructor and the copy operator.
+ *
+ * \code{.cpp}
+ * class A : private Uncopyable<A> {
+ *     // Your code
+ * };
+ * \endcode
+ */
+template <class T>
+class Uncopyable {
+    public:
+        Uncopyable() = default;
+        virtual ~Uncopyable() = default;
+
+    private:
+        Uncopyable(Uncopyable<T> const& other) = delete;
+        Uncopyable<T>& operator=(Uncopyable<T> const& other) = delete;
+};
 
 
 /**

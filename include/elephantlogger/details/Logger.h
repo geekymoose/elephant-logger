@@ -5,13 +5,12 @@
 #include <atomic>
 #include <thread>
 #include <cstdarg>
-#include <assert.h>
 
 #include "Channel.h"
 #include "LogLevel.h"
 #include "LogMessage.h"
-#include "Singleton.h"
 #include "config.h"
+#include "utils.h"
 
 
 namespace elephantlogger {
@@ -50,7 +49,7 @@ class Logger : private Singleton<Logger> {
     // Initialization / Constructors
     // -------------------------------------------------------------------------
     private:
-        Logger() {}
+        Logger() : m_isRunning(false) {}
         ~Logger() { shutdown(); }
 
     public:
@@ -60,7 +59,7 @@ class Logger : private Singleton<Logger> {
          * Do nothing if already running.
          */
         void startup() {
-            assert(m_isRunning == false);
+            ELEPHANTLOGGER_ASSERT(m_isRunning == false);
             if (m_isRunning) {
                 return;
             }
@@ -71,8 +70,8 @@ class Logger : private Singleton<Logger> {
             m_queueLogs1.reserve(config::DEFAULT_QUEUE_SIZE);
             m_queueLogs2.reserve(config::DEFAULT_QUEUE_SIZE);
 
-            assert(m_queueLogsFront != nullptr);
-            assert(m_queueLogsBack  != nullptr);
+            ELEPHANTLOGGER_ASSERT(m_queueLogsFront != nullptr);
+            ELEPHANTLOGGER_ASSERT(m_queueLogsBack  != nullptr);
 
             startBackThread();
         }
@@ -144,7 +143,7 @@ class Logger : private Singleton<Logger> {
 
             for (LogMessage& msg : *m_queueLogsBack) {
                 int channelID = msg.getChannelID();
-                assert(channelID < config::NB_CHANNELS);
+                ELEPHANTLOGGER_ASSERT(channelID < config::NB_CHANNELS);
 
                 if(channelID < config::NB_CHANNELS) {
                     auto& coco = m_lookupChannels[static_cast<size_t>(channelID)];
@@ -200,8 +199,8 @@ class Logger : private Singleton<Logger> {
          * \param output The output to add in the channel.
          */
         void addOutput(const int channelID, IOutput * output) {
-            assert(output != nullptr);
-            assert(channelID >= 0 && channelID < config::NB_CHANNELS);
+            ELEPHANTLOGGER_ASSERT(output != nullptr);
+            ELEPHANTLOGGER_ASSERT(channelID >= 0 && channelID < config::NB_CHANNELS);
             if(channelID >= 0 && channelID < config::NB_CHANNELS) {
                 m_lookupChannels[channelID].addOutput(output);
             }

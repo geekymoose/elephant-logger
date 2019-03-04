@@ -2,9 +2,9 @@
 
 #include <stdarg.h>
 
-#include "details/config.h"
 #include "details/LogLevel.h"
 #include "details/Logger.h"
+#include "details/config.h"
 #include "outputs/IOutput.h"
 #include "outputs/ConsoleOutput.h"
 
@@ -35,6 +35,7 @@ inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
 
 /**
  * Adds an Output to the specific channel.
+ * Do nothing in case of invalid ID or nullptr.
  *
  * \warning
  * Channel keeps a pointer only, therefore the output variable must live
