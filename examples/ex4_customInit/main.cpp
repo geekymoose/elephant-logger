@@ -1,13 +1,11 @@
-/*
- * Example that uses custom configuration.
- */
+// Example that uses custom configuration.
 
 #include <string>
 #include <elephantlogger/log.h>
 
 // Include Outputs headers
-#include "elephantlogger/outputs/DebugOutput.h"
-#include "elephantlogger/outputs/FileOutput.h"
+#include <elephantlogger/outputs/DebugOutput.h>
+#include <elephantlogger/outputs/FileOutput.h>
 
 
 // Initialize the logger with custom outputs and channels.
@@ -21,22 +19,14 @@ static void customInitElephant() {
     elephantlogger::addOutput(1, &filelog);
 }
 
-void foo() {
+int main(int argc, char** argv) {
+    customInitElephant();
+
     LOG_WARNING_(1, "Some warning log");
     LOG_DEBUG_(1, "Some debug log");
     LOG_ERROR_(1, "Some error log");
     LOG_CONFIG_(1, "Some config log");
     LOG_TRACE_(1, "Some trace log");
     LOG_INFO_(1, "Some information log");
-}
-
-int main(int argc, char** argv) {
-    customInitElephant();
-
-    LOG_CONFIG_(0, "Start custom init example");
-
-    foo(); // Your code
-
-    LOG_CONFIG_(0, "Stop custom init example");
     return 0;
 }

@@ -32,11 +32,12 @@ class FileOutput : public IOutput {
 
         /**
          * Create a new log file.
+         * Appends log if exists.
          *
          * \param filename Name of the file.
          */
         FileOutput(const std::string & filename) : m_filename(filename) {
-            m_stream.open(m_filename);
+            m_stream.open(m_filename, std::fstream::app | std::fstream::out); // append
         }
 
         /**
@@ -61,31 +62,6 @@ class FileOutput : public IOutput {
             if(m_stream.is_open()) {
                 m_stream << message.getFormattedMessage() << std::endl;
             }
-        }
-
-
-    // -------------------------------------------------------------------------
-    // Extra methods
-    // -------------------------------------------------------------------------
-    private:
-
-        bool save(const char* path) const {
-            /* TODO
-            std::lock_guard<std::mutex> lock(m_streamAccess);
-
-            if(m_stream.is_open()) {
-                using Clock = std::chrono::system_clock;
-                std::time_t startTime = Clock::to_time_t(Clock::now());
-
-                char timestamp[20];
-                std::strftime(timestamp, 20, "%Y_%m_%d_%H%M%S", std::localtime(&startTime));
-
-                return internal_save(path, timestamp);
-                // std::string fullSavePath = std::string(path) 
-                // + "/" + timestamp + "_" + m_fileName;
-            }
-            */
-           return false; // TODO TMP
         }
 };
 
