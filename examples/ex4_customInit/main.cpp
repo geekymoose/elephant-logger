@@ -4,18 +4,18 @@
 #include <elephantlogger/log.h>
 
 // Include Outputs headers
-#include <elephantlogger/outputs/DebugOutput.h>
+#include <elephantlogger/outputs/ConsoleOutput.h>
 #include <elephantlogger/outputs/FileOutput.h>
 
 
 // Initialize the logger with custom outputs and channels.
 static void customInitElephant() {
-    static elephantlogger::DebugOutput      debugOutput;
+    static elephantlogger::ConsoleOutput    consoleOutput;
     static elephantlogger::FileOutput       filelog("elephant.log");
 
     elephantlogger::init();
 
-    elephantlogger::addOutput(1, &debugOutput);
+    elephantlogger::addOutput(1, &consoleOutput);
     elephantlogger::addOutput(1, &filelog);
 }
 
