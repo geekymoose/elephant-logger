@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0 // Multi-threaded version not supported anymore
+
 #include <vector>
 #include <mutex>
 #include <atomic>
@@ -13,6 +15,19 @@
 #include "LogMessage.h"
 #include "config.h"
 #include "utils.h"
+
+
+/**
+ * Initial size of the log queue.
+ *
+ * Each time a message is queued, I use push_back,
+ * which is slow if has reached vector max size.
+ * To avoid this, we should initialize the queue with a size big enough
+ * to be hard to reach (Not enough logs in the queue)
+ * and small enough for memory use space.
+ */
+#define ELEPHANTLOGGER_DEFAULT_QUEUE_SIZE = 40
+
 
 namespace elephantlogger {
 
@@ -126,8 +141,8 @@ class Logger : private Singleton<Logger> {
             m_isRunning         = true;
             m_queueLogsFront    = &m_queueLogs1;
             m_queueLogsBack     = &m_queueLogs2;
-            m_queueLogs1.reserve(config::DEFAULT_QUEUE_SIZE);
-            m_queueLogs2.reserve(config::DEFAULT_QUEUE_SIZE);
+            m_queueLogs1.reserve(ELEPHANTLOGGER_DEFAULT_QUEUE_SIZE);
+            m_queueLogs2.reserve(ELEPHANTLOGGER_DEFAULT_QUEUE_SIZE);
 
             ELEPHANTLOGGER_ASSERT(m_queueLogsFront != nullptr);
             ELEPHANTLOGGER_ASSERT(m_queueLogsBack  != nullptr);
@@ -140,7 +155,7 @@ class Logger : private Singleton<Logger> {
             m_isRunning = false;
             std::lock_guard<std::mutex> lock(m_mutexBack);
 
-            processBackQueue();
+            processBackQueue();elephantlogger
             swapQueues();
             processBackQueue();
 
@@ -190,4 +205,6 @@ class Logger : private Singleton<Logger> {
 
 
 }
+
+#endif
 
