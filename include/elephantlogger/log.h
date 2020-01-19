@@ -82,7 +82,7 @@ inline void log(const LogLevel level,
                 const char * function,
                 const char * format,
                 ...) {
-    if(Logger::get().passFilter(level, channels)) {
+    if(Logger::get().passFilters(level, channels)) {
         va_list argList;
         va_start(argList, format);
         Logger::get().log(level, channels, file, line, function, format, argList);
@@ -96,21 +96,21 @@ inline void log(const LogLevel level,
 
 #define _LOG(level, channelID, format, ...) elephantlogger::log(level, channelID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 
-#define LOG_WTF(format, ...)     _LOG(elephantlogger::LogLevel::Wtf, 0, format, ##__VA_ARGS__)
-#define LOG_ERROR(format, ...)   _LOG(elephantlogger::LogLevel::Error, 0, format, ##__VA_ARGS__)
-#define LOG_WARNING(format, ...) _LOG(elephantlogger::LogLevel::Warning, 0, format, ##__VA_ARGS__)
-#define LOG_CONFIG(format, ...)  _LOG(elephantlogger::LogLevel::Config, 0, format, ##__VA_ARGS__)
-#define LOG_INFO(format, ...)    _LOG(elephantlogger::LogLevel::Info, 0, format, ##__VA_ARGS__)
-#define LOG_TRACE(format, ...)   _LOG(elephantlogger::LogLevel::Trace, 0, format, ##__VA_ARGS__)
-#define LOG_DEBUG(format, ...)   _LOG(elephantlogger::LogLevel::Debug, 0, format, ##__VA_ARGS__)
+#define LOG_WTF(format, ...)     _LOG(elephantlogger::LogLevel::Debug, 1, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_ERROR(format, ...)   _LOG(elephantlogger::LogLevel::Error, 1, format, ##__VA_ARGS__)
+#define LOG_WARNING(format, ...) _LOG(elephantlogger::LogLevel::Warning, 1, format, ##__VA_ARGS__)
+#define LOG_CONFIG(format, ...)  _LOG(elephantlogger::LogLevel::Config, 1, format, ##__VA_ARGS__)
+#define LOG_INFO(format, ...)    _LOG(elephantlogger::LogLevel::Info, 1, format, ##__VA_ARGS__)
+#define LOG_TRACE(format, ...)   _LOG(elephantlogger::LogLevel::Trace, 1, format, ##__VA_ARGS__)
+#define LOG_DEBUG(format, ...)   _LOG(elephantlogger::LogLevel::Debug, 1, format, ##__VA_ARGS__)
 
-#define LOG_WTF_(channelID, format, ...)     _LOG(elephantlogger::LogLevel::Wtf, channelID, format, ##__VA_ARGS__)
-#define LOG_ERROR_(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Error, channelID, format, ##__VA_ARGS__)
-#define LOG_WARNING_(channelID, format, ...) _LOG(elephantlogger::LogLevel::Warning, channelID, format, ##__VA_ARGS__)
-#define LOG_CONFIG_(channelID, format, ...)  _LOG(elephantlogger::LogLevel::Config, channelID, format, ##__VA_ARGS__)
-#define LOG_INFO_(channelID, format, ...)    _LOG(elephantlogger::LogLevel::Info, channelID, format, ##__VA_ARGS__)
-#define LOG_TRACE_(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Trace, channelID, format, ##__VA_ARGS__)
-#define LOG_DEBUG_(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Debug, channelID, format, ##__VA_ARGS__)
+#define LOG_WTF_IN(channelID, format, ...)     _LOG(elephantlogger::LogLevel::Wtf, channelID, format, ##__VA_ARGS__)
+#define LOG_ERROR_IN(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Error, channelID, format, ##__VA_ARGS__)
+#define LOG_WARNING_IN(channelID, format, ...) _LOG(elephantlogger::LogLevel::Warning, channelID, format, ##__VA_ARGS__)
+#define LOG_CONFIG_IN(channelID, format, ...)  _LOG(elephantlogger::LogLevel::Config, channelID, format, ##__VA_ARGS__)
+#define LOG_INFO_IN(channelID, format, ...)    _LOG(elephantlogger::LogLevel::Info, channelID, format, ##__VA_ARGS__)
+#define LOG_TRACE_IN(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Trace, channelID, format, ##__VA_ARGS__)
+#define LOG_DEBUG_IN(channelID, format, ...)   _LOG(elephantlogger::LogLevel::Debug, channelID, format, ##__VA_ARGS__)
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 

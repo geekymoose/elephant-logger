@@ -29,17 +29,6 @@ class Logger : private Singleton<Logger> {
 
     public:
 
-        /**
-         * Writes a log for the specified channels.
-         *
-         * \param level     Log Level for this message.
-         * \param channels  The channels related to this log.
-         * \param file      File that created the log
-         * \param line      Line position in file.
-         * \param function  Function's name.
-         * \param format    Row message, using printf convention (%s, %d etc).
-         * \param argList   Variable list of parameters.
-         */
         void log(const LogLevel level,
                  const uint64_t channels,
                  const char * file,
@@ -47,12 +36,12 @@ class Logger : private Singleton<Logger> {
                  const char * function,
                  const char * format,
                  va_list argList) {
-            if(this->passFilter(level, channels)) {
+            if(this->passFilters(level, channels)) {
                 ELEPHANTLOGGER_ASSERT(channel != 0);
 
                 for(IOutput * output : this->m_outputs) {
                     ELEPHANTLOGGER_ASSERT(output != nullptr);
-                    if(output != nullptr && output->passFilter(level, channels)) {
+                    if(output != nullptr && output->passFilters(level, channels)) {
                         LogMessage msg(level, channels, file, line, function, format, argList);
                         output->write(msg);
                     }
@@ -60,14 +49,6 @@ class Logger : private Singleton<Logger> {
             }
         }
 
-        /**
-         * Adds an output with the given channels filter (reset old filter if exists).
-         * Keep a pointer to this output (beware with variable scope).
-         *
-         * \param output    The output to add.
-         * \param level     Log level for this output.
-         * \param channels  Channels filter for this output.
-         */
         void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
             ELEPHANTLOGGER_ASSERT(channel != 0);
@@ -79,7 +60,7 @@ class Logger : private Singleton<Logger> {
             }
         }
 
-        bool passFilter(const LogLevel level, const uint64_t channels) const {
+        bool passFilters(const LogLevel level, const uint64_t channels) const {
             return level <= this->m_currentLogLevel && (channels & this->m_currentChannelsFilter) != 0;
         }
 

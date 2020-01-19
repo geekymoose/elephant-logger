@@ -23,12 +23,12 @@ static void customInitElephant() {
 int main(int argc, char** argv) {
     customInitElephant();
 
-    LOG_WARNING_(CHANNEL_ONLINE, "Some warning log");
-    LOG_DEBUG_(CHANNEL_ENGINE, "Some debug log");
-    LOG_ERROR_(CHANNEL_ENGINE, "Some error log");
-    LOG_CONFIG_(CHANNEL_ONLINE, "Some config log");
-    LOG_TRACE_(CHANNEL_ENGINE, "Some trace log");
-    LOG_INFO_(CHANNEL_ENGINE, "Some information log");
+    LOG_WARNING_IN(CHANNEL_ONLINE, "Some warning log");
+    LOG_DEBUG_IN(CHANNEL_ENGINE, "Some debug log");
+    LOG_ERROR_IN(CHANNEL_ENGINE, "Some error log");
+    LOG_CONFIG_IN(CHANNEL_ONLINE, "Some config log");
+    LOG_TRACE_IN(CHANNEL_ENGINE, "Some trace log");
+    LOG_INFO_IN(CHANNEL_ENGINE, "Some information log");
 
     return 0;
 }

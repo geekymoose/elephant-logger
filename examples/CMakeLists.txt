@@ -13,6 +13,6 @@ target_link_libraries(example2 -pthread)
 add_custom_target(runExample2 example2)
 
 # Example 3
-add_executable(example3 ex3_customInit/main.cpp)
+add_executable(example3 ex3_customOutputs/main.cpp)
 target_link_libraries(example3 -pthread)
 add_custom_target(runExample3 example3)

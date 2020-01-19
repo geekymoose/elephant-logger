@@ -7,29 +7,17 @@
 
 namespace elephantlogger {
 
-/**
- * Interface that defines how to write a log.
- */
 class IOutput {
     private:
-        int m_currentLogLevel;
+        LogLevel m_currentLogLevel;
         uint64_t m_currentChannelsFilter;
 
     public:
         virtual ~IOutput() = default;
 
-        /**
-         * Writes one log in this output and add a line return.
-         * Message is formatted.
-         *
-         * \param message The message to wirte in this output.
-         */
         virtual void write(const LogMessage & message) = 0;
 
-        /**
-         * Checkes whether this output accept the given conditions.
-         */
-        bool passFilter(const LogLevel level, const uint64_t channels) const {
+        bool passFilters(const LogLevel level, const uint64_t channels) const {
             return level <= this->m_currentLogLevel && (channels & this->m_currentChannelsFilter) != 0;
         }
 
@@ -49,5 +37,5 @@ class IOutput {
 };
 
 
-} // End namespace
+}
 

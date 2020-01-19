@@ -9,11 +9,6 @@
 
 namespace elephantlogger {
 
-
-/**
- * This output writes logs in a file.
- * All functions are thread safe.
- */
 class FileOutput : public IOutput {
 
     private:
@@ -24,25 +19,16 @@ class FileOutput : public IOutput {
 
     public:
 
-        /**
-         * Creates a new log file (appends log if exists).
-         *
-         * \param filename File's path (path + name)
-         */
         FileOutput(const std::string & filename) : m_filename(filename) {
-            m_stream.open(m_filename, std::fstream::app | std::fstream::out); // append
+            m_stream.open(m_filename, std::fstream::app | std::fstream::out); // Append if exists
         }
 
-        /**
-         * Close file stream and destroye this poor object.
-         */
         ~FileOutput() {
             if(m_stream.is_open()) {
                 m_stream.close();
             }
         }
 
-        /** \copydoc IOutput::write() */
         void write(const LogMessage & message) override {
             std::lock_guard<std::mutex> lock(m_streamAccess);
 
@@ -53,5 +39,5 @@ class FileOutput : public IOutput {
 };
 
 
-} // End namespace
+}
 

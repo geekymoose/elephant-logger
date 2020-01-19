@@ -11,10 +11,7 @@
 
 namespace elephantlogger {
 
-/**
- * Internal representation of a log message.
- * A message can't excess a defined size. (Usually 256 characters).
- */
+// Internal representation of a log message.
 class LogMessage {
 
     private:
@@ -42,16 +39,11 @@ class LogMessage {
                                       m_creationTime(std::time(nullptr)) {
             memcpy(m_file, file, strlen(file));
             memcpy(m_function, function, strlen(function));
+            //Message is truncated if length higher than max size.
             vsnprintf(m_message, config::LOG_MSG_SIZE-1, format, argList); // -1 for '\0'
             m_message[config::LOG_MSG_SIZE-1] = '\0';
         }
 
-        /**
-         * Returns the formatted version of the message.
-         * Message is truncated if length higher than max size.
-         *
-         * \return Formatted version of the message.
-         */
         const std::string getFormattedMessage() const {
 
             std::string dateStr = ctime(&m_creationTime);
@@ -64,13 +56,6 @@ class LogMessage {
             msg += m_message;
             return msg;
         }
-
-        /**
-         * Returns channel ID where to write this message.
-         *
-         * \return Channel ID.
-         */
-        const int getChannelID() const { return m_channelID; }
 };
 
 
