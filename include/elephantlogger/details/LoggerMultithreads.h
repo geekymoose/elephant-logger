@@ -7,6 +7,7 @@
 #include <thread>
 #include <cstdarg>
 
+#include "elephantlogger/outputs/IOutput.h"
 #include "Channel.h"
 #include "LogLevel.h"
 #include "LogMessage.h"
@@ -15,14 +16,11 @@
 
 namespace elephantlogger {
 
-class IOutput;
-
-
 /**
  * Multithreaded version of the logger.
  *
- * Run inside it's own thread (all functions are thread safe).
- * The user thread only queue message to be processed.
+ * Run inside it's own thread (public functions are thread safe).
+ * The user thread only queues the messages to be processed.
  */
 class Logger : private Singleton<Logger> {
     ELEPHANTLOGGER_ADD_SINGLETON_UTILS(Logger);
@@ -42,9 +40,6 @@ class Logger : private Singleton<Logger> {
         std::condition_variable m_conditionvar;
         std::mutex m_mutexFront;
         std::mutex m_mutexBack;
-
-
-    // -------------------------------------------------------------------------
 
     public:
 
@@ -195,3 +190,4 @@ class Logger : private Singleton<Logger> {
 
 
 }
+

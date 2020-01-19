@@ -14,3 +14,4 @@ cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
 make
 make runExample1
 make runExample2
+make runExample3

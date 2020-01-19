@@ -10,7 +10,6 @@
 namespace elephantlogger {
 namespace config {
 
-
 enum : int {
 
     /**

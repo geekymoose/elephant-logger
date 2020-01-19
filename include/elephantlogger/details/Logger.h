@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdarg>
 
+#include "elephantlogger/outputs/IOutput.h"
 #include "Channel.h"
 #include "LogLevel.h"
 #include "LogMessage.h"
@@ -11,9 +12,6 @@
 
 
 namespace elephantlogger {
-
-class IOutput;
-
 
 /**
  * The Famous Ugly Logger (Singleton).
@@ -25,11 +23,6 @@ class Logger : private Singleton<Logger> {
 
         LogLevel m_currentLogLevel;
         Channel m_lookupChannels[static_cast<size_t>(config::NB_CHANNELS)];
-
-        Logger() = default;
-        ~Logger() = default;
-
-    // -------------------------------------------------------------------------
 
     public:
 
@@ -98,8 +91,13 @@ class Logger : private Singleton<Logger> {
         LogLevel getLogLevel() const {
             return m_currentLogLevel;
         }
+
+    private:
+
+        Logger() = default;
+        ~Logger() = default;
 };
 
 
-}
+} // End namespace
 

@@ -16,25 +16,18 @@ namespace elephantlogger {
  */
 class FileOutput : public IOutput {
 
-    // -------------------------------------------------------------------------
-    // Variables
-    // -------------------------------------------------------------------------
     private:
+
         std::string m_filename;
         std::ofstream m_stream;
         mutable std::mutex m_streamAccess;
 
-
-    // -------------------------------------------------------------------------
-    // Initialization
-    // -------------------------------------------------------------------------
     public:
 
         /**
-         * Create a new log file.
-         * Appends log if exists.
+         * Creates a new log file (appends log if exists).
          *
-         * \param filename Name of the file.
+         * \param filename File's path (path + name)
          */
         FileOutput(const std::string & filename) : m_filename(filename) {
             m_stream.open(m_filename, std::fstream::app | std::fstream::out); // append
@@ -48,12 +41,6 @@ class FileOutput : public IOutput {
                 m_stream.close();
             }
         }
-
-
-    // -------------------------------------------------------------------------
-    // IOutPut override
-    // -------------------------------------------------------------------------
-    public:
 
         /** \copydoc IOutput::write() */
         void write(const LogMessage & message) override {

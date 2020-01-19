@@ -2,18 +2,15 @@
 
 #include <string>
 #include <elephantlogger/log.h>
-
-// Include Outputs headers
 #include <elephantlogger/outputs/ConsoleOutput.h>
 #include <elephantlogger/outputs/FileOutput.h>
 
-
 // Initialize the logger with custom outputs and channels.
 static void customInitElephant() {
+    elephantlogger::init();
+
     static elephantlogger::ConsoleOutput    consoleOutput;
     static elephantlogger::FileOutput       filelog("elephant.log");
-
-    elephantlogger::init();
 
     elephantlogger::addOutput(1, &consoleOutput);
     elephantlogger::addOutput(1, &filelog);
@@ -28,5 +25,6 @@ int main(int argc, char** argv) {
     LOG_CONFIG_(1, "Some config log");
     LOG_TRACE_(1, "Some trace log");
     LOG_INFO_(1, "Some information log");
+
     return 0;
 }

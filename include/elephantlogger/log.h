@@ -9,15 +9,15 @@
 
 #include <stdarg.h>
 
-#include "details/LogLevel.h"
-#include "details/config.h"
-#include "outputs/IOutput.h"
-#include "outputs/ConsoleOutput.h"
+#include "elephantlogger/details/LogLevel.h"
+#include "elephantlogger/details/config.h"
+#include "elephantlogger/outputs/IOutput.h"
+#include "elephantlogger/outputs/ConsoleOutput.h"
 
 #ifdef ELEPHANTLOGGER_MULTITHREADS_ENABLED
-#   include "details/LoggerMultithreads.h"
+#   include "elephantlogger/details/LoggerMultithreads.h"
 #else
-#   include "details/Logger.h"
+#   include "elephantlogger/details/Logger.h"
 #endif
 
 
@@ -52,7 +52,7 @@ inline void addOutput(const int channelID, IOutput * output) {
 }
 
 /**
- * Change the log level.
+ * Changes the log level.
  * This may be called at runtime.
  *
  * \param level New level of log to apply.
@@ -62,7 +62,7 @@ inline void setLogLevel(const LogLevel level) {
 }
 
 /**
- * Log a message.
+ * Logs a message.
  * Accept the message only if LogLevel inferior or equals to current logger level.
  *
  * \param level     Log Level for this message.

@@ -3,7 +3,7 @@
 #include <ctime>
 #include <string>
 #include <cstring>
-#include <stdarg.h> // va_list
+#include <stdarg.h>
 
 #include "LogLevel.h"
 #include "config.h"
@@ -11,17 +11,14 @@
 
 namespace elephantlogger {
 
-
-
 /**
  * Internal representation of a log message.
  * A message can't excess a defined size. (Usually 256 characters).
  */
 class LogMessage {
-    // -------------------------------------------------------------------------
-    // Attributes
-    // -------------------------------------------------------------------------
+
     private:
+
         const LogLevel      m_logLevel;
         const int           m_channelID;
         char                m_file[config::LOG_FILE_SIZE];
@@ -31,10 +28,8 @@ class LogMessage {
         const std::time_t   m_creationTime;
 
 
-    // -------------------------------------------------------------------------
-    // Initialization
-    // -------------------------------------------------------------------------
     public:
+
         LogMessage(const LogLevel logLevel,
                    const int channelID,
                    const char* file,
@@ -51,14 +46,8 @@ class LogMessage {
             m_message[config::LOG_MSG_SIZE-1] = '\0';
         }
 
-
-    // -------------------------------------------------------------------------
-    // Core
-    // -------------------------------------------------------------------------
-    public:
-
         /**
-         * Returns the Formatted version of the message.
+         * Returns the formatted version of the message.
          * Message is truncated if length higher than max size.
          *
          * \return Formatted version of the message.
@@ -70,7 +59,7 @@ class LogMessage {
 
             std::string msg = "[" + dateStr +"] ";
             msg += "[";
-            msg += LogLevelHelper::logLevelToString(m_logLevel);
+            msg += logLevelToString(m_logLevel);
             msg += "]: ";
             msg += m_message;
             return msg;
@@ -86,5 +75,4 @@ class LogMessage {
 
 
 } // End namespace
-
 

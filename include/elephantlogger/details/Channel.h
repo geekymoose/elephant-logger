@@ -8,7 +8,6 @@
 
 namespace elephantlogger {
 
-
 /**
  * A Channel is where logs are sent.
  * Several outputs may be registered for a channel.
@@ -19,12 +18,10 @@ class Channel {
         std::vector<IOutput *> m_outputs;
 
     public:
-        Channel() = default;
-        ~Channel() = default;
 
         /**
-         * A an output linked with this Channel.
-         * Channel now write in this output as well.
+         * Add an output in this channel.
+         * This channel now writes in this output as well.
          *
          * \param output Pointer to the output.
          */
@@ -33,7 +30,7 @@ class Channel {
         }
 
         /**
-         * Write message in all outputs linked with this channel.
+         * Writes the message in the channel's outputs.
          *
          * \param message Log message to write.
          */
