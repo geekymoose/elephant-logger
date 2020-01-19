@@ -9,16 +9,11 @@
 
 #include <stdarg.h>
 
-#include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/config.h"
+#include "elephantlogger/details/Logger.h"
+#include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/outputs/IOutput.h"
 #include "elephantlogger/outputs/ConsoleOutput.h"
-
-#ifdef ELEPHANTLOGGER_MULTITHREADS_ENABLED
-#   include "elephantlogger/details/LoggerMultithreads.h"
-#else
-#   include "elephantlogger/details/Logger.h"
-#endif
 
 
 namespace elephantlogger {
@@ -29,7 +24,7 @@ namespace elephantlogger {
  * 
  * \param level Maximum level of log to use (uses default if empty).
  */
-inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
+inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleOutput console;
     Logger::get().setLogLevel(level);
     Logger::get().addOutput(&console, level, 1); // Create an output for the default channel 1
@@ -47,7 +42,7 @@ inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
  * \param level     Log level for this output.
  * \param channels  Channels filter for this output.
  */
-inline void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {
+inline void addOutput(IOutput * output, LogLevel level, uint64_t channels) {
     Logger::get().addOutput(output, level, channels);
 }
 
@@ -57,7 +52,7 @@ inline void addOutput(IOutput * output, const LogLevel level, const uint64_t cha
  *
  * \param level Level of log to apply.
  */
-inline void setLogLevel(const LogLevel level) {
+inline void setLogLevel(LogLevel level) {
     Logger::get().setLogLevel(level);
 }
 
@@ -87,14 +82,14 @@ inline void enableAllChannels() {
  * Accept the message only if LogLevel inferior or equals to current logger level.
  *
  * \param level     Log Level for this message.
- * \param channels  ID of the channel where to write log.
- * \param file      File that created the log
+ * \param channels  Filter with the channels where to write this log.
+ * \param file      File that created the log.
  * \param line      Line position in file.
  * \param function  Function's name.
  * \param format    Row message, using printf convention (%s, %d etc).
  * \param argList   Variable list of parameters.
  */
-inline void log(LogLevel level, int channels, const char * file, int line, const char * function, const char * format, ...) {
+inline void log(LogLevel level, uint64_t channels, const char * file, int line, const char * function, const char * format, ...) {
     if(Logger::get().passFilters(level, channels)) {
         va_list argList;
         va_start(argList, format);
@@ -160,13 +155,13 @@ inline void log(const LogLevel level, const int channelID, const char* file,
 #define LOG_TRACE(format, ...)
 #define LOG_DEBUG(format, ...)
 
-#define LOG_WTF_(channelID, format, ...)
-#define LOG_ERROR_(channelID, format, ...)
-#define LOG_WARNING_(channelID, format, ...)
-#define LOG_CONFIG_(channelID, format, ...)
-#define LOG_INFO_(channelID, format, ...)
-#define LOG_TRACE_(channelID, format, ...)
-#define LOG_DEBUG_(channelID, format, ...)
+#define LOG_WTF_IN(channelID, format, ...)
+#define LOG_ERROR_IN(channelID, format, ...)
+#define LOG_WARNING_IN(channelID, format, ...)
+#define LOG_CONFIG_IN(channelID, format, ...)
+#define LOG_INFO_IN(channelID, format, ...)
+#define LOG_TRACE_IN(channelID, format, ...)
+#define LOG_DEBUG_IN(channelID, format, ...)
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 
