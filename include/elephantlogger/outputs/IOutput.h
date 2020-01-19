@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include "elephantlogger/details/config.h"
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/LogMessage.h"
 
@@ -21,18 +22,30 @@ class IOutput {
             return level <= this->m_currentLogLevel && (channels & this->m_currentChannelsFilter) != 0;
         }
 
-        void setChannelsFilter(const uint64_t channels) {
-            this->m_currentChannelsFilter = channels;
-        }
-
         void setLogLevel(const LogLevel level) {
             this->m_currentLogLevel = level;
         }
 
+        void setChannelsFilter(const uint64_t channels) {
+            this->m_currentChannelsFilter = channels;
+        }
+
+        void enableAllChannels() {
+            this->m_currentChannelsFilter = UINT64_MAX; // Accept all
+        }
+
+        void enableChannels(const uint64_t channels) {
+            this->m_currentChannelsFilter |= channels;
+        }
+
+        void disableChannels(const uint64_t channels) {
+            this->m_currentChannelsFilter ^= channels;
+        }
+
     protected:
         IOutput() {
-            this->m_currentLogLevel = LogLevel::Debug;
-            this->m_currentChannelsFilter = UINT64_MAX; // Accept all by default
+            this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
+            this->enableAllChannels(); // Accept all by default
         }
 };
 

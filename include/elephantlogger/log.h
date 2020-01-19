@@ -25,8 +25,7 @@ namespace elephantlogger {
 
 /**
  * Initialize the logger and all its subsystems.
- * By default, the first channel has a ConsoleOutput setup.
- * This method must be called once before any log call..
+ * This creates a ConsoleOutput linked with the default channel.
  * 
  * \param level Maximum level of log to use (uses default if empty).
  */
@@ -39,11 +38,10 @@ inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
 /**
  * Adds an output with the given channels filter (reset old filter if exists).
  * Keep a pointer to this output (beware with variable scope).
- * 
+ *
  * \warning
  * Logger keeps a pointer only, therefore the output variable must live
  * until the logger is stopped (dangling pointer otherwise).
- *
  *
  * \param output    The output to add.
  * \param level     Log level for this output.
@@ -54,13 +52,34 @@ inline void addOutput(IOutput * output, const LogLevel level, const uint64_t cha
 }
 
 /**
- * Changes the log level.
+ * Changes the general log level.
  * This may be called at runtime.
  *
- * \param level New level of log to apply.
+ * \param level Level of log to apply.
  */
 inline void setLogLevel(const LogLevel level) {
     Logger::get().setLogLevel(level);
+}
+
+/**
+ * New logs are accepted by the logger.
+ */
+inline void enableLogger() {
+    Logger::get().setEnabled(true);
+}
+
+/**
+ * New logs are simply bypassed by the logger.
+ */
+inline void disableLogger() {
+    Logger::get().setEnabled(false);
+}
+
+/**
+ * All channels are accepted by the logger.
+ */
+inline void enableAllChannels() {
+    Logger::get().enableAllChannels();
 }
 
 /**
@@ -75,13 +94,7 @@ inline void setLogLevel(const LogLevel level) {
  * \param format    Row message, using printf convention (%s, %d etc).
  * \param argList   Variable list of parameters.
  */
-inline void log(const LogLevel level,
-                const int channels,
-                const char * file,
-                const int line,
-                const char * function,
-                const char * format,
-                ...) {
+inline void log(LogLevel level, int channels, const char * file, int line, const char * function, const char * format, ...) {
     if(Logger::get().passFilters(level, channels)) {
         va_list argList;
         va_start(argList, format);

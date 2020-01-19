@@ -23,6 +23,7 @@ class Logger : private Singleton<Logger> {
 
     private:
 
+        bool m_enabled;
         LogLevel m_currentLogLevel;
         uint64_t m_currentChannelsFilter; // Max nb channels is 64
         std::vector<IOutput *> m_outputs;
@@ -36,7 +37,7 @@ class Logger : private Singleton<Logger> {
                  const char * function,
                  const char * format,
                  va_list argList) {
-            if(this->passFilters(level, channels)) {
+            if(this->m_enabled && this->passFilters(level, channels)) {
                 ELEPHANTLOGGER_ASSERT(channel != 0);
 
                 for(IOutput * output : this->m_outputs) {
@@ -68,21 +69,33 @@ class Logger : private Singleton<Logger> {
             this->m_currentLogLevel = level;
         }
 
+        void setEnabled(const bool enabled) {
+            this->m_enabled = enabled;
+        }
+
         void setChannelsFilter(const uint64_t channels) {
             this->m_currentChannelsFilter = channels;
         }
-        void acceptAllChannels() {
+
+        void enableAllChannels() {
             this->m_currentChannelsFilter = UINT64_MAX; // Accept all
+        }
+
+        void enableChannels(const uint64_t channels) {
+            this->m_currentChannelsFilter |= channels;
+        }
+
+        void disableChannels(const uint64_t channels) {
+            this->m_currentChannelsFilter ^= channels;
         }
 
     private:
 
         Logger() {
-            this->acceptAllChannels();
+            this->m_enabled = true;
+            this->enableAllChannels();
             this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
         }
-
-        ~Logger() = default;
 };
 
 
