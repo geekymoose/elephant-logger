@@ -32,23 +32,25 @@ namespace elephantlogger {
  */
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleOutput console;
-    Logger::get().addOutput(0, &console);
     Logger::get().setLogLevel(level);
+    Logger::get().addOutput(&console, level, 1); // Create an output for the default channel 1
 }
 
 /**
- * Adds an Output to the specific channel.
- * Do nothing in case of invalid ID or nullptr.
- *
+ * Adds an output with the given channels filter (reset old filter if exists).
+ * Keep a pointer to this output (beware with variable scope).
+ * 
  * \warning
- * Channel keeps a pointer only, therefore the output variable must live
+ * Logger keeps a pointer only, therefore the output variable must live
  * until the logger is stopped (dangling pointer otherwise).
  *
- * \param channelID ID of the channel where to add output.
- * \param output Pointer to the output instance (do nothing if null).
+ *
+ * \param output    The output to add.
+ * \param level     Log level for this output.
+ * \param channels  Channels filter for this output.
  */
-inline void addOutput(const int channelID, IOutput * output) {
-    Logger::get().addOutput(channelID, output);
+inline void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {
+    Logger::get().addOutput(output, level, channels);
 }
 
 /**
@@ -66,7 +68,7 @@ inline void setLogLevel(const LogLevel level) {
  * Accept the message only if LogLevel inferior or equals to current logger level.
  *
  * \param level     Log Level for this message.
- * \param channelID ID of the channel where to write log.
+ * \param channels  ID of the channel where to write log.
  * \param file      File that created the log
  * \param line      Line position in file.
  * \param function  Function's name.
@@ -74,16 +76,16 @@ inline void setLogLevel(const LogLevel level) {
  * \param argList   Variable list of parameters.
  */
 inline void log(const LogLevel level,
-                const int channelID,
+                const int channels,
                 const char * file,
                 const int line,
                 const char * function,
                 const char * format,
                 ...) {
-    if(Logger::get().isLogLevelAccepted(level)) {
+    if(Logger::get().passFilter(level, channels)) {
         va_list argList;
         va_start(argList, format);
-        Logger::get().log(level, channelID, file, line, function, format, argList);
+        Logger::get().log(level, channels, file, line, function, format, argList);
         va_end(argList);
     }
 }
@@ -130,10 +132,10 @@ inline void log(const LogLevel level,
 namespace elephantlogger {
 
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
-inline void addOutput(const int channelID, IOutput * output) {}
+inline void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {}
 inline void setLogLevel(const LogLevel level) {}
 inline void log(const LogLevel level, const int channelID, const char* file,
-         const int line, const char* function, const char* format, ...) {}
+                const int line, const char* function, const char* format, ...) {}
 
 #ifndef ELEPHANTLOGGER_MACROS_DISABLED
 

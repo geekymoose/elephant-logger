@@ -5,26 +5,30 @@
 #include <elephantlogger/outputs/ConsoleOutput.h>
 #include <elephantlogger/outputs/FileOutput.h>
 
+// Channels accessible from the code
+static uint64_t CHANNEL_ONLINE = 1;
+static uint64_t CHANNEL_ENGINE = 2;
+
 // Initialize the logger with custom outputs and channels.
 static void customInitElephant() {
     elephantlogger::init();
 
-    static elephantlogger::ConsoleOutput    consoleOutput;
-    static elephantlogger::FileOutput       filelog("elephant.log");
+    static elephantlogger::ConsoleOutput   consoleOutput;
+    static elephantlogger::FileOutput      filelog("elephant.log");
 
-    elephantlogger::addOutput(1, &consoleOutput);
-    elephantlogger::addOutput(1, &filelog);
+    elephantlogger::addOutput(&consoleOutput, elephantlogger::LogLevel::Debug, CHANNEL_ENGINE);
+    elephantlogger::addOutput(&filelog, elephantlogger::LogLevel::Debug, CHANNEL_ONLINE);
 }
 
 int main(int argc, char** argv) {
     customInitElephant();
 
-    LOG_WARNING_(1, "Some warning log");
-    LOG_DEBUG_(1, "Some debug log");
-    LOG_ERROR_(1, "Some error log");
-    LOG_CONFIG_(1, "Some config log");
-    LOG_TRACE_(1, "Some trace log");
-    LOG_INFO_(1, "Some information log");
+    LOG_WARNING_(CHANNEL_ONLINE, "Some warning log");
+    LOG_DEBUG_(CHANNEL_ENGINE, "Some debug log");
+    LOG_ERROR_(CHANNEL_ENGINE, "Some error log");
+    LOG_CONFIG_(CHANNEL_ONLINE, "Some config log");
+    LOG_TRACE_(CHANNEL_ENGINE, "Some trace log");
+    LOG_INFO_(CHANNEL_ENGINE, "Some information log");
 
     return 0;
 }

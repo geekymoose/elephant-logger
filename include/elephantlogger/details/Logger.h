@@ -2,9 +2,10 @@
 
 #include <vector>
 #include <cstdarg>
+#include <cmath>
+#include <stdint.h>
 
 #include "elephantlogger/outputs/IOutput.h"
-#include "Channel.h"
 #include "LogLevel.h"
 #include "LogMessage.h"
 #include "config.h"
@@ -14,7 +15,8 @@
 namespace elephantlogger {
 
 /**
- * The Famous Ugly Logger (Singleton).
+ * Nellie, the famous elephant logger.
+ * She's thirsty of logs and will remember all of them!
  */
 class Logger : private Singleton<Logger> {
     ELEPHANTLOGGER_ADD_SINGLETON_UTILS(Logger);
@@ -22,17 +24,16 @@ class Logger : private Singleton<Logger> {
     private:
 
         LogLevel m_currentLogLevel;
-        Channel m_lookupChannels[static_cast<size_t>(config::NB_CHANNELS)];
+        uint64_t m_currentChannelsFilter; // Max nb channels is 64
+        std::vector<IOutput *> m_outputs;
 
     public:
 
         /**
-         * Queue a log to be processed by the respective Output.
-         * This function is meant be be as fast as possible.
-         * Only queue the message to be processed later by logger thread.
+         * Writes a log for the specified channels.
          *
          * \param level     Log Level for this message.
-         * \param channelID ID of the channel where to write log.
+         * \param channels  The channels related to this log.
          * \param file      File that created the log
          * \param line      Line position in file.
          * \param function  Function's name.
@@ -40,61 +41,66 @@ class Logger : private Singleton<Logger> {
          * \param argList   Variable list of parameters.
          */
         void log(const LogLevel level,
-                 const int channelID,
+                 const uint64_t channels,
                  const char * file,
                  const int line,
                  const char * function,
                  const char * format,
                  va_list argList) {
-            LogMessage msg(level, channelID, file, line, function, format, argList);
-            ELEPHANTLOGGER_ASSERT(channelID < config::NB_CHANNELS);
-            if(channelID < config::NB_CHANNELS) {
-                auto& coco = m_lookupChannels[static_cast<size_t>(channelID)];
-                coco.write(msg);
+            if(this->passFilter(level, channels)) {
+                ELEPHANTLOGGER_ASSERT(channel != 0);
+
+                for(IOutput * output : this->m_outputs) {
+                    ELEPHANTLOGGER_ASSERT(output != nullptr);
+                    if(output != nullptr && output->passFilter(level, channels)) {
+                        LogMessage msg(level, channels, file, line, function, format, argList);
+                        output->write(msg);
+                    }
+                }
             }
         }
 
         /**
-         * Checks whether the given loglevel value is accepted by this logger.
+         * Adds an output with the given channels filter (reset old filter if exists).
+         * Keep a pointer to this output (beware with variable scope).
          *
-         * \return True if accepted, otherwise, return false.
+         * \param output    The output to add.
+         * \param level     Log level for this output.
+         * \param channels  Channels filter for this output.
          */
-        bool isLogLevelAccepted(const LogLevel level) const {
-            return m_currentLogLevel >= level;
-        }
-
-        /**
-         * Adds an output to the specific channel.
-         * Keep a pointer to this output (Beware with variable scope).
-         *
-         * \param channelID The channel where to add output.
-         * \param output The output to add in the channel.
-         */
-        void addOutput(const int channelID, IOutput * output) {
+        void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
-            ELEPHANTLOGGER_ASSERT(channelID >= 0 && channelID < config::NB_CHANNELS);
-            if(channelID >= 0 && channelID < config::NB_CHANNELS) {
-                m_lookupChannels[channelID].addOutput(output);
+            ELEPHANTLOGGER_ASSERT(channel != 0);
+
+            if(output != nullptr) {
+                output->setLogLevel(level);
+                output->setChannelsFilter(channels);
+                this->m_outputs.push_back(output);
             }
         }
 
-        /**
-         * Changes the current log level.
-         */
-        void setLogLevel(const LogLevel level) {
-            m_currentLogLevel = level;
+        bool passFilter(const LogLevel level, const uint64_t channels) const {
+            return level <= this->m_currentLogLevel && (channels & this->m_currentChannelsFilter) != 0;
         }
 
-        /**
-         * Returns the current log level.
-         */
-        LogLevel getLogLevel() const {
-            return m_currentLogLevel;
+        void setLogLevel(const LogLevel level) {
+            this->m_currentLogLevel = level;
+        }
+
+        void setChannelsFilter(const uint64_t channels) {
+            this->m_currentChannelsFilter = channels;
+        }
+        void acceptAllChannels() {
+            this->m_currentChannelsFilter = UINT64_MAX; // Accept all
         }
 
     private:
 
-        Logger() = default;
+        Logger() {
+            this->acceptAllChannels();
+            this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
+        }
+
         ~Logger() = default;
 };
 

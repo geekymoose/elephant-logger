@@ -6,10 +6,10 @@ namespace elephantlogger {
 
 // Assertions
 #ifdef ELEPHANTLOGGER_ASSERT_ENABLED
-#include <cassert>
-#define ELEPHANTLOGGER_ASSERT(condition) assert(condition)
+#   include <cassert>
+#   define ELEPHANTLOGGER_ASSERT(condition) assert(condition)
 #else
-#define ELEPHANTLOGGER_ASSERT(condition)
+#   define ELEPHANTLOGGER_ASSERT(condition)
 #endif // ELEPHANTLOGGER_ASSERT_DISABLED
 
 
