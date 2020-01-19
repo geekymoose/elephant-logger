@@ -1,23 +1,27 @@
 #pragma once
 
-#include <stdarg.h>
-
-#include "details/LogLevel.h"
-#include "details/Logger.h"
-#include "details/config.h"
-#include "outputs/IOutput.h"
-#include "outputs/ConsoleOutput.h"
-
-
 // ENTRY POINT
 // This is the only header to include in your project.
 // Nellie the elephant will remember everything then
 
 
-namespace elephantlogger {
-
-
 #ifndef ELEPHANTLOGGER_DISABLED
+
+#include <stdarg.h>
+
+#include "details/LogLevel.h"
+#include "details/config.h"
+#include "outputs/IOutput.h"
+#include "outputs/ConsoleOutput.h"
+
+#ifdef ELEPHANTLOGGER_MULTITHREADS_ENABLED
+#   include "details/LoggerMultithreads.h"
+#else
+#   include "details/Logger.h"
+#endif
+
+
+namespace elephantlogger {
 
 /**
  * Initialize the logger and all its subsystems.
@@ -30,7 +34,6 @@ inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleOutput console;
     Logger::get().addOutput(0, &console);
     Logger::get().setLogLevel(level);
-    Logger::get().startup();
 }
 
 /**
@@ -80,7 +83,7 @@ inline void log(const LogLevel level,
     if(Logger::get().isLogLevelAccepted(level)) {
         va_list argList;
         va_start(argList, format);
-        Logger::get().queueLog(level, channelID, file, line, function, format, argList);
+        Logger::get().log(level, channelID, file, line, function, format, argList);
         va_end(argList);
     }
 }
@@ -109,11 +112,22 @@ inline void log(const LogLevel level,
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 
+} // Namespace
+
+
+// -----------------------------------------------------------------------------
 
 #else // ELEPHANTLOGGER_DISABLED
 
 // Totally disable the elephant logger library
 // Any logger call are replaced by an empty method
+
+#include "details/LogLevel.h"
+#include "details/config.h"
+#include "outputs/IOutput.h"
+
+
+namespace elephantlogger {
 
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
 inline void addOutput(const int channelID, IOutput * output) {}
@@ -141,9 +155,8 @@ inline void log(const LogLevel level, const int channelID, const char* file,
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 
+} // Namespace
+
 
 #endif // ELEPHANTLOGGER_DISABLED
-
-
-} // End namespace
 
