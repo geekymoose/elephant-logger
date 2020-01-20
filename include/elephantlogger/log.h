@@ -18,6 +18,12 @@
 
 namespace elephantlogger {
 
+typedef uint64_t LogChannel;
+
+static LogChannel defaultChannel = 1;
+static LogChannel noChannels = 0;
+static LogChannel allChannels = UINT64_MAX;
+
 /**
  * Initialize the logger and all its subsystems.
  * This creates a ConsoleOutput linked with the default channel.
@@ -27,7 +33,7 @@ namespace elephantlogger {
 inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleOutput console;
     Logger::get().setLogLevel(level);
-    Logger::get().addOutput(&console, level, 1); // Create an output for the default channel 1
+    Logger::get().addOutput(&console, level, defaultChannel);
 }
 
 /**
@@ -42,7 +48,7 @@ inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
  * \param level     Log level for this output.
  * \param channels  Channels filter for this output.
  */
-inline void addOutput(IOutput * output, LogLevel level, uint64_t channels) {
+inline void addOutput(IOutput * output, LogLevel level, LogChannel channels) {
     Logger::get().addOutput(output, level, channels);
 }
 
@@ -71,10 +77,32 @@ inline void disableLogger() {
 }
 
 /**
+ * Set which channels are accepted by the global logger.
+ * Any log for a channel that is not in the filter won't be logged.
+ */
+inline void setChannelsFilter(LogChannel channels) {
+    Logger::get().setChannelsFilter(channels);
+}
+
+/**
  * All channels are accepted by the logger.
  */
 inline void enableAllChannels() {
     Logger::get().enableAllChannels();
+}
+
+/**
+ * Enable some channels in addition to the channels already enabled.
+ */
+inline void enableChannels(LogChannel channels) {
+    Logger::get().enableChannels(channels);
+}
+
+/**
+ * Disable the requested channels.
+ */
+inline void disableChannels(LogChannel channels) {
+    Logger::get().disableChannels(channels);
 }
 
 /**
@@ -89,7 +117,7 @@ inline void enableAllChannels() {
  * \param format    Row message, using printf convention (%s, %d etc).
  * \param argList   Variable list of parameters.
  */
-inline void log(LogLevel level, uint64_t channels, const char * file, int line, const char * function, const char * format, ...) {
+inline void log(LogLevel level, LogChannel channels, const char * file, int line, const char * function, const char * format, ...) {
     if(Logger::get().passFilters(level, channels)) {
         va_list argList;
         va_start(argList, format);
@@ -140,7 +168,7 @@ inline void log(LogLevel level, uint64_t channels, const char * file, int line, 
 namespace elephantlogger {
 
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
-inline void addOutput(IOutput * output, const LogLevel level, const uint64_t channels) {}
+inline void addOutput(IOutput * output, const LogLevel level, LogChannel channels) {}
 inline void setLogLevel(const LogLevel level) {}
 inline void log(const LogLevel level, const int channelID, const char* file,
                 const int line, const char* function, const char* format, ...) {}

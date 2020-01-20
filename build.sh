@@ -15,3 +15,4 @@ make
 make runExample1
 make runExample2
 make runExample3
+make runExample4

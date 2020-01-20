@@ -93,8 +93,8 @@ class Logger : private Singleton<Logger> {
 
         Logger() {
             this->m_enabled = true;
-            this->enableAllChannels();
             this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
+            this->enableAllChannels();
         }
 };
 
