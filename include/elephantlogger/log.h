@@ -167,9 +167,21 @@ inline void log(LogLevel level, LogChannel channels, const char * file, int line
 
 namespace elephantlogger {
 
+typedef uint64_t LogChannel;
+
+static LogChannel defaultChannel = 1;
+static LogChannel noChannels = 0;
+static LogChannel allChannels = UINT64_MAX;
+
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
 inline void addOutput(IOutput * output, const LogLevel level, LogChannel channels) {}
 inline void setLogLevel(const LogLevel level) {}
+inline void enableLogger() {}
+inline void disableLogger() {}
+inline void setChannelsFilter(LogChannel channels) {}
+inline void enableAllChannels() {}
+inline void enableChannels(LogChannel channels) {}
+inline void disableChannels(LogChannel channels) {}
 inline void log(const LogLevel level, const int channelID, const char* file,
                 const int line, const char* function, const char* format, ...) {}
 
