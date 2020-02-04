@@ -47,7 +47,7 @@ The logger is started on its own thread which then process the logs, print them,
     - File
     - Cout
     - Visual Studio Console (Cout is not supported)
-  - Define your own IOutput implementation.
+  - Define your own LogOutput implementation.
 - Channels
   - Up to 10 channels (ID from 0 to 9)
   - Each channel may be binded to several outputs.

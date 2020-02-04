@@ -9,7 +9,7 @@
 
 namespace elephantlogger {
 
-class IOutput {
+class LogOutput {
 
     private:
 
@@ -17,7 +17,7 @@ class IOutput {
 
     public:
 
-        virtual ~IOutput() = default;
+        virtual ~LogOutput() = default;
         virtual void write(const LogMessage & message) = 0;
 
         LogFilter & filter() { return this->m_filter; }

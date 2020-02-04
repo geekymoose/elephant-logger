@@ -6,12 +6,12 @@
 #   include <iostream>
 #endif
 
-#include "IOutput.h"
+#include "LogOutput.h"
 
 
 namespace elephantlogger {
 
-class ConsoleOutput : public IOutput {
+class ConsoleOutput : public LogOutput {
 
     public:
 

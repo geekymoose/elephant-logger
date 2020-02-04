@@ -5,7 +5,7 @@
 #include <cmath>
 #include <stdint.h>
 
-#include "elephantlogger/outputs/IOutput.h"
+#include "elephantlogger/outputs/LogOutput.h"
 
 #include "LogFilter.h"
 #include "LogLevel.h"
@@ -27,7 +27,7 @@ class Logger : private Singleton<Logger> {
 
         bool m_isEnabled;
         LogFilter m_filter;
-        std::vector<IOutput *> m_outputs;
+        std::vector<LogOutput *> m_outputs;
 
     public:
 
@@ -40,7 +40,7 @@ class Logger : private Singleton<Logger> {
                  va_list argList) {
 
             ELEPHANTLOGGER_ASSERT(category != 0);
-            for(IOutput * output : this->m_outputs) {
+            for(LogOutput * output : this->m_outputs) {
                 ELEPHANTLOGGER_ASSERT(output != nullptr);
                 if(output != nullptr && output->filter().passFilters(level, categories)) {
                     LogMessage msg(level, categories, file, line, function, format, argList);
@@ -49,7 +49,7 @@ class Logger : private Singleton<Logger> {
             }
         }
 
-        void addOutput(IOutput * output, const LogLevel level, const uint64_t categories) {
+        void addOutput(LogOutput * output, const LogLevel level, const uint64_t categories) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
             ELEPHANTLOGGER_ASSERT(category != 0);
 

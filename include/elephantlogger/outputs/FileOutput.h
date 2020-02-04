@@ -5,11 +5,11 @@
 #include <chrono>
 #include <mutex>
 
-#include "IOutput.h"
+#include "LogOutput.h"
 
 namespace elephantlogger {
 
-class FileOutput : public IOutput {
+class FileOutput : public LogOutput {
 
     private:
 

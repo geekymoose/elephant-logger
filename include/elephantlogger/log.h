@@ -12,7 +12,7 @@
 #include "elephantlogger/details/config.h"
 #include "elephantlogger/details/Logger.h"
 #include "elephantlogger/details/LogLevel.h"
-#include "elephantlogger/outputs/IOutput.h"
+#include "elephantlogger/outputs/LogOutput.h"
 #include "elephantlogger/outputs/ConsoleOutput.h"
 
 
@@ -48,7 +48,7 @@ inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
  * \param level Log level for this output.
  * \param categories Categories filter for this output.
  */
-inline void addOutput(IOutput * output, LogLevel level, LogCategory categories) {
+inline void addOutput(LogOutput * output, LogLevel level, LogCategory categories) {
     Logger::get().addOutput(output, level, categories);
 }
 
@@ -162,7 +162,7 @@ inline void log(LogLevel level, LogCategory categories, const char * file, int l
 
 #include "details/LogLevel.h"
 #include "details/config.h"
-#include "outputs/IOutput.h"
+#include "outputs/LogOutput.h"
 
 
 namespace elephantlogger {
@@ -174,7 +174,7 @@ static LogCategory noCategories = 0;
 static LogCategory allCategories = UINT64_MAX;
 
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
-inline void addOutput(IOutput * output, const LogLevel level, LogCategory categories) {}
+inline void addOutput(LogOutput * output, const LogLevel level, LogCategory categories) {}
 inline void setLogLevel(const LogLevel level) {}
 inline void enableLogger() {}
 inline void disableLogger() {}
