@@ -17,7 +17,7 @@ class LogMessage {
     private:
 
         const LogLevel      m_logLevel;
-        const int           m_channelID;
+        const int           m_categoryID;
         char                m_file[config::LOG_FILE_SIZE];
         const int           m_line;
         char                m_function[config::LOG_FUNCTION_SIZE];
@@ -28,13 +28,13 @@ class LogMessage {
     public:
 
         LogMessage(const LogLevel logLevel,
-                   const int channelID,
+                   const int categoryID,
                    const char* file,
                    const int line,
                    const char* function,
                    const char* format,
                    va_list argList) : m_logLevel(logLevel),
-                                      m_channelID(channelID),
+                                      m_categoryID(categoryID),
                                       m_line(line),
                                       m_creationTime(std::time(nullptr)) {
             memcpy(m_file, file, strlen(file));
