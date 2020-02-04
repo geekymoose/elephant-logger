@@ -6,6 +6,8 @@
 #include <stdint.h>
 
 #include "elephantlogger/outputs/IOutput.h"
+
+#include "LogFilter.h"
 #include "LogLevel.h"
 #include "LogMessage.h"
 #include "config.h"
@@ -23,9 +25,8 @@ class Logger : private Singleton<Logger> {
 
     private:
 
-        bool m_enabled;
-        LogLevel m_currentLogLevel;
-        uint64_t m_currentCategoriesFilter; // Max nb categories is 64
+        bool m_isEnabled;
+        LogFilter m_filter;
         std::vector<IOutput *> m_outputs;
 
     public:
@@ -37,15 +38,13 @@ class Logger : private Singleton<Logger> {
                  const char * function,
                  const char * format,
                  va_list argList) {
-            if(this->m_enabled && this->passFilters(level, categories)) {
-                ELEPHANTLOGGER_ASSERT(category != 0);
 
-                for(IOutput * output : this->m_outputs) {
-                    ELEPHANTLOGGER_ASSERT(output != nullptr);
-                    if(output != nullptr && output->passFilters(level, categories)) {
-                        LogMessage msg(level, categories, file, line, function, format, argList);
-                        output->write(msg);
-                    }
+            ELEPHANTLOGGER_ASSERT(category != 0);
+            for(IOutput * output : this->m_outputs) {
+                ELEPHANTLOGGER_ASSERT(output != nullptr);
+                if(output != nullptr && output->filter().passFilters(level, categories)) {
+                    LogMessage msg(level, categories, file, line, function, format, argList);
+                    output->write(msg);
                 }
             }
         }
@@ -55,49 +54,38 @@ class Logger : private Singleton<Logger> {
             ELEPHANTLOGGER_ASSERT(category != 0);
 
             if(output != nullptr) {
-                output->setLogLevel(level);
-                output->setCategoriesFilter(categories);
+                output->filter().setLogLevel(level);
+                output->filter().setCategoriesFilter(categories);
                 this->m_outputs.push_back(output);
             }
         }
 
-        bool passFilters(const LogLevel level, const uint64_t categories) const {
-            return level <= this->m_currentLogLevel && (categories & this->m_currentCategoriesFilter) != 0;
+        void enable() {
+            this->m_isEnabled = true;
         }
 
-        void setLogLevel(const LogLevel level) {
-            this->m_currentLogLevel = level;
+        void disable() {
+            this->m_isEnabled = false;
         }
 
-        void setEnabled(const bool enabled) {
-            this->m_enabled = enabled;
+        bool isEnabled() const {
+            return this->m_isEnabled;
         }
 
-        void setCategoriesFilter(const uint64_t categories) {
-            this->m_currentCategoriesFilter = categories;
+        LogFilter & filter() {
+            return this->m_filter;
         }
 
-        void enableAllCategories() {
-            this->m_currentCategoriesFilter = UINT64_MAX; // Accept all
-        }
-
-        void enableCategories(const uint64_t categories) {
-            this->m_currentCategoriesFilter |= categories;
-        }
-
-        void disableCategories(const uint64_t categories) {
-            this->m_currentCategoriesFilter ^= categories;
+        LogFilter const& filter() const {
+            return this->m_filter;
         }
 
     private:
 
         Logger() {
-            this->m_enabled = true;
-            this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
-            this->enableAllCategories();
+            this->m_isEnabled = true;
         }
 };
-
 
 } // End namespace
 

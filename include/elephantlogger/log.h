@@ -32,7 +32,7 @@ static LogCategory allCategories = UINT64_MAX;
  */
 inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleOutput console;
-    Logger::get().setLogLevel(level);
+    Logger::get().filter().setLogLevel(level);
     Logger::get().addOutput(&console, level, defaultCategory);
 }
 
@@ -59,21 +59,21 @@ inline void addOutput(IOutput * output, LogLevel level, LogCategory categories) 
  * \param level Level of log to apply.
  */
 inline void setLogLevel(LogLevel level) {
-    Logger::get().setLogLevel(level);
+    Logger::get().filter().setLogLevel(level);
 }
 
 /**
  * New logs are accepted by the logger.
  */
 inline void enableLogger() {
-    Logger::get().setEnabled(true);
+    Logger::get().enable();
 }
 
 /**
  * New logs are simply bypassed by the logger.
  */
 inline void disableLogger() {
-    Logger::get().setEnabled(false);
+    Logger::get().disable();
 }
 
 /**
@@ -81,28 +81,28 @@ inline void disableLogger() {
  * Any log for a category that is not in the filter won't be logged.
  */
 inline void setCategoriesFilter(LogCategory categories) {
-    Logger::get().setCategoriesFilter(categories);
+    Logger::get().filter().setCategoriesFilter(categories);
 }
 
 /**
  * All categories are accepted by the logger.
  */
 inline void enableAllCategories() {
-    Logger::get().enableAllCategories();
+    Logger::get().filter().enableAllCategories();
 }
 
 /**
  * Enable some categories in addition to the categories already enabled.
  */
 inline void enableCategories(LogCategory categories) {
-    Logger::get().enableCategories(categories);
+    Logger::get().filter().enableCategories(categories);
 }
 
 /**
  * Disable the requested categories.
  */
 inline void disableCategories(LogCategory categories) {
-    Logger::get().disableCategories(categories);
+    Logger::get().filter().disableCategories(categories);
 }
 
 /**
@@ -118,7 +118,7 @@ inline void disableCategories(LogCategory categories) {
  * \param argList Variable list of parameters.
  */
 inline void log(LogLevel level, LogCategory categories, const char * file, int line, const char * function, const char * format, ...) {
-    if(Logger::get().passFilters(level, categories)) {
+    if(Logger::get().isEnabled() && Logger::get().filter().passFilters(level, categories)) {
         va_list argList;
         va_start(argList, format);
         Logger::get().log(level, categories, file, line, function, format, argList);
