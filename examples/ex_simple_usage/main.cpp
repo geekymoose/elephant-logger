@@ -1,6 +1,6 @@
-// A simple example with default configuration
+// A simple example with the default configuration
 
-#include "elephantlogger/log.h"
+#include <elephantlogger/log.h>
 
 
 int main(int argc, char** argv) {

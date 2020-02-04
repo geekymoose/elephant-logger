@@ -7,7 +7,7 @@
 
 // Categories
 static elephantlogger::LogCategory general = elephantlogger::defaultCategory; 
- static elephantlogger::LogCategory engine = 2;
+static elephantlogger::LogCategory engine = 2;
 static elephantlogger::LogCategory gameplay = 4;
 static elephantlogger::LogCategory online = 8;
 

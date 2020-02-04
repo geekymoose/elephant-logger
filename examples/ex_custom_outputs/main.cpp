@@ -1,4 +1,4 @@
-// Example that uses custom configuration.
+// Example that uses a custom configuration.
 
 #include <string>
 #include <elephantlogger/log.h>

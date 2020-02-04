@@ -12,7 +12,7 @@ cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       ..
 
 make
-make runExample1
-make runExample2
-make runExample3
-make runExample4
+make run_ex_simple_usage
+make run_ex_multi_classes
+make run_ex_custom_outputs
+make run_ex_logger_categories_filters
