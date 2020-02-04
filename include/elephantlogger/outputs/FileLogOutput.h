@@ -9,7 +9,7 @@
 
 namespace elephantlogger {
 
-class FileOutput : public LogOutput {
+class FileLogOutput : public LogOutput {
 
     private:
 
@@ -19,11 +19,11 @@ class FileOutput : public LogOutput {
 
     public:
 
-        FileOutput(const std::string & filename) : m_filename(filename) {
+        FileLogOutput(const std::string & filename) : m_filename(filename) {
             m_stream.open(m_filename, std::fstream::app | std::fstream::out); // Append if exists
         }
 
-        ~FileOutput() {
+        ~FileLogOutput() {
             if(m_stream.is_open()) {
                 m_stream.close();
             }

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <elephantlogger/log.h>
-#include <elephantlogger/outputs/ConsoleOutput.h>
+#include <elephantlogger/outputs/ConsoleLogOutput.h>
 
 // Categories
 static elephantlogger::LogCategory general = elephantlogger::defaultCategory; 
@@ -11,7 +11,7 @@ static elephantlogger::LogCategory general = elephantlogger::defaultCategory;
 static elephantlogger::LogCategory gameplay = 4;
 static elephantlogger::LogCategory online = 8;
 
-static elephantlogger::ConsoleOutput console;
+static elephantlogger::ConsoleLogOutput console;
 
 
 void printRandomLogs() {

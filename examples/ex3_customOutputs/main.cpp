@@ -2,8 +2,8 @@
 
 #include <string>
 #include <elephantlogger/log.h>
-#include <elephantlogger/outputs/ConsoleOutput.h>
-#include <elephantlogger/outputs/FileOutput.h>
+#include <elephantlogger/outputs/ConsoleLogOutput.h>
+#include <elephantlogger/outputs/FileLogOutput.h>
 
 // Categories accessible from the code
 static uint64_t CATEGORY_ONLINE = 1;
@@ -13,10 +13,10 @@ static uint64_t CATEGORY_ENGINE = 2;
 static void customInitElephant() {
     elephantlogger::init();
 
-    static elephantlogger::ConsoleOutput   consoleOutput;
-    static elephantlogger::FileOutput      filelog("elephant.log");
+    static elephantlogger::ConsoleLogOutput   ConsoleLogOutput;
+    static elephantlogger::FileLogOutput      filelog("elephant.log");
 
-    elephantlogger::addOutput(&consoleOutput, elephantlogger::LogLevel::Debug, CATEGORY_ENGINE);
+    elephantlogger::addOutput(&ConsoleLogOutput, elephantlogger::LogLevel::Debug, CATEGORY_ENGINE);
     elephantlogger::addOutput(&filelog, elephantlogger::LogLevel::Debug, CATEGORY_ONLINE);
 }
 

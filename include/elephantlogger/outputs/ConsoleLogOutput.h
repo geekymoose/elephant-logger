@@ -11,7 +11,7 @@
 
 namespace elephantlogger {
 
-class ConsoleOutput : public LogOutput {
+class ConsoleLogOutput : public LogOutput {
 
     public:
 

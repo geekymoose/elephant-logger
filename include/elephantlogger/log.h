@@ -13,7 +13,7 @@
 #include "elephantlogger/details/Logger.h"
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/outputs/LogOutput.h"
-#include "elephantlogger/outputs/ConsoleOutput.h"
+#include "elephantlogger/outputs/ConsoleLogOutput.h"
 
 
 namespace elephantlogger {
@@ -26,12 +26,12 @@ static LogCategory allCategories = UINT64_MAX;
 
 /**
  * Initialize the logger and all its subsystems.
- * This creates a ConsoleOutput linked with the default category.
+ * This creates a ConsoleLogOutput linked with the default category.
  * 
  * \param level Maximum level of log to use (uses default if empty).
  */
 inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
-    static ConsoleOutput console;
+    static ConsoleLogOutput console;
     Logger::get().filter().setLogLevel(level);
     Logger::get().addOutput(&console, level, defaultCategory);
 }
