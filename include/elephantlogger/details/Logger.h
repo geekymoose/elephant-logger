@@ -42,7 +42,7 @@ class Logger : private Singleton<Logger> {
             ELEPHANTLOGGER_ASSERT(category != 0);
             for(LogOutput * output : this->m_outputs) {
                 ELEPHANTLOGGER_ASSERT(output != nullptr);
-                if(output != nullptr && output->filter().passFilters(level, categories)) {
+                if(output != nullptr && output->isEnabled() && output->filter().passFilters(level, categories)) {
                     LogMessage msg(level, categories, file, line, function, format, argList);
                     output->write(msg);
                 }

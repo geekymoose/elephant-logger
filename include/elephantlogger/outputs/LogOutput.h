@@ -13,6 +13,7 @@ class LogOutput {
 
     private:
 
+        bool m_isEnabled = true;
         LogFilter m_filter;
 
     public:
@@ -20,8 +21,26 @@ class LogOutput {
         virtual ~LogOutput() = default;
         virtual void write(const LogMessage & message) = 0;
 
-        LogFilter & filter() { return this->m_filter; }
-        LogFilter const& filter() const { return this->m_filter; }
+
+        void enable() {
+            this->m_isEnabled = true;
+        }
+
+        void disable() {
+            this->m_isEnabled = false;
+        }
+
+        bool isEnabled() const {
+            return this->m_isEnabled;
+        }
+
+        LogFilter & filter() {
+            return this->m_filter;
+        }
+
+        LogFilter const& filter() const {
+            return this->m_filter;
+        }
 };
 
 
