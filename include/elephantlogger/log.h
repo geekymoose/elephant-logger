@@ -28,7 +28,6 @@ inline bool isCategoryValid(LogCategory category) {
     return category >= 1 && category <= 64;
 }
 
-
 /**
  * Initialize the logger and all its subsystems.
  * This creates a ConsoleLogOutput linked with the default category.
@@ -184,21 +183,19 @@ inline void log(LogLevel level, LogCategory category, const char * file, int lin
 
 namespace elephantlogger {
 
-typedef uint64_t LogCategory;
+typedef int LogCategory;
 
-static LogCategory defaultCategory = 1;
-static LogCategory noCategories = 0;
-static LogCategory allCategories = UINT64_MAX;
+const LogCategory LOG_CATEGORY_DEFAULT = 1;
 
 inline void init(const LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {}
-inline void addOutput(LogOutput * output, const LogLevel level, LogCategory categories) {}
+inline void addOutput(LogOutput * output, const LogLevel level) {}
 inline void setLogLevel(const LogLevel level) {}
 inline void enableLogger() {}
 inline void disableLogger() {}
-inline void setCategoriesFilter(LogCategory categories) {}
-inline void enableAllCategories() {}
-inline void enableCategories(LogCategory categories) {}
-inline void disableCategories(LogCategory categories) {}
+inline void enableAllCategoriesLogger() {}
+inline void disableAllCategoriesLogger() {}
+inline void enableCategoryLogger(LogCategory category) {}
+inline void disableCategoryLogger(LogCategory category) {}
 inline void log(const LogLevel level, const int categoryID, const char* file,
                 const int line, const char* function, const char* format, ...) {}
 
