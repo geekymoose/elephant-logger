@@ -32,12 +32,12 @@ class LogFilter {
             this->m_currentCategoriesFilter |= categories;
         }
 
-        void enableAllCategories() {
-            this->m_currentCategoriesFilter = UINT64_MAX; // Accept all
-        }
-
         void disableCategories(const uint64_t categories) {
             this->m_currentCategoriesFilter ^= categories;
+        }
+
+        void enableAllCategories() {
+            this->m_currentCategoriesFilter = UINT64_MAX; // Accept all
         }
 
         void disableAllCategories() {

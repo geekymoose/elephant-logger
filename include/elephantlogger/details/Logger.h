@@ -39,7 +39,7 @@ class Logger : private Singleton<Logger> {
                  const char * format,
                  va_list argList) {
 
-            ELEPHANTLOGGER_ASSERT(category != 0);
+            ELEPHANTLOGGER_ASSERT(categories != 0);
             for(LogOutput * output : this->m_outputs) {
                 ELEPHANTLOGGER_ASSERT(output != nullptr);
                 if(output != nullptr && output->isEnabled() && output->filter().passFilters(level, categories)) {
@@ -49,13 +49,12 @@ class Logger : private Singleton<Logger> {
             }
         }
 
-        void addOutput(LogOutput * output, const LogLevel level, const uint64_t categories) {
+        void addOutput(LogOutput * output, const LogLevel level) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
-            ELEPHANTLOGGER_ASSERT(category != 0);
+            ELEPHANTLOGGER_ASSERT(categories != 0);
 
             if(output != nullptr) {
                 output->filter().setLogLevel(level);
-                output->filter().setCategoriesFilter(categories);
                 this->m_outputs.push_back(output);
             }
         }

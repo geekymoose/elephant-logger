@@ -18,11 +18,16 @@
 
 namespace elephantlogger {
 
-typedef uint64_t LogCategory;
+typedef int LogCategory;
 
-static LogCategory defaultCategory = 1;
-static LogCategory noCategories = 0;
-static LogCategory allCategories = UINT64_MAX;
+const LogCategory LOG_CATEGORY_DEFAULT = 1;
+
+// Internal use
+inline bool isCategoryValid(LogCategory category) {
+    // Filter uses 64 bitset. Value range is from 1 to 64
+    return category >= 1 && category <= 64;
+}
+
 
 /**
  * Initialize the logger and all its subsystems.
@@ -33,7 +38,7 @@ static LogCategory allCategories = UINT64_MAX;
 inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
     static ConsoleLogOutput console;
     Logger::get().filter().setLogLevel(level);
-    Logger::get().addOutput(&console, level, defaultCategory);
+    Logger::get().addOutput(&console, level);
 }
 
 /**
@@ -48,61 +53,67 @@ inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL) {
  * \param level Log level for this output.
  * \param categories Categories filter for this output.
  */
-inline void addOutput(LogOutput * output, LogLevel level, LogCategory categories) {
-    Logger::get().addOutput(output, level, categories);
+inline void addOutput(LogOutput * output, LogLevel level) {
+    Logger::get().addOutput(output, level);
 }
 
 /**
- * Changes the general log level.
- * This may be called at runtime.
+ * Changes the general log level (a.k.a., log severity).
  *
- * \param level Level of log to apply.
+ * \param level New level of log to apply.
  */
 inline void setLogLevel(LogLevel level) {
     Logger::get().filter().setLogLevel(level);
 }
 
 /**
- * New logs are accepted by the logger.
+ * Logs are accepted by the logger.
  */
 inline void enableLogger() {
     Logger::get().enable();
 }
 
 /**
- * New logs are simply bypassed by the logger.
+ * Logs are bypassed by the logger.
  */
 inline void disableLogger() {
     Logger::get().disable();
 }
 
 /**
- * Set which categories are accepted by the global logger.
- * Any log for a category that is not in the filter won't be logged.
- */
-inline void setCategoriesFilter(LogCategory categories) {
-    Logger::get().filter().setCategoriesFilter(categories);
-}
-
-/**
  * All categories are accepted by the logger.
  */
-inline void enableAllCategories() {
+inline void enableAllCategoriesLogger() {
     Logger::get().filter().enableAllCategories();
 }
 
 /**
- * Enable some categories in addition to the categories already enabled.
+ * All categories are bypassed by the logger.
  */
-inline void enableCategories(LogCategory categories) {
-    Logger::get().filter().enableCategories(categories);
+inline void disableAllCategoriesLogger() {
+    Logger::get().filter().disableAllCategories();
 }
 
 /**
- * Disable the requested categories.
+ * Enable the given category in addition to the categories already enabled.
  */
-inline void disableCategories(LogCategory categories) {
-    Logger::get().filter().disableCategories(categories);
+inline void enableCategoryLogger(LogCategory category) {
+    ELEPHANTLOGGER_ASSERT(isCategoryValid(category));
+    if(isCategoryValid(category)) {
+        uint64_t filter = 1 << (category - 1); // Category starts at 1 (not 0)
+        Logger::get().filter().enableCategories(filter);
+    }
+}
+
+/**
+ * Disable the given category in addition to the categories already disabled.
+ */
+inline void disableCategoryLogger(LogCategory category) {
+    ELEPHANTLOGGER_ASSERT(isCategoryValid(category));
+    if(isCategoryValid(category)) {
+        uint64_t filter = 1 << (category - 1); // Category starts at 1 (not 0)
+        Logger::get().filter().disableCategories(filter);
+    }
 }
 
 /**
@@ -110,18 +121,24 @@ inline void disableCategories(LogCategory categories) {
  * Accept the message only if LogLevel inferior or equals to current logger level.
  *
  * \param level Log Level for this message.
- * \param categories Filter with the categories where to write this log.
+ * \param category Category where to write this log.
  * \param file File that created the log.
  * \param line Line position in file.
  * \param function Function's name.
  * \param format Row message, using printf convention (%s, %d etc).
  * \param argList Variable list of parameters.
  */
-inline void log(LogLevel level, LogCategory categories, const char * file, int line, const char * function, const char * format, ...) {
-    if(Logger::get().isEnabled() && Logger::get().filter().passFilters(level, categories)) {
+inline void log(LogLevel level, LogCategory category, const char * file, int line, const char * function, const char * format, ...) {
+    ELEPHANTLOGGER_ASSERT(isCategoryValid(category));
+    uint64_t categories_filter = 1 << LOG_CATEGORY_DEFAULT; // Default
+    if(isCategoryValid(category)) {
+        categories_filter = 1 << (category - 1); // Category starts at 1 (not 0)
+    }
+
+    if(Logger::get().isEnabled() && Logger::get().filter().passFilters(level, categories_filter)) {
         va_list argList;
         va_start(argList, format);
-        Logger::get().log(level, categories, file, line, function, format, argList);
+        Logger::get().log(level, categories_filter, file, line, function, format, argList);
         va_end(argList);
     }
 }
@@ -132,13 +149,13 @@ inline void log(LogLevel level, LogCategory categories, const char * file, int l
 
 #define _LOG(level, categoryID, format, ...) elephantlogger::log(level, categoryID, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 
-#define LOG_WTF(format, ...)     _LOG(elephantlogger::LogLevel::Debug, 1, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-#define LOG_ERROR(format, ...)   _LOG(elephantlogger::LogLevel::Error, 1, format, ##__VA_ARGS__)
-#define LOG_WARNING(format, ...) _LOG(elephantlogger::LogLevel::Warning, 1, format, ##__VA_ARGS__)
-#define LOG_CONFIG(format, ...)  _LOG(elephantlogger::LogLevel::Config, 1, format, ##__VA_ARGS__)
-#define LOG_INFO(format, ...)    _LOG(elephantlogger::LogLevel::Info, 1, format, ##__VA_ARGS__)
-#define LOG_TRACE(format, ...)   _LOG(elephantlogger::LogLevel::Trace, 1, format, ##__VA_ARGS__)
-#define LOG_DEBUG(format, ...)   _LOG(elephantlogger::LogLevel::Debug, 1, format, ##__VA_ARGS__)
+#define LOG_WTF(format, ...)     _LOG(elephantlogger::LogLevel::Debug, elephantlogger::LOG_CATEGORY_DEFAULT, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define LOG_ERROR(format, ...)   _LOG(elephantlogger::LogLevel::Error, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
+#define LOG_WARNING(format, ...) _LOG(elephantlogger::LogLevel::Warning, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
+#define LOG_CONFIG(format, ...)  _LOG(elephantlogger::LogLevel::Config, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
+#define LOG_INFO(format, ...)    _LOG(elephantlogger::LogLevel::Info, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
+#define LOG_TRACE(format, ...)   _LOG(elephantlogger::LogLevel::Trace, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
+#define LOG_DEBUG(format, ...)   _LOG(elephantlogger::LogLevel::Debug, elephantlogger::LOG_CATEGORY_DEFAULT, format, ##__VA_ARGS__)
 
 #define LOG_WTF_IN(categoryID, format, ...)     _LOG(elephantlogger::LogLevel::Wtf, categoryID, format, ##__VA_ARGS__)
 #define LOG_ERROR_IN(categoryID, format, ...)   _LOG(elephantlogger::LogLevel::Error, categoryID, format, ##__VA_ARGS__)
