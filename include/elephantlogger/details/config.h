@@ -2,16 +2,14 @@
 
 #include "LogLevel.h"
 
-
 // Mostly for internal logger configurations
 // WARNING: if you want to change a value, you need to recompile the logger.
-
 
 namespace elephantlogger {
 namespace config {
 
-enum : int {
-
+enum : int
+{
     /**
      * Max size of the message content of a log. (Your message).
      */
@@ -28,9 +26,7 @@ enum : int {
     LOG_FILE_SIZE = 200,
 };
 
-
 #define ELEPHANTLOGGER_DEFAULT_LOGLEVEL elephantlogger::LogLevel::Debug
-
 
 } // End namespace
 } // End namespace

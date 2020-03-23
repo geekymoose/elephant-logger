@@ -3,7 +3,6 @@
 *.vcxproj
 *.vcxproj.filters
 .ycm_extra_conf.py
-.vscode
 build
 build-doxygen
 

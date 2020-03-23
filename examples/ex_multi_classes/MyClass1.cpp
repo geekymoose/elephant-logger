@@ -2,6 +2,7 @@
 
 #include <elephantlogger/log.h>
 
-void MyClass1::foo() {
+void MyClass1::foo()
+{
     LOG_INFO("Function MyClass1::foo()");
 }

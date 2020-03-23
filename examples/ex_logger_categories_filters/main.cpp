@@ -1,26 +1,28 @@
 // Example of categories filter at the logger level (outputs have their own filters)
 
+#include <elephantlogger/log.h>
 #include <iostream>
 #include <string>
-#include <elephantlogger/log.h>
 
-
-struct LOG_CATEGORY {
-    public:
-        static const elephantlogger::LogCategory DEFAULT = elephantlogger::LOG_CATEGORY_DEFAULT;
-        static const elephantlogger::LogCategory ENGINE = 2;
-        static const elephantlogger::LogCategory GAMEPLAY = 3;
-        static const elephantlogger::LogCategory ONLINE = 4;
+struct LOG_CATEGORY
+{
+  public:
+    static const elephantlogger::LogCategory DEFAULT = elephantlogger::LOG_CATEGORY_DEFAULT;
+    static const elephantlogger::LogCategory ENGINE = 2;
+    static const elephantlogger::LogCategory GAMEPLAY = 3;
+    static const elephantlogger::LogCategory ONLINE = 4;
 };
 
-void printRandomLogs() {
+void printRandomLogs()
+{
     LOG_INFO("Some info log (Default)");
     LOG_INFO_IN(LOG_CATEGORY::ENGINE, "Some info log (Engine)");
     LOG_INFO_IN(LOG_CATEGORY::GAMEPLAY, "Some info log (Gameplay)");
     LOG_INFO_IN(LOG_CATEGORY::ONLINE, "Some info log (Online)");
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     elephantlogger::init();
 
     // -------------------------------------------------------------------------
@@ -61,4 +63,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-

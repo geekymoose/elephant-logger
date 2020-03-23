@@ -1,17 +1,14 @@
 #pragma once
 
-
 namespace elephantlogger {
-
 
 // Assertions
 #ifdef ELEPHANTLOGGER_ASSERT_ENABLED
-#   include <cassert>
-#   define ELEPHANTLOGGER_ASSERT(condition) assert(condition)
+#include <cassert>
+#define ELEPHANTLOGGER_ASSERT(condition) assert(condition)
 #else
-#   define ELEPHANTLOGGER_ASSERT(condition)
+#define ELEPHANTLOGGER_ASSERT(condition)
 #endif // ELEPHANTLOGGER_ASSERT_DISABLED
-
 
 /**
  * Uncopyable interface.
@@ -23,17 +20,17 @@ namespace elephantlogger {
  * };
  * \endcode
  */
-template <class T>
-class Uncopyable {
-    public:
-        Uncopyable() = default;
-        virtual ~Uncopyable() = default;
+template<class T>
+class Uncopyable
+{
+  public:
+    Uncopyable() = default;
+    virtual ~Uncopyable() = default;
 
-    private:
-        Uncopyable(Uncopyable<T> const& other) = delete;
-        Uncopyable<T>& operator=(Uncopyable<T> const& other) = delete;
+  private:
+    Uncopyable(Uncopyable<T> const& other) = delete;
+    Uncopyable<T>& operator=(Uncopyable<T> const& other) = delete;
 };
-
 
 /**
  * Singleton template interface.
@@ -53,27 +50,27 @@ class Uncopyable {
  * };
  * \endcode
  */
-template <class T>
-class Singleton : private Uncopyable<Singleton<T>> {
-    private:
-        friend T;
-        Singleton() = default;
-        virtual ~Singleton() = default;
+template<class T>
+class Singleton : private Uncopyable<Singleton<T>>
+{
+  private:
+    friend T;
+    Singleton() = default;
+    virtual ~Singleton() = default;
 
-    public:
-        static T& get() {
-            static T m_instance;
-            return m_instance;
-        }
+  public:
+    static T& get()
+    {
+        static T m_instance;
+        return m_instance;
+    }
 };
 
-
-#define ELEPHANTLOGGER_ADD_SINGLETON_UTILS(ClassName) \
-    public: \
-        using Singleton<ClassName>::get; \
-    private: \
-        friend Singleton<ClassName>
-
+#define ELEPHANTLOGGER_ADD_SINGLETON_UTILS(ClassName)                                                                  \
+  public:                                                                                                              \
+    using Singleton<ClassName>::get;                                                                                   \
+                                                                                                                       \
+  private:                                                                                                             \
+    friend Singleton<ClassName>
 
 } // End namespace
-

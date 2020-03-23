@@ -1,54 +1,44 @@
 #pragma once
 
-#include <stdint.h>
-#include "elephantlogger/details/config.h"
 #include "elephantlogger/details/LogLevel.h"
+#include "elephantlogger/details/config.h"
 
+#include <stdint.h>
 
 namespace elephantlogger {
 
-class LogFilter {
+class LogFilter
+{
+  private:
+    LogLevel m_currentLogLevel;
+    uint64_t m_currentCategoriesFilter;
 
-    private:
+  public:
+    bool passFilters(const LogLevel level, const uint64_t categories) const
+    {
+        return level <= this->m_currentLogLevel && (categories & this->m_currentCategoriesFilter) != 0;
+    }
 
-        LogLevel m_currentLogLevel;
-        uint64_t m_currentCategoriesFilter;
+    void setLogLevel(const LogLevel level) { this->m_currentLogLevel = level; }
 
-    public:
+    void setCategoriesFilter(const uint64_t categories) { this->m_currentCategoriesFilter = categories; }
 
-        bool passFilters(const LogLevel level, const uint64_t categories) const {
-            return level <= this->m_currentLogLevel && (categories & this->m_currentCategoriesFilter) != 0;
-        }
+    void enableCategories(const uint64_t categories) { this->m_currentCategoriesFilter |= categories; }
 
-        void setLogLevel(const LogLevel level) {
-            this->m_currentLogLevel = level;
-        }
+    void disableCategories(const uint64_t categories) { this->m_currentCategoriesFilter ^= categories; }
 
-        void setCategoriesFilter(const uint64_t categories) {
-            this->m_currentCategoriesFilter = categories;
-        }
+    void enableAllCategories()
+    {
+        this->m_currentCategoriesFilter = UINT64_MAX; // Accept all
+    }
 
-        void enableCategories(const uint64_t categories) {
-            this->m_currentCategoriesFilter |= categories;
-        }
+    void disableAllCategories() { this->m_currentCategoriesFilter = 0; }
 
-        void disableCategories(const uint64_t categories) {
-            this->m_currentCategoriesFilter ^= categories;
-        }
-
-        void enableAllCategories() {
-            this->m_currentCategoriesFilter = UINT64_MAX; // Accept all
-        }
-
-        void disableAllCategories() {
-            this->m_currentCategoriesFilter = 0;
-        }
-
-        LogFilter() {
-            this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
-            this->enableAllCategories(); // Accept all by default
-        }
+    LogFilter()
+    {
+        this->m_currentLogLevel = ELEPHANTLOGGER_DEFAULT_LOGLEVEL;
+        this->enableAllCategories(); // Accept all by default
+    }
 };
 
 } // End namespace
-

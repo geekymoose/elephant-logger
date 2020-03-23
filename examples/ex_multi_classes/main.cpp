@@ -6,7 +6,8 @@
 #include "MyClass1.h"
 #include "MyClass2.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     elephantlogger::init();
 
     LOG_DEBUG("Create MyClass%d", 1);
