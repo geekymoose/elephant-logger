@@ -1,11 +1,11 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "elephantlogger/details/LogFilter.h"
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/LogMessage.h"
 #include "elephantlogger/details/config.h"
-
-#include <stdint.h>
 
 namespace elephantlogger {
 
@@ -30,4 +30,4 @@ class LogOutput
     LogFilter const& filter() const { return this->m_filter; }
 };
 
-}
+} // End namespace

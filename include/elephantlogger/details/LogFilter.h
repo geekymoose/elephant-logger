@@ -1,9 +1,9 @@
 #pragma once
 
+#include <stdint.h>
+
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/config.h"
-
-#include <stdint.h>
 
 namespace elephantlogger {
 

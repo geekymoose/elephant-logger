@@ -5,8 +5,8 @@
 #include <stdarg.h>
 #include <string>
 
-#include "LogLevel.h"
-#include "config.h"
+#include "elephantlogger/details/LogLevel.h"
+#include "elephantlogger/details/config.h"
 
 namespace elephantlogger {
 

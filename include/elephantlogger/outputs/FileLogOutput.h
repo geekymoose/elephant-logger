@@ -5,7 +5,7 @@
 #include <mutex>
 #include <string>
 
-#include "LogOutput.h"
+#include "elephantlogger/outputs/LogOutput.h"
 
 namespace elephantlogger {
 
@@ -40,4 +40,4 @@ class FileLogOutput : public LogOutput
     }
 };
 
-}
+} // End namespace

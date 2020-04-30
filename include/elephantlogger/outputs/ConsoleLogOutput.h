@@ -6,7 +6,7 @@
 #include <iostream>
 #endif
 
-#include "LogOutput.h"
+#include "elephantlogger/outputs/LogOutput.h"
 
 namespace elephantlogger {
 
@@ -24,4 +24,4 @@ class ConsoleLogOutput : public LogOutput
     }
 };
 
-}
+} // End namespace

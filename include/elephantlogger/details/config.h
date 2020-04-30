@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LogLevel.h"
+#include "elephantlogger/details/LogLevel.h"
 
 // Mostly for internal logger configurations
 // WARNING: if you want to change a value, you need to recompile the logger.
@@ -11,17 +11,19 @@ namespace config {
 enum : int
 {
     /**
-     * Max size of the message content of a log. (Your message).
+     * Maximum size of the log message's content. (Your message).
      */
     LOG_MSG_SIZE = 256,
 
     /**
-     * Max size of the function name in log message.
+     * Maximum function's name size to display.
+     * The function is where the log was generated.
      */
     LOG_FUNCTION_SIZE = 50,
 
     /**
-     * Max size of the displayed file name in log message.
+     * Maximum file size to display.
+     * The file is where the log was generated.
      */
     LOG_FILE_SIZE = 200,
 };

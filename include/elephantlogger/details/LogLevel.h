@@ -42,4 +42,4 @@ inline const char* logLevelToString(LogLevel level)
     }
 }
 
-}
+} // End namespace

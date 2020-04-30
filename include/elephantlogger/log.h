@@ -190,7 +190,7 @@ log(LogLevel level, LogCategory category, const char* file, int line, const char
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 
-} // Namespace
+} // End namespace
 
 // -----------------------------------------------------------------------------
 
@@ -247,6 +247,6 @@ inline void log(const LogLevel level,
 
 #endif // ELEPHANTLOGGER_MACROS_DISABLED
 
-} // Namespace
+} // End namespace
 
 #endif // ELEPHANTLOGGER_DISABLED

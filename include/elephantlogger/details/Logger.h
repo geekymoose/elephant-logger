@@ -5,13 +5,12 @@
 #include <stdint.h>
 #include <vector>
 
+#include "elephantlogger/details/LogFilter.h"
+#include "elephantlogger/details/LogLevel.h"
+#include "elephantlogger/details/LogMessage.h"
+#include "elephantlogger/details/config.h"
+#include "elephantlogger/details/utils.h"
 #include "elephantlogger/outputs/LogOutput.h"
-
-#include "LogFilter.h"
-#include "LogLevel.h"
-#include "LogMessage.h"
-#include "config.h"
-#include "utils.h"
 
 namespace elephantlogger {
 
@@ -37,7 +36,6 @@ class Logger : private Singleton<Logger>
              const char* format,
              va_list argList)
     {
-
         ELEPHANTLOGGER_ASSERT(categories != 0);
         for (LogOutput* output : this->m_outputs) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
