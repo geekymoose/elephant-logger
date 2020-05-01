@@ -10,7 +10,7 @@
 
 namespace elephantlogger {
 
-class ConsoleLogOutput : public LogOutput
+class LogOutput_Console : public LogOutput
 {
   public:
     void write(const LogMessage& message) override

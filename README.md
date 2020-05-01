@@ -56,8 +56,8 @@ The goal is to easily filter and show the logs on several outputs.
 
 - Outputs
   - Builtin outputs
-    - `FileLogOutput`
-    - `ConsoleLogOutput`
+    - `LogOutput_File`
+    - `LogOutput_Console`
   - Custom outputs
     - Implement `LogOutput` interface
     - Add `LogOutput` in the logger
@@ -121,11 +121,11 @@ int main(int argc, char** argc) {
 ```c++
 #include <string>
 #include <elephantlogger/log.h>
-#include <elephantlogger/outputs/FileLogOutput.h>
+#include <elephantlogger/outputs/LogOutput_File.h>
 
 // Initialize the logger with custom outputs and categories.
 static void elephant_customInit() {
-    static elephantlogger::FileLogOutput filelog("elephant.log");
+    static elephantlogger::LogOutput_File filelog("elephant.log");
 
     elephantlogger::init();
     elephantlogger::addOutput(&filelog, elephantlogger::LogLevel::Debug);

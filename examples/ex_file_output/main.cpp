@@ -1,14 +1,14 @@
 // Example that uses a custom file output configuration (but no category filters).
 
 #include <elephantlogger/log.h>
-#include <elephantlogger/outputs/FileLogOutput.h>
+#include <elephantlogger/outputs/LogOutput_File.h>
 
 #include <string>
 
 // Initialize the logger with custom outputs and categories.
 static void elephant_customInit()
 {
-    static elephantlogger::FileLogOutput filelog("elephant.log");
+    static elephantlogger::LogOutput_File filelog("elephant.log");
 
     elephantlogger::init();
     elephantlogger::addOutput(&filelog, elephantlogger::LogLevel::Debug);
