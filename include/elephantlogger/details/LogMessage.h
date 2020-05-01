@@ -1,9 +1,12 @@
 #pragma once
 
+#include <cstdarg>
 #include <cstring>
 #include <ctime>
-#include <stdarg.h>
+#include <iomanip>
+#include <sstream>
 #include <string>
+#include <sys/time.h>
 
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/config.h"
@@ -45,15 +48,27 @@ class LogMessage
 
     const std::string getFormattedMessage() const
     {
-        std::string dateStr = ctime(&m_creationTime);
-        dateStr.pop_back(); // Remove line return
+        std::tm t = *std::localtime(&m_creationTime);
+        struct timeval tv;
+        gettimeofday(&tv, nullptr);
 
-        std::string msg = "[" + dateStr + "] ";
-        msg += "[";
-        msg += logLevelToString(m_logLevel);
-        msg += "]: ";
-        msg += m_message;
-        return msg;
+        std::ostringstream msg;
+
+        msg << "[";
+        msg << (t.tm_year + 1900) << "-";                             // Year
+        msg << std::setfill('0') << std::setw(2) << t.tm_mon << "-";  // Month
+        msg << std::setfill('0') << std::setw(2) << t.tm_mday << " "; // Day
+        msg << std::setfill('0') << std::setw(2) << t.tm_hour << ":"; // Hour
+        msg << std::setfill('0') << std::setw(2) << t.tm_min << ":";  // Min
+        msg << std::setfill('0') << std::setw(2) << t.tm_sec << " ";  // Sec
+        msg << tv.tv_usec;                                            // Microseconds
+
+        msg << "] [";
+
+        msg << logLevelToString(m_logLevel);
+        msg << "]: ";
+        msg << m_message;
+        return msg.str();
     }
 };
 

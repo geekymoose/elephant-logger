@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cmath>
 #include <cstdarg>
-#include <stdint.h>
 #include <vector>
 
 #include "elephantlogger/details/LogFilter.h"
@@ -37,6 +35,7 @@ class Logger : private Singleton<Logger>
              va_list argList)
     {
         ELEPHANTLOGGER_ASSERT(categories != 0);
+
         for (LogOutput* output : this->m_outputs) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
             if (output != nullptr && output->isEnabled() && output->filter().passFilters(level, categories)) {

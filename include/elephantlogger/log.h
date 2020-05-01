@@ -6,7 +6,7 @@
 
 #ifndef ELEPHANTLOGGER_DISABLED
 
-#include <stdarg.h>
+#include <cstdarg>
 
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/Logger.h"
