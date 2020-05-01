@@ -70,6 +70,8 @@ class LogMessage
         msg << m_message;
         return msg.str();
     }
+
+    LogLevel getLogLevel() const { return this->m_logLevel; }
 };
 
 } // End namespace

@@ -12,7 +12,7 @@
 #include "elephantlogger/details/Logger.h"
 #include "elephantlogger/details/config.h"
 #include "elephantlogger/outputs/LogOutput.h"
-#include "elephantlogger/outputs/LogOutput_Console.h"
+#include "elephantlogger/outputs/LogOutput_ConsoleColor.h"
 
 namespace elephantlogger {
 
@@ -29,13 +29,13 @@ inline bool isCategoryValid(LogCategory category)
 
 /**
  * Initialize the logger and all its subsystems.
- * This creates a LogOutput_Console linked with the default category.
+ * This creates a LogOutput_ConsoleColor linked with the default category.
  *
  * \param level Maximum level of log to use (uses default if empty).
  */
 inline void init(LogLevel level = ELEPHANTLOGGER_DEFAULT_LOGLEVEL)
 {
-    static LogOutput_Console console;
+    static LogOutput_ConsoleColor console;
     Logger::get().filter().setLogLevel(level);
     Logger::get().addOutput(&console, level);
 }
