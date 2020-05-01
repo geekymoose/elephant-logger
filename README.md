@@ -48,7 +48,6 @@ The goal is to easily filter and show the logs on several outputs.
 ## Work in progress
 
 - API may change.
-- Not thread safe for now.
 - Warning: max log size is 255 chars (truncated if higher).
 - No Windows support tested.
 - Add color console output.

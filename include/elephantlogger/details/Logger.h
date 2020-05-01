@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdarg>
+#include <mutex>
 #include <vector>
 
 #include "elephantlogger/details/LogFilter.h"
@@ -24,6 +25,7 @@ class Logger : private Singleton<Logger>
     bool m_isEnabled;
     LogFilter m_filter;
     std::vector<LogOutput*> m_outputs;
+    std::mutex m_mutex;
 
   public:
     void log(const LogLevel level,
@@ -36,8 +38,11 @@ class Logger : private Singleton<Logger>
     {
         ELEPHANTLOGGER_ASSERT(categories != 0);
 
+        std::lock_guard<std::mutex> lk(this->m_mutex);
+
         for (LogOutput* output : this->m_outputs) {
             ELEPHANTLOGGER_ASSERT(output != nullptr);
+
             if (output != nullptr && output->isEnabled() && output->filter().passFilters(level, categories)) {
                 LogMessage msg(level, categories, file, line, function, format, argList);
                 output->write(msg);
@@ -51,14 +56,24 @@ class Logger : private Singleton<Logger>
         ELEPHANTLOGGER_ASSERT(categories != 0);
 
         if (output != nullptr) {
+            std::lock_guard<std::mutex> lk(this->m_mutex);
+
             output->filter().setLogLevel(level);
             this->m_outputs.push_back(output);
         }
     }
 
-    void enable() { this->m_isEnabled = true; }
+    void enable()
+    {
+        std::lock_guard<std::mutex> lk(this->m_mutex);
+        this->m_isEnabled = true;
+    }
 
-    void disable() { this->m_isEnabled = false; }
+    void disable()
+    {
+        std::lock_guard<std::mutex> lk(this->m_mutex);
+        this->m_isEnabled = false;
+    }
 
     bool isEnabled() const { return this->m_isEnabled; }
 

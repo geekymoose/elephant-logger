@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <stdint.h>
 
 #include "elephantlogger/details/LogFilter.h"
@@ -14,14 +15,23 @@ class LogOutput
   private:
     bool m_isEnabled = true;
     LogFilter m_filter;
+    std::mutex m_mutex;
 
   public:
     virtual ~LogOutput() = default;
     virtual void write(const LogMessage& message) = 0;
 
-    void enable() { this->m_isEnabled = true; }
+    void enable()
+    {
+        std::lock_guard<std::mutex> lk(this->m_mutex);
+        this->m_isEnabled = true;
+    }
 
-    void disable() { this->m_isEnabled = false; }
+    void disable()
+    {
+        std::lock_guard<std::mutex> lk(this->m_mutex);
+        this->m_isEnabled = false;
+    }
 
     bool isEnabled() const { return this->m_isEnabled; }
 
