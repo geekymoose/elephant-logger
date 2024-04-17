@@ -166,6 +166,13 @@ make run_ex_simple_usage
 
 > `DCMAKE_BUILD_TYPE` options: Debug / Release / RelWithDebInfo / MinSizeRel
 
+## Autoformat
+
+The autoformat uses `clang-format` to apply the rules.
+You can autoformat the whole code with the following command:
+
+`clang-format -i -style=file include/**/*.h`
+
 ## Examples of codes
 
 Several examples are available in the `examples` directory.

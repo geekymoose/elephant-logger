@@ -225,7 +225,8 @@ inline void log(const LogLevel level,
                 const char* function,
                 const char* format,
                 ...)
-{}
+{
+}
 
 #ifndef ELEPHANTLOGGER_MACROS_DISABLED
 
