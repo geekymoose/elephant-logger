@@ -1,12 +1,9 @@
 #pragma once
 
 #include <mutex>
-#include <stdint.h>
 
 #include "elephantlogger/details/LogFilter.h"
-#include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/LogMessage.h"
-#include "elephantlogger/details/config.h"
 
 namespace elephantlogger {
 

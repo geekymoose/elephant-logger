@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 2.8.2)
+cmake_minimum_required(VERSION 3.5.0)
 project(elephant-logger)
 
 
 if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
-    message(FATAL_ERROR "in-source build not allowed. Use another directory.")
+    message(FATAL_ERROR "in-source build not allowed. You should create a 'build' directory then cmake from there. `mkdir build && cd build`")
 endif()
 
 
@@ -22,6 +22,13 @@ if(NOT CMAKE_BUILD_TYPE)
 else()
     message(STATUS "BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 endif(NOT CMAKE_BUILD_TYPE)
+
+
+# ------------------------------------------------------------------------------
+# Utils
+# ------------------------------------------------------------------------------
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 
 # ------------------------------------------------------------------------------

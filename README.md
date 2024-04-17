@@ -164,7 +164,7 @@ make -j2
 make run_ex_simple_usage
 ```
 
-> DCMAKE_BUILD_TYPE options: Debug / Release / RelWithDebInfo / MinSizeRel
+> `DCMAKE_BUILD_TYPE` options: Debug / Release / RelWithDebInfo / MinSizeRel
 
 ## Examples of codes
 
@@ -173,7 +173,7 @@ Several examples are available in the `examples` directory.
 ## Generate the documentation
 
 - In the root folder, run `doxygen Doxyfile`
-- Documentation generated in build-doxygen folder.
+- Documentation generated in `build/doxygen` folder.
 
 ## Known BUGs
 

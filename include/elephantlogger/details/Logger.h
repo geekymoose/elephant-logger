@@ -7,7 +7,6 @@
 #include "elephantlogger/details/LogFilter.h"
 #include "elephantlogger/details/LogLevel.h"
 #include "elephantlogger/details/LogMessage.h"
-#include "elephantlogger/details/config.h"
 #include "elephantlogger/details/utils.h"
 #include "elephantlogger/outputs/LogOutput.h"
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "elephantlogger/details/LogLevel.h"
-
 // Mostly for internal logger configurations
 // WARNING: if you want to change a value, you need to recompile the logger.
 
