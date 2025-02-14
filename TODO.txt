@@ -1,0 +1,6 @@
+Update category with easy to use client tool +Upgrade
+Add filter parameter as string +Upgrade
+Add category in the LogMessage format +Upgrade
+Remove buffer size limits +Upgrade
+Add a way to get the default Output +Upgrade
+Update singleton so that it is possible to have one logger instance per thread +Upgrade
