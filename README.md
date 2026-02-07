@@ -2,9 +2,9 @@
 
 ![elephantlogger-logo](logo.png)
 
-[![release-version](https://img.shields.io/badge/release-beta--version-red.svg)](</>)
-[![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger.svg?branch=dev)](<https://travis-ci.org/GeekyMoose/elephant-logger>)
-[![license](https://img.shields.io/badge/license-Apache-blue.svg)](<https://github.com/GeekyMoose/elephant-logger-realtime/blob/dev/LICENSE.txt>)
+[![release-version](https://img.shields.io/badge/release-beta--version-red.svg)](/)
+[![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger.svg?branch=dev)](https://travis-ci.org/GeekyMoose/elephant-logger)
+[![license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/GeekyMoose/elephant-logger-realtime/blob/dev/LICENSE.txt)
 
 ```c++
 // Your code
@@ -42,15 +42,15 @@ int main(int argc, char** argv) {
 
 ## Description
 
-Easy to use and flexible C++ logger with support for custom outputs and filters.
-The goal is to easily filter and show the logs on several outputs.
+An easy-to-use and flexible C++ logger with support for custom outputs and filters.
+The goal is to easily filter and display logs across multiple outputs.
 
-## Work in progress
+## Work in Progress
 
 - API may change.
-- Warning: max log size is 255 chars (truncated if higher).
-- No Windows support tested.
-- Add color console output.
+- Warning: Maximum log size is 255 characters (truncated if longer).
+- Windows support has not been tested.
+- Colored console output is planned.
 
 ## Features
 
@@ -59,21 +59,19 @@ The goal is to easily filter and show the logs on several outputs.
     - `LogOutput_File`
     - `LogOutput_Console`
   - Custom outputs
-    - Implement `LogOutput` interface
-    - Add `LogOutput` in the logger
+    - Implement the `LogOutput` interface
+    - Add `LogOutput` to the logger
 - Categories
-  - Default category for easy usage
+  - Default category for ease of use
   - Up to 64 categories
-  - User defined categories
+  - User-defined categories
 - Filters
-  - Category filters (global and output specific)
-  - Log level filters (global and output specific)
+  - Category filters (global and output-specific)
+  - Log level filters (global and output-specific)
   - Filters can be changed at runtime
-- Enable / disable
-  - Enable logger
-  - Disable logger
-  - Enable a specific output
-  - Disable a specific output
+- Enable/Disable
+  - Enable or disable logger
+  - Enable or disable a specific output
 - Default logging macros
   - `LOG_WTF(msg, ...)`
   - `LOG_ERROR(msg, ...)`
@@ -91,17 +89,17 @@ The goal is to easily filter and show the logs on several outputs.
   - `LOG_TRACE_IN(categoryID, msg, ...)`
   - `LOG_DEBUG_IN(categoryID, msg, ...)`
 - Configuration macros
-  - `ELEPHANTLOGGER_DISABLED` Totally disable the logger if defined
-  - `ELEPHANTLOGGER_MACROS_DISABLED` Remove the macro definitions (use `elephantlogger::log()` instead)
-  - `ELEPHANTLOGGER_ASSERT_ENABLED` Enable internal assert for debug
+  - `ELEPHANTLOGGER_DISABLED` — Completely disables the logger if defined
+  - `ELEPHANTLOGGER_MACROS_DISABLED` — Removes macro definitions (use `elephantlogger::log()` instead)
+  - `ELEPHANTLOGGER_ASSERT_ENABLED` — Enables internal assertions for debugging
 - Printf like log format
 
 ## Getting Started
 
-- Add the `include/` folder in your project's include paths.
-- Add `#include <elephantlogger/log.h>` in your code.
-- Call `elephantlogger::init()` in your main.
-- Log using `LOG_DBG("msg")` macro (change DGB with any other log levels).
+- Add the `include/` folder to your project's include paths.
+- Add `#include <elephantlogger/log.h>` to your code.
+- Call `elephantlogger::init()` in your main function.
+- Log using the `LOG_DBG("msg")` macro (replace DBG with any other log level).
 - Logs are sent to the default output.
 
 ```c++
@@ -116,7 +114,7 @@ int main(int argc, char** argc) {
 }
 ```
 
-## Example with a file output
+## Example with File Output
 
 ```c++
 #include <string>
@@ -145,7 +143,7 @@ int main(int argc, char** argv) {
 }
 ```
 
-## Build the examples
+## Build the Examples
 
 ### Requirements
 
@@ -166,30 +164,28 @@ make run_ex_simple_usage
 
 > `DCMAKE_BUILD_TYPE` options: Debug / Release / RelWithDebInfo / MinSizeRel
 
-## Autoformat
+## Auto-formatting
 
-The autoformat uses `clang-format` to apply the rules.
-You can autoformat the whole code with the following command:
+Auto-formatting uses `clang-format` to apply formatting rules.
+You can auto-format all code with the following command:
 
 `clang-format -i -style=file include/**/*.h`
 
-## Examples of codes
+## Code Examples
 
-Several examples are available in the `examples` directory.
+Several examples are available in the `examples/` directory.
 
-## Generate the documentation
+## Generate the Documentation
 
 - In the root folder, run `doxygen Doxyfile`
-- Documentation generated in `build/doxygen` folder.
+- Documentation is generated in the `build/doxygen/` folder.
 
-## Known BUGs
+## Known Bugs
 
-See the github [issues-section](https://github.com/GeekyMoose/elephant-logger/issues)
-
-> Warning: in case of wrong log format (e.g., %s instead of %d),
-> you will get weird errors without nice warning information (segfault in the worst case).
+> **Warning:** In case of incorrect log format (e.g., using `%s` instead of `%d`),
+> you may encounter obscure errors without helpful warning messages (segmentation fault in the worst case).
 
 ## Authors
 
-- Constantin Masson ([GeekyMoose](https://github.com/GeekyMoose))
-- Logo made by Marie-Pier Bouffard ([www.artstation.com/mariepierbouffard](https://www.artstation.com/mariepierbouffard))
+- Constantin Masson ([Geekymoose](https://github.com/geekymoose))
+- Logo by [Marie-Pier Bouffard](https://www.artstation.com/mariepierbouffard)
