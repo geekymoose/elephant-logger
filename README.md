@@ -6,6 +6,11 @@
 [![Build Status](https://travis-ci.org/GeekyMoose/elephant-logger.svg?branch=dev)](https://travis-ci.org/GeekyMoose/elephant-logger)
 [![license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/GeekyMoose/elephant-logger-realtime/blob/dev/LICENSE.txt)
 
+> **WARNING:** This project is now archived.
+> I made this project as part of my first steps in C++.
+> This was mostly for learning purposes and not targeted for actual production use.
+> I'd recommend using mature logging projects instead (such as spdlog).
+
 ```c++
 // Your code
 #include <elephantlogger/log.h>
@@ -44,13 +49,6 @@ int main(int argc, char** argv) {
 
 An easy-to-use and flexible C++ logger with support for custom outputs and filters.
 The goal is to easily filter and display logs across multiple outputs.
-
-## Work in Progress
-
-- API may change.
-- Warning: Maximum log size is 255 characters (truncated if longer).
-- Windows support has not been tested.
-- Colored console output is planned.
 
 ## Features
 
@@ -92,29 +90,12 @@ The goal is to easily filter and display logs across multiple outputs.
   - `ELEPHANTLOGGER_DISABLED` — Completely disables the logger if defined
   - `ELEPHANTLOGGER_MACROS_DISABLED` — Removes macro definitions (use `elephantlogger::log()` instead)
   - `ELEPHANTLOGGER_ASSERT_ENABLED` — Enables internal assertions for debugging
-- Printf like log format
+- Printf-like log format
 
-## Getting Started
+## Examples
 
-- Add the `include/` folder to your project's include paths.
-- Add `#include <elephantlogger/log.h>` to your code.
-- Call `elephantlogger::init()` in your main function.
-- Log using the `LOG_DBG("msg")` macro (replace DBG with any other log level).
-- Logs are sent to the default output.
-
-```c++
-#include <elephantlogger/log.h>
-
-int main(int argc, char** argc) {
-    elephantlogger::init();
-
-    // Your code
-
-    return 0;
-}
-```
-
-## Example with File Output
+Several examples are available in the `examples/` directory.
+Here is a simple example with file output:
 
 ```c++
 #include <string>
@@ -143,16 +124,32 @@ int main(int argc, char** argv) {
 }
 ```
 
+## Getting Started
+
+- Add the `include/` folder to your project's include paths.
+- Add `#include <elephantlogger/log.h>` to your code.
+- Call `elephantlogger::init()` in your main function.
+- Log using the `LOG_DBG("msg")` macro (replace DBG with any other log level).
+- Logs are sent to the default output.
+
+```c++
+#include <elephantlogger/log.h>
+
+int main(int argc, char** argc) {
+    elephantlogger::init();
+
+    // Your code
+
+    return 0;
+}
+```
+
 ## Build the Examples
 
-### Requirements
-
-- C++11
-- pragma support (pragma once)
-
-### Build the examples on GNU/Linux with CMake
-
-- [CMake](https://cmake.org/)
+- Requirements
+  - C++11
+  - Pragma support (`#pragma once`)
+  - [CMake](https://cmake.org/)
 
 ```bash
 mkdir build
@@ -171,10 +168,6 @@ You can auto-format all code with the following command:
 
 `clang-format -i -style=file include/**/*.h`
 
-## Code Examples
-
-Several examples are available in the `examples/` directory.
-
 ## Generate the Documentation
 
 - In the root folder, run `doxygen Doxyfile`
@@ -182,8 +175,9 @@ Several examples are available in the `examples/` directory.
 
 ## Known Bugs
 
-> **Warning:** In case of incorrect log format (e.g., using `%s` instead of `%d`),
-> you may encounter obscure errors without helpful warning messages (segmentation fault in the worst case).
+- **Warning:** In case of incorrect log format (e.g., using `%s` instead of `%d`), you may encounter obscure errors without helpful warning messages (segmentation fault in the worst case).
+- Maximum log size is 255 characters (truncated if longer).
+- Windows support has not been tested.
 
 ## Authors
 
